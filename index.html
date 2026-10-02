@@ -1,0 +1,1995 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Touchline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=DM+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&display=swap">
+<style>
+/* Layout: one column of reading on the left (pitch, controls), commentary beside it on wide screens.
+   Palette: chalk-green paper, softened ink, one turf-green accent. Kit colours only appear on kit swatches and the pitch. */
+:root {
+  --ground: #E3E7DB;
+  --ground-2: #D5DBC9;
+  --ink: #2A2A2A;
+  --ink-soft: #596055;
+  --rule: #B6BEA9;
+  --accent: #14613C;
+  --accent-ink: #F2F6EC;
+  --stripe: rgba(20, 97, 60, 0.04);
+  --sheen: rgba(255, 255, 255, 0.4);
+  --kit-edge: rgba(42, 42, 42, 0.4);
+  --card-y: #E2B600;
+  --card-r: #C23B22;
+
+  --ui: "Archivo", "Helvetica Neue", "Segoe UI", sans-serif;
+  --serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --mono: "DM Mono", ui-monospace, Menlo, Consolas, monospace;
+
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 48px; --s8: 64px;
+  --t-sm: 0.8125rem; --t-base: 1rem; --t-md: 1.125rem; --t-lg: 1.375rem; --t-xl: 2rem;
+  --t-2xl: clamp(2.5rem, 7vw, 5rem);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #121914; --ground-2: #19221C; --ink: #E4E8DE; --ink-soft: #A2AB9A; --rule: #2E3A31;
+    --accent: #62C58F; --accent-ink: #0E1A12; --stripe: rgba(98, 197, 143, 0.035); --sheen: rgba(255, 255, 255, 0.03);
+    --kit-edge: rgba(228, 232, 222, 0.45); --card-y: #E8C21F; --card-r: #E0563C;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #121914; --ground-2: #19221C; --ink: #E4E8DE; --ink-soft: #A2AB9A; --rule: #2E3A31;
+  --accent: #62C58F; --accent-ink: #0E1A12; --stripe: rgba(98, 197, 143, 0.035); --sheen: rgba(255, 255, 255, 0.03);
+  --kit-edge: rgba(228, 232, 222, 0.45); --card-y: #E8C21F; --card-r: #E0563C;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  padding-inline: var(--s4);
+  padding-block: var(--s5) var(--s8);
+  background-color: var(--ground);
+  background-image:
+    url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .16 0 0 0 0 .18 0 0 0 0 .16 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    repeating-linear-gradient(90deg, transparent 0 88px, var(--stripe) 88px 176px),
+    radial-gradient(90% 60% at 0% 0%, var(--sheen), transparent 70%),
+    linear-gradient(180deg, var(--ground) 0%, var(--ground-2) 100%);
+  background-attachment: scroll;
+  color: var(--ink);
+  font: 400 var(--t-base)/1.5 var(--serif);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100%;
+}
+.shell { max-width: 1120px; margin-inline: auto; display: flex; flex-direction: column; gap: var(--s6); }
+h1, h2, h3, p { margin: 0; }
+h1, h2 { text-wrap: balance; }
+
+/* masthead */
+.mast { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s4); flex-wrap: wrap; padding-bottom: var(--s3); border-bottom: 1px solid var(--rule); }
+.wordmark { font: 800 var(--t-lg)/1 var(--ui); font-stretch: 125%; letter-spacing: -0.01em; }
+.mast-note { font: 400 var(--t-sm)/1.4 var(--ui); color: var(--ink-soft); }
+
+/* buttons */
+.btn {
+  position: relative; isolation: isolate;
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 44px; padding: 0 var(--s5);
+  border: 1.5px solid var(--ink); border-radius: 2px;
+  background: transparent; color: var(--ink);
+  font: 700 0.9375rem/1 var(--ui); white-space: nowrap; cursor: pointer;
+  transition: transform 0.12s ease-out;
+}
+.btn::before { content: ""; position: absolute; inset: 0; z-index: -1; background: currentColor; opacity: 0; transition: opacity 0.16s ease-out; }
+.btn:hover::before { opacity: 0.09; }
+.btn:active { transform: translateY(1px) scale(0.985); }
+.btn:active::before { opacity: 0.16; }
+.btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.btn[disabled] { opacity: 0.4; cursor: not-allowed; }
+.btn[disabled]:active { transform: none; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.small { min-height: 36px; padding: 0 var(--s4); font-size: var(--t-sm); }
+.seg { display: inline-flex; }
+.seg .btn { border-radius: 0; margin-left: -1.5px; }
+.seg .btn:first-child { margin-left: 0; border-radius: 2px 0 0 2px; }
+.seg .btn:last-child { border-radius: 0 2px 2px 0; }
+.seg .btn[aria-pressed="true"] { background: var(--ink); color: var(--ground); }
+.seg .btn:focus-visible { z-index: 2; }
+
+.kit { display: inline-block; flex: none; width: 14px; height: 22px; border-radius: 2px; background: linear-gradient(90deg, var(--k1) 0 66%, var(--k2) 66% 100%); box-shadow: inset 0 0 0 1px var(--kit-edge); }
+
+/* setup */
+#setup { display: flex; flex-direction: column; gap: var(--s6); }
+.intro { display: flex; flex-direction: column; gap: var(--s4); max-width: 46rem; }
+.intro h1 { font: 800 var(--t-2xl)/0.98 var(--ui); font-stretch: 112%; letter-spacing: -0.02em; }
+.intro p { font-size: var(--t-md); line-height: 1.55; max-width: 38rem; }
+.picks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s6); }
+.pick { border: 0; padding: 0; margin: 0; min-width: 0; }
+.pick legend { padding: 0 0 var(--s3); font: 800 var(--t-md)/1 var(--ui); font-stretch: 112%; }
+.clubs { display: flex; flex-direction: column; border-top: 1px solid var(--rule); }
+.club { position: relative; display: block; border-bottom: 1px solid var(--rule); }
+.club input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.club input:disabled { cursor: not-allowed; }
+.club-face { position: relative; isolation: isolate; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s4); align-items: center; padding: var(--s3) var(--s3); min-height: 64px; }
+.club-face::before { content: ""; position: absolute; inset: 0; z-index: -1; background: currentColor; opacity: 0; transition: opacity 0.16s ease-out; }
+.club input:hover:not(:disabled) + .club-face::before { opacity: 0.07; }
+.club input:active:not(:disabled) + .club-face::before { opacity: 0.14; }
+.club input:focus-visible + .club-face { outline: 2px solid var(--accent); outline-offset: -2px; }
+.club input:checked + .club-face { background: var(--ink); color: var(--ground); }
+.club input:disabled + .club-face { opacity: 0.38; }
+.club-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.club-name { font: 800 var(--t-md)/1.1 var(--ui); font-stretch: 105%; }
+.club-meta { display: flex; flex-wrap: wrap; column-gap: var(--s3); font: 400 var(--t-sm)/1.4 var(--ui); opacity: 0.72; }
+.club-nums { font-family: var(--mono); font-size: 0.75rem; }
+.ready { display: flex; flex-direction: column; gap: var(--s4); padding-top: var(--s4); border-top: 1px solid var(--rule); }
+.fixture { font: 800 var(--t-xl)/1.05 var(--ui); font-stretch: 105%; letter-spacing: -0.01em; overflow-wrap: anywhere; }
+.fixture small { display: block; margin-top: var(--s2); font: 400 var(--t-sm)/1.4 var(--ui); color: var(--ink-soft); letter-spacing: 0; }
+.actions { display: flex; flex-wrap: wrap; gap: var(--s3); }
+.fine { font: 400 var(--t-sm)/1.5 var(--ui); color: var(--ink-soft); max-width: 44rem; }
+
+/* match */
+#match { display: flex; flex-direction: column; gap: var(--s5); }
+.board { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: var(--s4); padding-block: var(--s5); border-bottom: 1px solid var(--rule); }
+.side { display: flex; align-items: center; gap: var(--s3); min-width: 0; }
+.side-h { justify-content: flex-end; text-align: right; }
+.tname { font: 800 clamp(1.05rem, 3.6vw, 2rem)/1.05 var(--ui); font-stretch: 110%; letter-spacing: -0.01em; overflow-wrap: anywhere; }
+.mid { display: flex; flex-direction: column; align-items: center; gap: var(--s2); }
+.score { display: flex; align-items: baseline; gap: var(--s3); font: 800 var(--t-2xl)/0.9 var(--ui); font-stretch: 70%; font-variant-numeric: tabular-nums; }
+.score .dash { color: var(--ink-soft); font-weight: 500; }
+.clockline { display: flex; align-items: baseline; gap: var(--s3); font: 500 var(--t-sm)/1 var(--mono); font-variant-numeric: tabular-nums; }
+.clockline #clock { font-size: var(--t-md); color: var(--accent); }
+.clockline #phase { color: var(--ink-soft); }
+.timeline { position: relative; height: 24px; }
+.timeline::before { content: ""; position: absolute; left: 0; right: 0; top: 11px; height: 2px; background: var(--rule); }
+.tfill { position: absolute; left: 0; right: 0; top: 11px; height: 2px; background: var(--ink); transform: scaleX(0); transform-origin: left; }
+.tmark { position: absolute; top: 12px; width: 10px; height: 10px; transform: translate(-50%, -50%); border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 2px var(--ground); }
+.tmark.yc { width: 7px; height: 10px; border-radius: 1px; background: var(--card-y); }
+.tmark.rc { width: 7px; height: 10px; border-radius: 1px; background: var(--card-r); }
+.tmark.a { top: 12px; }
+
+.grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: var(--s6); align-items: start; }
+.left { display: flex; flex-direction: column; gap: var(--s4); min-width: 0; }
+.pitchwrap { position: relative; width: 100%; max-width: 100%; aspect-ratio: 105 / 68; background: #4E7A45; border-radius: 2px; overflow: hidden; }
+.pitchwrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.controls { display: flex; flex-wrap: wrap; gap: var(--s3); align-items: center; }
+.matchno { margin-left: auto; font: 400 var(--t-sm)/1 var(--mono); color: var(--ink-soft); }
+.ft { display: flex; flex-direction: column; gap: var(--s3); padding-top: var(--s4); border-top: 1px solid var(--rule); }
+.ft h2 { font: 800 var(--t-xl)/1.05 var(--ui); font-stretch: 105%; }
+.ft p { font-size: var(--t-md); line-height: 1.5; max-width: 40rem; }
+.ft .label { font: 700 var(--t-sm)/1.4 var(--ui); color: var(--ink-soft); }
+.scorers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s4); }
+.scorers ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--s1); font-size: var(--t-base); }
+
+.right { min-width: 0; display: flex; flex-direction: column; gap: var(--s3); }
+.feedhead { display: flex; justify-content: space-between; align-items: center; gap: var(--s3); flex-wrap: wrap; padding-bottom: var(--s2); border-bottom: 1px solid var(--ink); }
+.feedhead h2 { font: 800 var(--t-md)/1 var(--ui); font-stretch: 110%; }
+.toggle { display: inline-flex; align-items: center; gap: var(--s2); font: 500 var(--t-sm)/1 var(--ui); cursor: pointer; min-height: 32px; }
+.toggle input { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; cursor: pointer; }
+.toggle input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+#feed { list-style: none; margin: 0; padding: 0; max-height: min(72vh, 720px); overflow-y: auto; overscroll-behavior: contain; }
+#feed:empty::after { content: "Commentary starts at kick off."; display: block; padding: var(--s4) 0; color: var(--ink-soft); font-family: var(--ui); font-size: var(--t-sm); }
+.line { display: grid; grid-template-columns: 3.5rem minmax(0, 1fr); gap: var(--s3); padding: var(--s3) 0; border-bottom: 1px solid var(--rule); animation: rise 0.28s ease-out both; }
+.line .min { font: 500 var(--t-sm)/1.65 var(--mono); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.line .body { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.line .head { font: 800 var(--t-base)/1.3 var(--ui); font-stretch: 105%; }
+.line p { font-size: 1.0625rem; line-height: 1.5; }
+.line .tail { font: 500 var(--t-sm)/1.4 var(--mono); color: var(--ink-soft); }
+.line.quiet p, .line.chance p, .line.foul p, .line.corner p { color: var(--ink-soft); }
+.line.goal { padding-block: var(--s4); }
+.line.goal .min { color: var(--accent); font-weight: 500; }
+.line.goal .head { font-size: var(--t-lg); color: var(--accent); }
+.line.goal p { font-size: var(--t-md); }
+.line.goal .tail { color: var(--ink); }
+.line.card .head::before { content: ""; display: inline-block; width: 9px; height: 13px; margin-right: var(--s2); vertical-align: -1px; border-radius: 1px; background: var(--card-y); }
+.line.card.red .head::before { background: var(--card-r); }
+.line.phase .head { color: var(--ink); }
+#feed.keyonly .line:not(.key) { display: none; }
+@keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+.lower { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s6); padding-top: var(--s5); border-top: 1px solid var(--rule); }
+.lower h2 { font: 800 var(--t-md)/1 var(--ui); font-stretch: 110%; padding-bottom: var(--s3); }
+.stat { display: grid; grid-template-columns: 3rem minmax(0, 1fr) 3rem; grid-template-areas: "h label a" "h bar a"; align-items: center; column-gap: var(--s3); row-gap: var(--s2); padding: var(--s2) 0; }
+.stat .v { font: 500 var(--t-base)/1 var(--mono); font-variant-numeric: tabular-nums; }
+.stat .vh { grid-area: h; text-align: right; }
+.stat .va { grid-area: a; text-align: left; }
+.stat .lab { grid-area: label; text-align: center; font: 500 var(--t-sm)/1.4 var(--ui); color: var(--ink-soft); }
+.stat .bar { grid-area: bar; position: relative; height: 4px; background: var(--rule); overflow: hidden; }
+.stat .bar i { position: absolute; inset: 0; background: var(--accent); transform: scaleX(0.5); transform-origin: left; }
+.teams { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s5); }
+.teams h3 { display: flex; align-items: center; gap: var(--s2); font: 800 var(--t-base)/1.2 var(--ui); padding-bottom: var(--s2); }
+.teams ol, .teams ul { list-style: none; margin: 0; padding: 0; font-size: var(--t-base); line-height: 1.35; }
+.teams li { display: flex; flex-wrap: wrap; column-gap: var(--s2); padding: 3px 0; }
+.teams li .pos { width: 2rem; font: 500 0.75rem/1.9 var(--mono); color: var(--ink-soft); }
+.teams li .fit { width: 1.6rem; height: 4px; align-self: center; margin-right: var(--s2); background: color-mix(in srgb, var(--ink-soft) 25%, transparent); border-radius: 2px; overflow: hidden; }
+.teams li .fit i { display: block; height: 100%; width: 100%; background: var(--accent); transform-origin: left; transition: transform 0.4s ease-out, opacity 0.4s ease-out; }
+.teams li .fit.mid i { opacity: 0.7; }
+.teams li .fit.low i { background: #B8541A; }
+.teams li .arch { font: 400 0.75rem/1.9 var(--ui); color: var(--accent); }
+.teams li .tags { font: 400 0.75rem/1.9 var(--ui); color: var(--ink-soft); }
+.teams li.off .nm { text-decoration: line-through; text-decoration-thickness: 1px; color: var(--ink-soft); }
+.teams .sub { margin-top: var(--s3); font: 700 var(--t-sm)/1 var(--ui); color: var(--ink-soft); padding-bottom: var(--s1); }
+.foot { max-width: none; padding-top: var(--s4); border-top: 1px solid var(--rule); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (max-width: 860px) {
+  .picks { grid-template-columns: minmax(0, 1fr); gap: var(--s5); }
+  .grid { grid-template-columns: minmax(0, 1fr); }
+  #feed { max-height: 460px; }
+  .lower { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 520px) {
+  .board { gap: var(--s2); }
+  .side { flex-direction: column; gap: var(--s2); }
+  .side-h, .side-a { justify-content: center; text-align: center; }
+  .side-h { flex-direction: column-reverse; }
+  .scorers, .teams { grid-template-columns: minmax(0, 1fr); }
+  .btn { padding: 0 var(--s4); }
+}
+
+/* club rows and tactics */
+.club-style { font: 400 var(--t-sm)/1.4 var(--serif); font-style: italic; opacity: 0.85; }
+.club-nums { margin-top: 2px; }
+.now { display: flex; align-items: center; gap: var(--s3); min-height: 28px; font: 500 var(--t-sm)/1.3 var(--mono); }
+.now .kit { width: 10px; height: 16px; }
+.lcol { display: flex; flex-direction: column; gap: var(--s6); min-width: 0; }
+.lcol section { min-width: 0; }
+.xgkey { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s3); padding-bottom: var(--s3); font: 500 var(--t-sm)/1 var(--ui); color: var(--ink-soft); }
+.xgkey .sw { width: 18px; height: 3px; border-radius: 1px; }
+.xgkey .sw-h { background: var(--accent); }
+.xgkey .sw-a { background: var(--ink); }
+.xgkey .gdot { width: 9px; height: 9px; border-radius: 50%; border: 2px solid var(--ink-soft); }
+#xgchart svg { display: block; width: 100%; height: auto; overflow: visible; }
+#xgchart .gl { stroke: var(--rule); stroke-width: 1; }
+#xgchart .ax { fill: var(--ink-soft); font: 400 11px var(--mono); }
+#xgchart .xl { fill: none; stroke-width: 2.4; stroke-linejoin: round; stroke-linecap: round; }
+#xgchart .xl-h, #xgchart .gm-h { stroke: var(--accent); }
+#xgchart .xl-a, #xgchart .gm-a { stroke: var(--ink); }
+#xgchart .gm { fill: var(--ground); stroke-width: 2.4; }
+.tactics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s5); }
+.tcol { display: flex; flex-direction: column; gap: var(--s2); min-width: 0; }
+.tcol h3 { display: flex; align-items: center; gap: var(--s2); font: 800 var(--t-base)/1.2 var(--ui); }
+.tcol .phil { font-size: 0.9375rem; line-height: 1.45; }
+.tcol .tshift { min-height: 1.2em; font: 700 var(--t-sm)/1.2 var(--ui); color: var(--accent); }
+.meter { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr) 2rem; align-items: center; gap: var(--s2); font: 500 var(--t-sm)/1.3 var(--ui); }
+.meter .lab { color: var(--ink-soft); }
+.meter .track { position: relative; height: 4px; background: var(--rule); overflow: hidden; }
+.meter .track i { position: absolute; inset: 0; background: var(--ink); transform: scaleX(0); transform-origin: left; }
+.meter .val { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.teams li .rt { width: 2.1rem; font: 500 0.8125rem/1.7 var(--mono); font-variant-numeric: tabular-nums; color: var(--ink-soft); }
+.teams li .rt.best { color: var(--accent); font-weight: 500; }
+@media (max-width: 520px) { .tactics { grid-template-columns: minmax(0, 1fr); } .meter { grid-template-columns: 6.5rem minmax(0, 1fr) 2rem; } }
+@media (prefers-reduced-motion: reduce) {
+  .line { animation: none; }
+  .btn, .btn::before, .club-face::before { transition: none; }
+}
+</style>
+
+<div class="shell">
+  <header class="mast">
+    <div class="wordmark">Touchline</div>
+    <p class="mast-note">Premier League big six, played out minute by minute</p>
+  </header>
+
+  <main>
+    <section id="setup" aria-labelledby="h-setup">
+      <div class="intro">
+        <h1 id="h-setup">Pick two clubs and watch ninety minutes.</h1>
+        <p>Arsenal, Chelsea, Liverpool, Manchester City, Manchester United and Tottenham. Choose who plays at home and who travels, then watch every pass, dribble and shot on the pitch, with commentary, tactics and expected goals alongside.</p>
+      </div>
+      <div class="picks">
+        <fieldset class="pick"><legend>Home side</legend><div class="clubs" id="clubs-h"></div></fieldset>
+        <fieldset class="pick"><legend>Away side</legend><div class="clubs" id="clubs-a"></div></fieldset>
+      </div>
+      <div class="ready">
+        <div class="fixture" id="fixture"></div>
+        <div class="actions">
+          <button class="btn primary" id="kickoff" type="button">Kick off</button>
+          <button class="btn" id="random" type="button">Random fixture</button>
+        </div>
+        <p class="fine">Every player has his own passing, dribbling, finishing, defending, pace and strength. On each action the man on the ball chooses to pass, dribble, cross or shoot, and the result depends on him, the defender in front of him, the club's tactics (press, defensive line, tempo, directness, set pieces, counters), the expected goals of the chance, a small home advantage and how each side's day is going. Squads and coaches are as of 1 October 2026. Ratings, player traits and tactical profiles are my own estimates, and the tactics are my reading of each coach's style. Each player also starts with a fitness level, shown as the small bar beside his position. It drains with work rate, pressing and tempo, makes him slower and less sharp as it falls, raises his injury risk, and decides who the manager takes off. The same match number always replays the same way.</p>
+      </div>
+    </section>
+
+    <section id="match" hidden aria-label="Match">
+      <div class="board" role="group" aria-label="Scoreboard">
+        <div class="side side-h"><span class="kit" id="kit-h"></span><span class="tname" id="name-h"></span></div>
+        <div class="mid">
+          <div class="score" aria-live="off"><span id="sc-h">0</span><span class="dash">&ndash;</span><span id="sc-a">0</span></div>
+          <div class="clockline"><span id="clock">0'</span><span id="phase">Kick off</span></div>
+        </div>
+        <div class="side side-a"><span class="kit" id="kit-a"></span><span class="tname" id="name-a"></span></div>
+      </div>
+      <div class="timeline" aria-hidden="true"><div class="tfill" id="tfill"></div><div id="marks"></div></div>
+
+      <div class="grid">
+        <div class="left">
+          <div class="pitchwrap"><canvas id="pitch" role="img" aria-label="Pitch view showing both teams and the ball"></canvas></div>
+          <p class="now"><span class="kit" id="now-kit"></span><span id="now-text">Kick off</span></p>
+          <div class="controls" id="controls">
+            <button class="btn" id="pause" type="button">Pause</button>
+            <div class="seg" role="group" aria-label="Playback speed">
+              <button class="btn" type="button" data-ms="2400" aria-pressed="false">Slow</button>
+              <button class="btn" type="button" data-ms="1300" aria-pressed="true">Normal</button>
+              <button class="btn" type="button" data-ms="450" aria-pressed="false">Fast</button>
+            </div>
+            <button class="btn" id="skip" type="button">Skip to full time</button>
+            <span class="matchno" id="matchno"></span>
+          </div>
+          <div class="ft" id="ft" hidden>
+            <h2 id="ft-title">Full time</h2>
+            <div class="scorers"><div><div class="label" id="ft-hn"></div><ul id="ft-hl"></ul></div><div><div class="label" id="ft-an"></div><ul id="ft-al"></ul></div></div>
+            <p id="ft-motm"></p>
+            <div class="actions">
+              <button class="btn primary" id="rematch" type="button">Play it again, new match</button>
+              <button class="btn" id="replay" type="button">Rewatch this one</button>
+              <button class="btn" id="another" type="button">Change teams</button>
+            </div>
+          </div>
+        </div>
+        <aside class="right" aria-label="Commentary">
+          <div class="feedhead">
+            <h2>Commentary</h2>
+            <label class="toggle"><input type="checkbox" id="keyonly"><span>Key moments only</span></label>
+          </div>
+          <ol id="feed"></ol>
+        </aside>
+      </div>
+
+      <div class="lower">
+        <div class="lcol">
+          <section aria-label="Match stats">
+            <h2>Match stats</h2>
+            <div id="stats"></div>
+          </section>
+          <section aria-label="Expected goals through the match">
+            <h2>Expected goals</h2>
+            <p class="xgkey"><span class="sw sw-h"></span><span id="xg-key-h"></span><span class="sw sw-a"></span><span id="xg-key-a"></span><span class="gdot"></span><span>Goal</span></p>
+            <div id="xgchart"></div>
+          </section>
+        </div>
+        <div class="lcol">
+          <section aria-label="Tactics">
+            <h2>Tactics</h2>
+            <div class="tactics" id="tactics"></div>
+          </section>
+          <section aria-label="Line-ups">
+            <h2>Line-ups and ratings</h2>
+            <div class="teams" id="teams"></div>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+  <p class="fine foot">Touchline is a simulation. Results, scorers and cards are generated and have nothing to do with real fixtures.</p>
+</div>
+<div class="sr" id="announce" aria-live="polite"></div>
+
+<script>
+/* =====================================================================
+   Touchline engine v2
+   - every player has attributes (passing, dribbling, finishing, defending,
+     pace, strength, creativity, goalkeeping) derived from rating + role tags
+   - the match is a chain of individual actions: pass, through ball, long ball,
+     cross, dribble, tackle, shot, set piece. Each action names the players involved.
+   - each club has a tactical profile (press, line, tempo, directness, width,
+     set pieces, counter-attack, risk, compactness) that changes how those
+     actions succeed and where the spaces are.
+   - shots carry an xG value from location, how the chance was made and the defence;
+     goals come from xG, finishing and goalkeeping.
+   - a home boost and a per-match "day" (form, finishing luck, openness,
+     dominance) make results spread out instead of repeating.
+   ===================================================================== */
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+function mulberry32(a) {
+  return function () {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+const fmt = (s, o) => s.replace(/\{(\w+)\}/g, (m, k) => (o[k] !== undefined ? o[k] : m));
+
+/* ---------- player attributes ---------- */
+const TAGFX = {
+  finisher: { sho: 7, phy: 2 }, poacher: { sho: 6, pac: 2 }, creator: { cre: 8, pas: 3 },
+  dribbler: { dri: 8, pac: 3 }, playmaker: { pas: 7, cre: 5 }, destroyer: { def: 8, phy: 5, pas: -3 },
+  sweeper: { pas: 8 }, aerial: { phy: 8 }, pacey: { pac: 8 }, crosser: { cre: 6, pas: 2 },
+  longshot: { sho: 6 }, target: { phy: 8, sho: 2 }, wingback: { cre: 7, dri: 3, pac: 4, def: -4 },
+  engine: { pac: 3, def: 3, phy: 3 }, keeper: { pas: 9 }, setpiece: { cre: 4 }, press: { def: 3, pac: 2 }
+};
+function buildAttrs(pos, r, tags) {
+  let a;
+  if (pos === "GK") a = { gk: r, pas: r - 12, dri: r - 40, sho: 20, def: r - 30, pac: r - 30, phy: r - 10, cre: r - 30 };
+  else if (pos === "DF") a = { gk: 0, pas: r - 8, dri: r - 14, sho: r - 30, def: r + 2, pac: r - 6, phy: r - 2, cre: r - 20 };
+  else if (pos === "MF") a = { gk: 0, pas: r, dri: r - 4, sho: r - 12, def: r - 8, pac: r - 8, phy: r - 6, cre: r - 3 };
+  else a = { gk: 0, pas: r - 8, dri: r, sho: r + 1, def: r - 35, pac: r - 2, phy: r - 8, cre: r - 8 };
+  (tags ? tags.split(" ") : []).forEach(k => { const fx = TAGFX[k]; if (fx) for (const x in fx) a[x] += fx[x]; });
+  return a;
+}
+/* ---------- playstyles: each player is an archetype that changes what he tries on the ball.
+   dr = how often he takes players on, ds = extra take-on success, sh = shot appetite, pr = through balls,
+   cr = crosses, lg = long balls ---------- */
+const STYX = (() => {
+  const B = { dr: 1, ds: 0, sh: 1, pr: 1, cr: 1, lg: 1 };
+  const d = { shotstopper: ["Shot-stopper", { dr: .3, sh: 0, pr: .6, cr: 0, lg: 1 }], sweepkeeper: ["Sweeper-keeper", { dr: .3, sh: 0, pr: .8, cr: 0, lg: .6 }],
+    stopper: ["Stopper", { dr: .3, sh: .1, pr: .5, cr: .4, lg: 1.2 }], ballcb: ["Ball-playing defender", { dr: .65, sh: .1, pr: 1.3, cr: .4, lg: .9 }], aerialcb: ["Aerial defender", { dr: .25, sh: .15, pr: .5, cr: .4, lg: 1.4 }],
+    fullback: ["Attacking full-back", { dr: 1.6, ds: .03, sh: .3, pr: 1, cr: 1.5, lg: .6 }],
+    regista: ["Deep playmaker", { dr: .7, sh: .7, pr: 1.5, cr: .8, lg: 1.4 }], winner: ["Ball-winner", { dr: .6, sh: .7, pr: .7, cr: .5, lg: 1 }],
+    b2b: ["Box-to-box midfielder", { dr: 1.4, ds: .02, sh: 1.1, pr: 1, cr: .8, lg: .8 }], tenner: ["Creator", { dr: 1.2, ds: .02, sh: 1, pr: 1.6, cr: 1.3, lg: .6 }], carrier: ["Ball-carrier", { dr: 2.4, ds: .06, sh: 1, pr: 1, cr: .8, lg: .5 }],
+    wizard: ["Magician", { dr: 3.4, ds: .09, sh: 1.1, pr: 1.4, cr: 1, lg: .3 }], winger: ["Take-on winger", { dr: 2.8, ds: .07, sh: 1.05, pr: 1, cr: 1.3, lg: .3 }],
+    inside: ["Inside forward", { dr: 1.9, ds: .04, sh: 1.25, pr: 1.2, cr: .7, lg: .4 }], poacher: ["Poacher", { dr: .8, sh: 1.15, pr: .5, cr: .3, lg: .5 }],
+    target: ["Target man", { dr: .5, sh: 1.0, pr: .6, cr: .3, lg: .4 }], falsenine: ["False nine", { dr: 1.3, sh: .8, pr: 1.8, cr: .6, lg: .5 }],
+    runner: ["Channel runner", { dr: 1.5, ds: .03, sh: 1.15, pr: .8, cr: .6, lg: .4 }], forward: ["Forward", {}] };
+  const o = {}; for (const k in d) o[k] = { key: k, label: d[k][0], ...B, ...d[k][1] };
+  return o;
+})();
+function styleOf(pos, tags) {
+  const t = {}; (tags || "").split(" ").forEach(k => { if (k) t[k] = 1; });
+  if (pos === "GK") return t.keeper ? "sweepkeeper" : "shotstopper";
+  if (pos === "DF") return t.wingback ? "fullback" : t.sweeper ? "ballcb" : t.aerial ? "aerialcb" : "stopper";
+  if (pos === "MF") return t.playmaker ? "regista" : t.destroyer ? "winner" : t.creator ? "tenner" : t.dribbler ? "carrier" : "b2b";
+  if (t.dribbler && t.creator) return "wizard";
+  if (t.dribbler) return t.finisher ? "inside" : "winger";
+  if (t.creator && t.finisher) return "inside";
+  if (t.target || t.aerial) return "target";
+  if (t.finisher || t.poacher) return "poacher";
+  if (t.creator) return "falsenine";
+  if (t.pacey) return "runner";
+  return "forward";
+}
+const cmpSho = v => 80 + (v - 80) * 0.45;
+const mk = rows => rows.map(([name, pos, r, short, tags]) => {
+  const sty = styleOf(pos, tags || "");
+  return { name, pos, r, short: short || name.split(" ").slice(-1)[0], tags: tags || "", sty, arch: STYX[sty].label, a: buildAttrs(pos, r, tags || "") };
+});
+
+/* ---------- squads as of 1 Oct 2026 (FotMob, Goal, club sites). First 11 = starting XI in slot order:
+   GK, RB, CB, CB, LB, MF holder, MF, MF, RW, ST, LW. The rest is the bench. Ratings and tags are estimates. ---------- */
+const TEAMS = {
+  arsenal: {
+    id: "arsenal", name: "Arsenal", ground: "Emirates Stadium", coach: "Mikel Arteta", form: "f433",
+    kit: { home: ["#DB0007", "#FFFFFF"], away: ["#F2D400", "#1B2A4A"] },
+    tactics: { press: .78, line: .70, tempo: .52, direct: .30, width: .60, setPiece: .95, counter: .40, risk: .30, compact: .70 },
+    style: "Possession, high press, set pieces",
+    philosophy: "Arteta builds slowly from the back, presses high and wins a lot of games from corners and free kicks.",
+    players: mk([
+      ["David Raya", "GK", 85, null, "keeper"], ["Ben White", "DF", 80], ["William Saliba", "DF", 88, null, "sweeper"], ["Gabriel Magalhães", "DF", 87, "Gabriel", "aerial"], ["Riccardo Calafiori", "DF", 82, null, "sweeper"],
+      ["Declan Rice", "MF", 88, null, "engine destroyer"], ["Bruno Guimarães", "MF", 85, "Guimarães", "playmaker"], ["Martin Ødegaard", "MF", 86, null, "creator setpiece"],
+      ["Bukayo Saka", "FW", 88, null, "dribbler creator"], ["Viktor Gyökeres", "FW", 85, null, "target finisher pacey"], ["Kai Havertz", "FW", 81, null, "aerial"],
+      ["Illan Meslier", "GK", 74, "Meslier"], ["Jurriën Timber", "DF", 82], ["Ezri Konsa", "DF", 80, "Konsa"], ["Martín Zubimendi", "MF", 83, "Zubimendi", "destroyer playmaker"], ["Eberechi Eze", "MF", 82, "Eze", "creator dribbler"], ["Mikel Merino", "MF", 79, null, "aerial"], ["Noni Madueke", "FW", 78, null, "dribbler"], ["Christos Tzolis", "FW", 76, "Tzolis", "pacey dribbler"]
+    ])
+  },
+  chelsea: {
+    id: "chelsea", name: "Chelsea", ground: "Stamford Bridge", coach: "Xabi Alonso", form: "f4231",
+    kit: { home: ["#034694", "#FFFFFF"], away: ["#F5D90A", "#0B2A57"] },
+    tactics: { press: .62, line: .60, tempo: .66, direct: .52, width: .78, setPiece: .55, counter: .62, risk: .50, compact: .55 },
+    style: "Wide overloads, quick vertical passes",
+    philosophy: "Alonso wants the full-backs high, wide overloads and quick vertical passes, with Palmer and Rogers working behind the striker.",
+    players: mk([
+      ["Emiliano Martínez", "GK", 85, "Martínez"], ["Reece James", "DF", 84, null, "crosser wingback"], ["Levi Colwill", "DF", 81, null, "sweeper"], ["Maxence Lacroix", "DF", 80, "Lacroix", "aerial"], ["Jorrel Hato", "DF", 79, "Hato", "sweeper"],
+      ["Moisés Caicedo", "MF", 86, null, "destroyer engine"], ["Roméo Lavia", "MF", 76, "Lavia", "destroyer"], ["Morgan Rogers", "MF", 84, null, "dribbler creator"],
+      ["Cole Palmer", "FW", 88, null, "creator finisher"], ["João Pedro", "FW", 83, "João Pedro", "finisher dribbler"], ["Pedro Neto", "FW", 81, "Neto", "pacey dribbler"],
+      ["Teddy Sharman-Lowe", "GK", 70, "Sharman-Lowe"], ["Malo Gusto", "DF", 77, null, "wingback"], ["Wesley Fofana", "DF", 78, null, "pacey"], ["Jordan Henderson", "MF", 74, null, "playmaker"], ["Valentín Barco", "MF", 74, "Barco"], ["Estêvão", "FW", 80, null, "dribbler creator"], ["Jamie Gittens", "FW", 77, null, "pacey dribbler"], ["Danny Welbeck", "FW", 74, null, "aerial"]
+    ])
+  },
+  liverpool: {
+    id: "liverpool", name: "Liverpool", ground: "Anfield", coach: "Andoni Iraola", form: "f433",
+    kit: { home: ["#C8102E", "#F6EB61"], away: ["#0E3B43", "#F2EDE0"] },
+    tactics: { press: .90, line: .82, tempo: .78, direct: .64, width: .55, setPiece: .60, counter: .72, risk: .66, compact: .54 },
+    style: "Pack pressing, vertical, high line",
+    philosophy: "Iraola's side presses in packs, goes forward through the middle quickly and leaves a lot of room behind a high line.",
+    players: mk([
+      ["Alisson Becker", "GK", 87, "Alisson", "keeper"], ["Jeremie Frimpong", "DF", 80, "Frimpong", "wingback pacey"], ["Ronald Araújo", "DF", 84, "Araújo", "pacey aerial"], ["Virgil van Dijk", "DF", 87, "Van Dijk", "sweeper aerial"], ["Milos Kerkez", "DF", 79, "Kerkez", "wingback crosser"],
+      ["Ryan Gravenberch", "MF", 86, null, "dribbler engine"], ["Alexis Mac Allister", "MF", 85, "Mac Allister", "playmaker"], ["Dominik Szoboszlai", "MF", 85, null, "longshot engine setpiece"],
+      ["Florian Wirtz", "FW", 86, null, "creator dribbler"], ["Alexander Isak", "FW", 87, null, "finisher pacey"], ["Cody Gakpo", "FW", 83, null, "finisher dribbler"],
+      ["Giorgi Mamardashvili", "GK", 81, "Mamardashvili"], ["Conor Bradley", "DF", 79, "Bradley", "wingback"], ["Jérémy Jacquet", "DF", 78, "Jacquet", "sweeper"], ["Wataru Endo", "MF", 74, "Endo", "destroyer"], ["Hugo Ekitike", "FW", 83, "Ekitike", "finisher pacey"], ["Bradley Barcola", "FW", 80, "Barcola", "pacey dribbler"], ["Federico Chiesa", "FW", 77, "Chiesa", "dribbler"], ["Víctor Muñoz", "FW", 76, "Muñoz", "pacey"]
+    ])
+  },
+  mancity: {
+    id: "mancity", name: "Man City", ground: "Etihad Stadium", coach: "Enzo Maresca", form: "f433i",
+    kit: { home: ["#6CABDD", "#FFFFFF"], away: ["#8C2F39", "#F1E6D2"] },
+    tactics: { press: .72, line: .78, tempo: .50, direct: .22, width: .50, setPiece: .50, counter: .50, risk: .35, compact: .65 },
+    style: "Control, inverted full-backs, central passes",
+    philosophy: "Maresca's City keep the ball, tuck the full-backs inside and wait for one clean pass through the middle.",
+    players: mk([
+      ["Gianluigi Donnarumma", "GK", 87, "Donnarumma"], ["Matheus Nunes", "DF", 79, "Nunes", "dribbler"], ["Rúben Dias", "DF", 87, "Dias", "destroyer"], ["Marc Guéhi", "DF", 84, "Guéhi", "sweeper"], ["Joško Gvardiol", "DF", 85, "Gvardiol", "sweeper"],
+      ["Enzo Fernández", "MF", 85, "Enzo", "playmaker"], ["Elliot Anderson", "MF", 83, "Anderson", "engine"], ["Rayan Cherki", "MF", 84, "Cherki", "creator dribbler"],
+      ["Jérémy Doku", "FW", 83, "Doku", "dribbler pacey"], ["Erling Haaland", "FW", 92, null, "finisher pacey target"], ["Antoine Semenyo", "FW", 84, "Semenyo", "pacey dribbler"],
+      ["Marcus Bettinelli", "GK", 70, "Bettinelli"], ["Rayan Aït-Nouri", "DF", 80, "Aït-Nouri", "wingback"], ["Nico O'Reilly", "DF", 80, "O'Reilly", "wingback"], ["Abdukodir Khusanov", "DF", 78, "Khusanov", "pacey"], ["Mateo Kovačić", "MF", 80, "Kovačić", "playmaker dribbler"], ["Ayyoub Bouaddi", "MF", 74, "Bouaddi", "destroyer"], ["Phil Foden", "FW", 85, null, "creator dribbler finisher"], ["Iliman Ndiaye", "FW", 80, "Ndiaye", "dribbler"]
+    ])
+  },
+  manutd: {
+    id: "manutd", name: "Man United", ground: "Old Trafford", coach: "Michael Carrick", form: "f4231",
+    kit: { home: ["#DA291C", "#111111"], away: ["#1A1A1A", "#DA291C"] },
+    tactics: { press: .45, line: .45, tempo: .72, direct: .62, width: .60, setPiece: .60, counter: .92, risk: .55, compact: .78 },
+    style: "Compact block, fast counters",
+    philosophy: "Carrick sits in a compact block and attacks quickly the moment the ball is won, through Mbeumo and Cunha.",
+    players: mk([
+      ["Senne Lammens", "GK", 78], ["Diogo Dalot", "DF", 79, null, "wingback"], ["Lisandro Martínez", "DF", 82, "Martínez", "sweeper destroyer"], ["Matthijs de Ligt", "DF", 79, "De Ligt", "aerial"], ["Luke Shaw", "DF", 78, null, "wingback crosser"],
+      ["Youri Tielemans", "MF", 82, "Tielemans", "playmaker"], ["Kobbie Mainoo", "MF", 79, null, "dribbler engine"], ["Bruno Fernandes", "MF", 87, "Bruno", "creator setpiece"],
+      ["Bryan Mbeumo", "FW", 83, null, "pacey dribbler"], ["Benjamin Šeško", "FW", 81, "Šeško", "target finisher aerial"], ["Matheus Cunha", "FW", 83, "Cunha", "dribbler creator"],
+      ["Karl Darlow", "GK", 70, "Darlow"], ["Harry Maguire", "DF", 78, null, "aerial"], ["Noussair Mazraoui", "DF", 78, "Mazraoui", "wingback"], ["Andrey Santos", "MF", 79, "Santos", "engine"], ["Mason Mount", "MF", 77, null, "press"], ["Marcus Rashford", "FW", 82, "Rashford", "pacey dribbler"], ["Amad Diallo", "FW", 80, "Amad", "dribbler"], ["Joshua Zirkzee", "FW", 75, "Zirkzee", "creator"]
+    ])
+  },
+  spurs: {
+    id: "spurs", name: "Spurs", ground: "Tottenham Hotspur Stadium", coach: "Roberto De Zerbi", form: "f433",
+    kit: { home: ["#F4F4F0", "#132257"], away: ["#132257", "#C9D3EE"] },
+    tactics: { press: .76, line: .80, tempo: .62, direct: .38, width: .50, setPiece: .50, counter: .55, risk: .76, compact: .50 },
+    style: "Short build-up, risky, high line",
+    philosophy: "De Zerbi lures the press with short passes from the back and then goes forward fast. It is risky and leaves a lot of room behind.",
+    players: mk([
+      ["Antonín Kinský", "GK", 74, "Kinský"], ["Pedro Porro", "DF", 81, "Porro", "wingback crosser setpiece"], ["Micky van de Ven", "DF", 84, "Van de Ven", "pacey sweeper"], ["Marcos Senesi", "DF", 77, "Senesi", "aerial"], ["Andy Robertson", "DF", 79, "Robertson", "wingback crosser"],
+      ["Sandro Tonali", "MF", 83, "Tonali", "playmaker destroyer"], ["James Maddison", "MF", 82, "Maddison", "creator setpiece"], ["Xavi Simons", "MF", 83, "Simons", "creator dribbler"],
+      ["Mohammed Kudus", "FW", 82, "Kudus", "dribbler"], ["Dominic Solanke", "FW", 79, "Solanke", "finisher"], ["Omar Marmoush", "FW", 83, "Marmoush", "pacey finisher dribbler"],
+      ["Martin Dúbravka", "GK", 73, "Dúbravka"], ["Jan Paul van Hecke", "DF", 76, "Van Hecke", "aerial"], ["Tosin Adarabioyo", "DF", 76, "Adarabioyo", "sweeper"], ["Destiny Udogie", "DF", 78, "Udogie", "wingback"], ["Conor Gallagher", "MF", 78, "Gallagher", "engine"], ["Rodrigo Bentancur", "MF", 79, "Bentancur", "playmaker"], ["Dejan Kulusevski", "MF", 80, "Kulusevski", "creator"], ["Richarlison", "FW", 76, null, "aerial"]
+    ])
+  }
+};
+const TEAM_ORDER = ["arsenal", "chelsea", "liverpool", "mancity", "manutd", "spurs"];
+
+/* ---------- formations: slot order GK, RB, CB, CB, LB, MF x3, RW, ST, LW; x runs from own goal (0) to opponent goal (1) ---------- */
+const FORMS = {
+  f433: [[.05, .5], [.24, .15], [.21, .38], [.21, .62], [.24, .85], [.38, .5], [.47, .29], [.47, .71], [.64, .14], [.70, .5], [.64, .86]],
+  f4231: [[.05, .5], [.25, .13], [.21, .38], [.21, .62], [.25, .87], [.37, .38], [.37, .62], [.56, .5], [.62, .14], [.71, .5], [.62, .86]],
+  f433i: [[.05, .5], [.30, .32], [.21, .40], [.21, .60], [.30, .68], [.36, .5], [.50, .27], [.50, .73], [.66, .10], [.72, .5], [.66, .90]]
+};
+/* Where each of a team's 11 slots stands, in the team's own attacking frame, given where the ball is (also in that frame). */
+function shapeTeam(form, tx, bx, by, inPoss) {
+  const F = FORMS[form] || FORMS.f433, out = [];
+  for (let i = 0; i < 11; i++) {
+    const b = F[i], lf = i === 0 ? 0.05 : i <= 4 ? 0.65 : 1;
+    let x = b[0] + (tx.line - 0.5) * (i === 0 ? 0.12 : 0.22) + (bx - 0.5) * 0.34 * lf;
+    if (inPoss) x += i >= 8 ? 0.07 : i >= 5 ? 0.045 : 0.02;
+    else if (i >= 8) x = x + (0.46 - x) * 0.28 * (1 - tx.press);
+    let y = 0.5 + (b[1] - 0.5) * (0.80 + 0.36 * tx.width);
+    if (!inPoss) y = 0.5 + (y - 0.5) * (1 - 0.22 * tx.compact);
+    if (i) y += (by - y) * 0.15 * lf;
+    out.push({ x: clamp(x, 0.02, 0.97), y: clamp(y, 0.04, 0.96) });
+  }
+  if (!inPoss && tx.press > 0) {
+    out.map((p, i) => ({ i, d: Math.hypot((p.x - bx) * 1.6, p.y - by) })).filter(o => o.i).sort((a, b) => a.d - b.d).slice(0, 3)
+      .forEach((o, k) => { const f = tx.press * (k === 0 ? 0.6 : k === 1 ? 0.4 : 0.25); out[o.i].x += (bx - out[o.i].x) * f; out[o.i].y += (by - out[o.i].y) * f; });
+  }
+  return out;
+}
+/* attacker frame -> display frame (home attacks right) */
+function toDisplay(s, ax, ay) { return s === "h" ? { x: ax, y: ay } : { x: 1 - ax, y: 1 - ay }; }
+
+function xgAt(ax, ay) {
+  const dx = Math.max(3, (1 - ax) * 105), dy = (ay - 0.5) * 68, dist = Math.hypot(dx, dy);
+  let th = Math.atan2(7.32 * dx, dx * dx + dy * dy - 13.4); if (th < 0) th += Math.PI;
+  return clamp(0.015 + 0.82 * Math.pow(th / 1.45, 2.2) * Math.exp(-dist / 32), 0.01, 0.78);
+}
+
+/* ---------- commentary ---------- */
+const TX = {
+  buildS: ["{t} keep it ticking over: {c}.", "A patient spell from {t}, {c}.", "{t} circulate it calmly, {c}.", "{t} work it through the thirds: {c}."],
+  buildD: ["{t} move it forward quickly: {c}.", "Quick, short passes from {t}: {c}.", "{t} get up the pitch without fuss, {c}.", "{t} go through the gears: {c}."],
+  prog: ["{p} threads a pass through to {q}.", "{p} splits the lines with a ball to {q}.", "{p} spots {q} and slides it into his path.", "{p} plays a sharp forward pass to {q}."],
+  progFail: ["{p} tries to find {q}, but {d} reads it.", "{d} steps in and cuts out {p}'s pass.", "A little too ambitious from {p}. {d} intercepts.", "{d} anticipates the ball to {q} and takes it."],
+  offside: ["{p} plays {q} in, but the flag is up. Offside.", "{q} is off before the ball is played. Flag up.", "The line steps up and catches {q} offside."],
+  long: ["{p} goes long for {q}.", "{p} clips a diagonal towards {q}.", "{p} launches it forward to {q}."],
+  longOk: ["{q} wins the aerial duel and brings it down.", "{q} controls it well and {t} are up the pitch."],
+  longFail: ["{d} wins the header and {o} clear it.", "{d} gets there first and the move breaks down."],
+  cross: ["{p} whips a cross in from the {f}.", "{p} swings it into the box from the {f}.", "{p} puts a deep cross in from the {f}."],
+  crossFail: ["{d} gets a head on it and clears.", "{p}'s cross is blocked by {d}.", "{p} overhits the cross and it runs out of play."],
+  dribOk: ["{p} drives past {d}.", "{p} twists {d} inside out.", "{p} takes on {d} and wins the duel.", "{p} drops a shoulder and leaves {d} behind."],
+  dribMore: ["{p} is not finished. He goes past {d} as well.", "Another one beaten. {p} skips by {d}.", "{d} is left on the floor. {p} keeps going.", "{p} slaloms on and wrong-foots {d} too."],
+  cutback: ["{p} cuts it back for {q}.", "{p} pulls it back across the box to {q}.", "{p} squares it for {q}."],
+  dribFail: ["{d} gets a foot in and dispossesses {p}.", "{p} tries to take on {d}, who stands his ground.", "{d} reads the dribble and wins the ball cleanly."],
+  counter: ["{t} win it and break at pace.", "The ball is won and {t} spring forward.", "Quick transition and {t} are away."],
+  pressWin: ["{t} press high and force a mistake from {p}.", "{d} wins it back high up the pitch for {t}.", "{p} is closed down by {d} and gives it away."],
+  save: ["{p} lets fly and {k} gets down well to keep it out.", "{p} gets a header on target, but {k} pushes it away.", "{p} goes for the near post and {k} is there to parry.", "A firm strike from {p}, straight at {k}, who holds on.", "{k} stretches to tip {p}'s shot round the post."],
+  miss: ["{p} drags it wide of the far post.", "{p} gets on top of it and the ball sails over the bar.", "{p} tries to place it and misses the target by a yard.", "{p} curls one towards the top corner and it drifts just past the post."],
+  block: ["{p} shoots, but {d} gets across to block.", "{d} throws himself in front of {p}'s effort.", "{p}'s shot is charged down by {d}."],
+  post: ["{p} hits the post. {t} cannot believe it.", "{p} smashes it against the crossbar and it stays out."],
+  goal: ["{p} sweeps it into the bottom corner and {k} is beaten.", "{p} takes a touch and drills it through {k}.", "{p} meets it first time and it flies past {k}.", "{p} rounds {k} and rolls it into the empty net.", "{p} heads it in from close range with {k} rooted to the spot.", "{p} curls it into the top corner from the edge of the box."],
+  one: ["{p} is through one-on-one with {k}.", "{p} races clear of the defence."],
+  stopped: ["{d} steps across and cuts it out.", "{d} reads it early and intercepts.", "{d} gets a foot in at the last moment and the danger is gone.", "Good defending from {d}, who slides in to clear."],
+  quiet: ["{t} keep the ball, moving it from side to side.", "{o} sit deep and let {t} have the ball.", "A scrappy spell in midfield. Neither side can settle.", "{p} drops deep to collect it and spreads it wide for {t}.", "Plenty of pressing from {o}, and {t} have to go backwards.", "{t} probe down the left, but {o} hold their shape.", "{p} takes a touch, looks up, and finds nothing on."]
+};
+
+/* ---------- the match ---------- */
+function simulate(homeId, awayId, seed) {
+  const rnd = mulberry32(seed >>> 0);
+  const R = () => rnd();
+  const gauss = () => { let u = 0, v = 0; while (!u) u = R(); while (!v) v = R(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
+  const pick = a => a[Math.floor(R() * a.length)];
+  const wpick = (items, wf) => {
+    let tot = 0; const w = items.map(i => { const x = Math.max(0, wf(i)); tot += x; return x; });
+    if (tot <= 0) return items[Math.floor(R() * items.length)];
+    let r = R() * tot;
+    for (let i = 0; i < items.length; i++) { r -= w[i]; if (r <= 0) return items[i]; }
+    return items[items.length - 1];
+  };
+  const opp = s => (s === "h" ? "a" : "h");
+  /* each side walks out with a game plan of its own, which nudges the club's usual tactics */
+  const PLANS = [
+    { n: "balanced", p: .32, d: {}, t: "" },
+    { n: "attack", p: .22, d: { line: .08, tempo: .08, risk: .14, direct: .04, compact: -.08 }, t: "{c} want to take the game to {o} and play on the front foot today." },
+    { n: "cautious", p: .2, d: { line: -.1, tempo: -.06, risk: -.14, press: -.06, compact: .1 }, t: "{c} look set to sit in and stay compact against {o}." },
+    { n: "counter", p: .16, d: { line: -.08, direct: .14, counter: .14, press: -.08 }, t: "{c} look to absorb pressure and hit {o} on the break." },
+    { n: "press", p: .1, d: { press: .1, line: .06, tempo: .06, risk: .06 }, t: "{c} start with a ferocious press, trying to rattle {o} early." }
+  ];
+  const planFor = tac => {
+    let r = R(), pl = PLANS[0];
+    for (const x of PLANS) { r -= x.p; if (r <= 0) { pl = x; break; } }
+    const o = { ...tac }; for (const k in pl.d) o[k] = clamp(o[k] + pl.d[k], 0.05, 0.98);
+    return { pl, tac: o };
+  };
+  const PL = { h: planFor(TEAMS[homeId].tactics), a: planFor(TEAMS[awayId].tactics) };
+  const T = { h: { ...TEAMS[homeId], tactics: PL.h.tac }, a: { ...TEAMS[awayId], tactics: PL.a.tac } };
+  const mom = { h: 0, a: 0 };
+  /* individual form on the day: most are normal, a few have a hero day or a nightmare */
+  const fresh = (p, bench) => {
+    let fm = Math.exp(gauss() * 0.09); const x = R();
+    if (x < 0.07) fm *= 1.3; else if (x > 0.95) fm *= 0.78;
+    const adj = (fm - 1) * 40, a = { ...p.a };
+    if (p.pos !== "GK") for (const k of ["dri", "pas", "cre", "def", "pac", "phy"]) a[k] = 78 + (a[k] - 78) * 0.78;
+    if (p.pos !== "GK") { a.dri += adj; a.sho += adj * 0.8; a.cre += adj * 0.8; a.pas += adj * 0.3; }
+    else a.gk += adj * 0.5;
+    /* match fitness going in: most are sharp, a few are carrying a knock or short of games */
+    let fit = bench ? 94 + gauss() * 4 : 91 + gauss() * 7;
+    if (!bench && R() < 0.09) fit = 62 + R() * 14;
+    fit = clamp(Math.round(fit), 55, 100);
+    return { ...p, fm, fit0: fit, stam: fit, inj: false, a0: a, a: { ...a }, st: { t: 0, pa: 0, pf: 0, kp: 0, dr: 0, df: 0, tk: 0, tf: 0, ic: 0, sh: 0, sot: 0, g: 0, as: 0, xg: 0, xa: 0, sv: 0, gc: 0, yc: 0, red: false, played: false } };
+  };
+  const S = {};
+  for (const s of ["h", "a"]) {
+    S[s] = {
+      slots: T[s].players.slice(0, 11).map(p => { const q = fresh(p, false); q.st.played = true; return q; }),
+      bench: T[s].players.slice(11).map(p => fresh(p, true)), gone: [], subs: 0, shift: "none", men: 11,
+      ef: { ...T[s].tactics },
+      st: { acts: 0, shots: 0, sot: 0, xg: 0, big: 0, corners: 0, fouls: 0, yc: 0, rc: 0, off: 0, dr: 0, tk: 0, goals: 0 }
+    };
+  }
+  const score = { h: 0, a: 0 };
+  const scoreText = () => `${T.h.name} ${score.h}, ${T.a.name} ${score.a}`;
+
+  /* the "day": shared openness, a dominance swing and each side's form, finishing luck, control */
+  const open = Math.exp(gauss() * 0.17);
+  const dom = gauss();
+  const F = {};
+  for (const s of ["h", "a"]) {
+    F[s] = { att: Math.exp(gauss() * 0.21), def: Math.exp(gauss() * 0.14), fin: Math.exp(gauss() * 0.17), ctrl: gauss() * 0.09 };
+    const x = R();
+    if (x < 0.07) { F[s].att *= 1.32; F[s].fin *= 1.18; F[s].def *= 0.9; }
+    else if (x > 0.93) { F[s].att *= 0.72; F[s].fin *= 0.8; F[s].def *= 1.12; }
+  }
+  F.h.att *= Math.exp(dom * 0.15); F.a.att *= Math.exp(-dom * 0.15);
+  F.h.def *= Math.exp(-dom * 0.04); F.a.def *= Math.exp(dom * 0.04);
+  /* spells of the match: each side's grip comes and goes in waves, so the underdog can own a quarter of an hour */
+  const WV = {};
+  for (const s of ["h", "a"]) WV[s] = [0, 1].map(() => ({ amp: 0.10 + R() * 0.17, per: 14 + R() * 30, ph: R() * 6.283 }));
+  const cur = { h: 1, a: 1 }, grip = { h: gauss() * 0.2, a: gauss() * 0.2 };
+  const updWave = m => { for (const s of ["h", "a"]) cur[s] = Math.exp(grip[s] + WV[s].reduce((t, w) => t + w.amp * Math.sin(m / w.per * 6.283 + w.ph), 0)); };
+  const cdOf = A => clamp(Math.log(cur[A] / cur[opp(A)]) + F[A].ctrl - F[opp(A)].ctrl, -0.9, 0.9);
+  const HA = { h: 1, a: 0 };
+  const haAtt = { h: 1.07, a: 1 };
+
+  const ball = { s: R() < 0.5 ? "h" : "a", ax: 0.5, ay: 0.5, car: 6, mode: "build", tcount: 0, dead: null };
+  let minuteNow = 1;
+
+  /* ----- helpers ----- */
+  const present = s => S[s].slots.map((p, i) => (p ? { p, i } : null)).filter(Boolean);
+  const outfield = s => present(s).filter(o => o.i !== 0);
+  function shape(s) {
+    const own = s === ball.s ? [ball.ax, ball.ay] : [1 - ball.ax, 1 - ball.ay];
+    return shapeTeam(T[s].form, S[s].ef, own[0], own[1], s === ball.s);
+  }
+  function dirE(s) { return clamp(S[s].ef.direct + (ball.s === s && ball.mode === "trans" ? 0.28 : 0), 0, 1); }
+  function pressure(A, D) {
+    const base = S[D].ef.press * (ball.ax < 0.4 ? 1.0 : ball.ax < 0.75 ? 0.9 : 0.78);
+    return clamp(base * (D === "h" ? 1.05 : 1) * (1 - 0.7 * mom[A]) * Math.sqrt(cur[D] / cur[A]), 0, 1);
+  }
+  function pickDef(D, forAx, forAy) {
+    const sh = shape(D), ox = 1 - forAx, oy = 1 - forAy;
+    return wpick(outfield(D), o => Math.exp(-Math.hypot((sh[o.i].x - ox) * 105, (sh[o.i].y - oy) * 68) / 14) * Math.pow(o.p.a.def / 78, 2));
+  }
+  function aggStat(s, slots, f) {
+    const xs = present(s).filter(o => slots.indexOf(o.i) > -1);
+    return xs.length ? xs.reduce((a, o) => a + f(o.p), 0) / xs.length : 70;
+  }
+
+  const pushAct = (e, o) => { o.w = o.w || 1; e.acts.push(o); return e.acts.length - 1; };
+  const L = (e, at, t, text, o) => { if (o && o.p !== undefined && R() > o.p) return; e.lines.push({ at, t, text, key: !!(o && o.key), head: (o && o.head) || "", tail: (o && o.tail) || "", when: (o && o.when) || "start" }); };
+  const ctxFor = (A, car, rec, d, extra) => Object.assign({
+    t: T[A].name, o: T[opp(A)].name, p: car ? car.short : "", q: rec ? rec.short : "", d: d ? d.short : "",
+    f: ball.ay < 0.5 ? "right" : "left"
+  }, extra || {});
+
+  /* run of short passes -> one commentary line */
+  let run = null;
+  function flushRun(e) {
+    if (run && run.names.length >= 2) {
+      const tx = T[run.s].tactics, names = run.names.slice(0, 4);
+      const c = names.join(" to ");
+      L(e, run.at, "quiet", fmt(pick(tx.direct > 0.5 ? TX.buildD : TX.buildS), { t: T[run.s].name, c }), {});
+    }
+    run = null;
+  }
+
+  /* ----- cards and fouls ----- */
+  function book(e, at, s, p, hard) {
+    const ctx = { f: p.short, t: T[s].name };
+    const second = p.st.yc === 1;
+    if (hard || second) {
+      p.st.red = true; S[s].st.rc++;
+      const i = S[s].slots.indexOf(p); S[s].slots[i] = null; S[s].gone.push(p); S[s].men--;
+      L(e, at, "card", fmt(hard ? "Straight red card. {f} is sent off and {t} are down to ten." : "A second yellow for {f}, and that means a red. {t} will play on with ten.", ctx), { key: true, head: "Red card" });
+      e.events.push({ k: "rc", s, name: p.name, at });
+    } else {
+      p.st.yc = 1; S[s].st.yc++;
+      L(e, at, "card", fmt("{f} goes into the referee's book for that one.", ctx), { key: true, head: "Yellow card" });
+      e.events.push({ k: "yc", s, name: p.name, at });
+    }
+  }
+  function foul(e, A, d, victim, hardFactor) {
+    const D = opp(A);
+    S[D].st.fouls++;
+    const at = pushAct(e, { s: A, k: "foul", p: victim.name, q: null, d: d.name, ok: false, ax: ball.ax, ay: ball.ay, ax2: ball.ax, ay2: ball.ay, w: 0.8, cap: `${d.short} fouls ${victim.short}` });
+    L(e, at, "foul", `${d.short} catches ${victim.short}. Free kick to ${T[A].name}.`, {});
+    const disc = (d.tags.indexOf("destroyer") > -1 ? 1.35 : 1) * (d.pos === "DF" ? 1.1 : 1);
+    const cr = R();
+    const pYc = (d.st.yc === 1 ? 0.09 : 0.2) * hardFactor * disc * (D === "a" ? 1.05 : 1);
+    if (cr < pYc) book(e, at, D, d, false);
+    else if (cr > 0.9985) book(e, at, D, d, true);
+    const vi = S[A].slots.indexOf(victim);
+    if (vi > 0 && !victim.inj && R() < 0.0025 * (1 + (100 - victim.stam) / 50) * (1 + (100 - victim.fit0) / 30)) injure(e, A, vi);
+    ball.dead = "fk";
+    return at;
+  }
+  function turnover(e, newS, car, lossAx, lossAy, fromAttackerS) {
+    ball.s = newS; ball.car = car; ball.broke = 0;
+    ball.ax = clamp(1 - lossAx, 0.04, 0.96); ball.ay = clamp(1 - lossAy, 0.05, 0.95);
+    const A = opp(newS);
+    const pT = clamp(0.12 + 0.5 * T[newS].tactics.counter * (0.35 + S[A].ef.line) * (lossAx > 0.45 ? 1 : 0.55), 0, 0.88);
+    ball.mode = R() < pT ? "trans" : "build"; ball.tcount = ball.mode === "trans" ? 3 : 0; ball.dead = null;
+  }
+
+  /* ----- shooting ----- */
+  function doShot(e, shooterIdx, assistIdx, how, pos, depth) {
+    const A = ball.s, D = opp(A);
+    const sh = S[A].slots[shooterIdx], asp = assistIdx != null ? S[A].slots[assistIdx] : null;
+    const gk = S[D].slots[0];
+    const ax = pos.ax, ay = pos.ay;
+    let xg = xgAt(ax, ay);
+    xg *= how === "header" ? 0.72 : how === "through" ? 1.05 : how === "cutback" ? 1.2 : how === "fk" ? 0.8 : how === "rebound" ? 1.15 : how === "dribble" ? 1.06 : 1;
+    xg *= 1 + 0.07 * Math.min(2, ball.broke || 0) + 0.5 * mom[A]; ball.broke = 0;
+    xg *= 1 - 0.14 * T[D].tactics.compact;
+    xg *= Math.pow(F[A].att * cur[A] / (F[D].def * Math.sqrt(cur[D])), 0.3) * (A === "h" ? 1.03 : 1);
+    const trans = ball.mode === "trans";
+    if (trans) xg *= 1 + 0.18 * T[A].tactics.counter;
+    if (how === "through" || trans) xg *= 1 + 0.32 * (S[D].ef.line - 0.5);
+    if (how === "corner") xg *= 0.4 + 0.4 * T[A].tactics.setPiece;
+    xg = clamp(xg * 1.0, 0.015, 0.8);
+    const dist = Math.hypot((1 - ax) * 105, (ay - 0.5) * 68);
+    const big = xg >= 0.28;
+    const dd = pickDef(D, ax, ay).p;
+    const fin = Math.pow(cmpSho(sh.a.sho) / 81, 1.4) * F[A].fin * (how === "header" ? Math.pow(sh.a.phy / 76, 0.5) : 1);
+    const gkF = Math.pow(80 / Math.max(60, gk.a.gk), 1.2);
+    const pBlock = how === "pen" || how === "fk" ? 0 : clamp(0.24 * (1 + 0.35 * T[D].tactics.compact) * (1 - 0.9 * xg), 0.03, 0.3) * (how === "header" ? 0.45 : 1);
+    const pOff = how === "pen" ? 0.04 : clamp(0.45 - (cmpSho(sh.a.sho) - 78) * 0.006 - xg * 0.4 + (dist > 20 ? 0.1 : 0), 0.08, 0.55);
+    const pOn = (1 - pBlock) * (1 - pOff);
+    const gOn = clamp(xg * fin * gkF / pOn, 0.02, 0.93);
+
+    const goalX = A === "h" ? 1 : 0;
+    const sd = toDisplay(A, ax, ay);
+    const base = { s: A, k: "shot", p: sh.name, q: null, d: null, ax, ay, ax2: ax, ay2: ay, xg: +xg.toFixed(2), how, w: 1.7 };
+    const ctx = ctxFor(A, sh, asp, dd, { k: gk.short, v: "" });
+    ctx.k = gk.short;
+    const sx = S[A].st, tag = `xG ${xg.toFixed(2)}`;
+    sx.shots++; sh.st.sh++; sx.xg += xg; sh.st.xg += xg; if (big) sx.big++;
+    if (asp) asp.st.xa += xg;
+    const headText = big ? "Big chance" : "";
+    const u = R();
+    let outcome;
+    if (u < pBlock) outcome = "block";
+    else if (R() < pOff) outcome = R() < 0.07 ? "post" : "miss";
+    else outcome = R() < gOn ? "goal" : "save";
+    let next = "keeper";
+    if (outcome === "block") {
+      const at = pushAct(e, { ...base, end: "block", to: { s: D, name: dd.name }, d: dd.name, ok: false, cap: `${sh.short} shoots, blocked by ${dd.short}` });
+      L(e, at, "shot", fmt(pick(TX.block), ctx), { when: "end", head: headText, tail: tag });
+      next = R() < 0.2 ? "corner" : "clear";
+    } else if (outcome === "miss" || outcome === "post") {
+      const ty = outcome === "post" ? (R() < 0.5 ? 0.455 : 0.545) : (R() < 0.5 ? 0.3 + R() * 0.12 : 0.58 + R() * 0.12);
+      const at = pushAct(e, { ...base, end: outcome, to: { x: goalX + (A === "h" ? 0.02 : -0.02) * (outcome === "post" ? 0 : 1), y: ty }, ok: false, cap: `${sh.short} shoots ${outcome === "post" ? "and hits the woodwork" : "wide"}` });
+      L(e, at, outcome === "post" ? "post" : "shot", fmt(pick(outcome === "post" ? TX.post : TX.miss), ctx), { when: "end", key: outcome === "post", head: outcome === "post" ? "Off the woodwork" : headText, tail: tag });
+      sh.st.sh += 0;
+      next = outcome === "post" && R() < 0.3 ? "rebound" : "gk";
+    } else {
+      sx.sot++; sh.st.sot++;
+      if (outcome === "goal") {
+        let disallow = false, varNote = "";
+        if (how !== "pen" && R() < 0.05) { if (R() < 0.45) disallow = true; else varNote = " VAR takes a look and the goal stands."; }
+        if (disallow) {
+          const at = pushAct(e, { ...base, end: "goal", to: { x: goalX, y: 0.5 }, ok: true, disallowed: true, cap: `${sh.short} scores, but VAR checks it` });
+          L(e, at, "var", fmt("{p} puts it in, but the flag is up and VAR confirms an offside in the build-up. No goal.", ctx), { key: true, when: "end", head: "Goal ruled out", tail: tag });
+          sx.sot--; sh.st.sot--;
+          next = "gk";
+        } else {
+          score[A]++; mom[A] = Math.min(0.32, mom[A] + 0.06); sx.goals++; sh.st.g++; if (asp) asp.st.as++; S[D].slots[0].st.gc++;
+          const at = pushAct(e, { ...base, end: "goal", to: { x: goalX, y: 0.5 + (R() - 0.5) * 0.09 }, ok: true, w: 2.2, cap: `GOAL! ${sh.short} scores` });
+          const how2 = how === "pen" ? fmt("{p} sends {k} the wrong way from the spot.", ctx) : fmt(pick(TX.goal), ctx) + (asp ? fmt(" {q} with the assist.", ctx) : "") + varNote;
+          L(e, at, "goal", how2, { key: true, when: "end", head: fmt("Goal, {t}!", ctx), tail: `${scoreText()}  ·  ${tag}` });
+          e.events.push({ k: "goal", s: A, name: sh.name, assist: asp ? asp.name : "", at, sc: [score.h, score.a], pen: how === "pen" });
+          e.goals.push({ s: A, name: sh.name, assist: asp ? asp.name : "", label: e.label, pen: how === "pen" });
+          next = "kickoff";
+        }
+      } else {
+        gk.st.sv++;
+        const at = pushAct(e, { ...base, end: "save", to: { s: D, name: gk.name }, d: gk.name, ok: false, cap: `${gk.short} saves from ${sh.short}` });
+        L(e, at, "save", fmt(pick(TX.save), ctx), { key: true, when: "end", head: big ? "Big save" : "Save", tail: tag });
+        next = R() < 0.15 ? "corner" : R() < 0.12 ? "rebound" : "keeper";
+      }
+    }
+    /* what happens next */
+    if (next === "kickoff") {
+      ball.s = D; ball.ax = 0.5; ball.ay = 0.5; ball.car = 6; ball.mode = "build"; ball.dead = null;
+    } else if (next === "corner") {
+      ball.s = A; ball.dead = "corner"; ball.mode = "build";
+    } else if (next === "rebound" && !depth) {
+      const cand = outfield(A).filter(o => o.i !== shooterIdx && o.p.pos !== "DF");
+      if (cand.length) {
+        const rb = wpick(cand, o => Math.pow(cmpSho(o.p.a.sho) / 80, 2));
+        doShot(e, rb.i, null, "rebound", { ax: clamp(0.91 + R() * 0.04, 0.88, 0.96), ay: clamp(0.5 + (R() - 0.5) * 0.3, 0.3, 0.7) }, 1);
+      }
+    } else {
+      /* keeper or defender restarts */
+      const dfs = outfield(D).filter(o => o.p.pos === "DF");
+      ball.s = D; ball.mode = "build"; ball.dead = null;
+      if (next === "clear" && dfs.length) { const o = pick(dfs); ball.car = o.i; ball.ax = 0.14; ball.ay = clamp(0.5 + (R() - 0.5) * 0.5, 0.1, 0.9); }
+      else { ball.car = 0; ball.ax = 0.06; ball.ay = 0.5; }
+    }
+    return outcome;
+  }
+
+  /* ----- set pieces ----- */
+  function doCorner(e) {
+    const A = ball.s, D = opp(A);
+    const takers = outfield(A).filter(o => o.p.pos !== "DF" || o.p.tags.indexOf("setpiece") > -1);
+    const taker = wpick(takers, o => Math.pow(o.p.a.cre / 78, 4) * (o.p.tags.indexOf("setpiece") > -1 ? 2.4 : 1));
+    S[A].st.corners++;
+    const rec = wpick(outfield(A).filter(o => o.i !== taker.i), o => Math.pow(o.p.a.phy / 76, 4) * (o.p.pos === "DF" ? 1.1 : o.p.pos === "FW" ? 1.0 : 0.45));
+    const d = pickDef(D, 0.92, 0.5);
+    const cy = R() < 0.5 ? 0.0 : 1.0, side = cy === 0 ? "right" : "left";
+    const cornerDisp = toDisplay(A, 1, cy);
+    const ctx = ctxFor(A, taker.p, rec.p, d.p, { f: side });
+    const q = clamp(0.30 + 0.22 * T[A].tactics.setPiece + (taker.p.a.cre - 78) * 0.006 - 0.12 * T[D].tactics.compact, 0.15, 0.6);
+    const at = pushAct(e, { s: A, k: "corner", p: taker.p.name, q: rec.p.name, d: null, ok: true, from: { x: cornerDisp.x, y: cornerDisp.y }, ax: 1, ay: cy, ax2: 0.93, ay2: 0.5, w: 1.3, cap: `Corner: ${taker.p.short} to ${rec.p.short}` });
+    L(e, at, "corner", `Corner to ${T[A].name}, swung in from the ${side} by ${taker.p.short}.`, {});
+    if (R() < q) {
+      doShot(e, rec.i, taker.i, "corner", { ax: 0.93 + (R() - 0.5) * 0.04, ay: 0.5 + (R() - 0.5) * 0.24 }, 0);
+    } else {
+      const at2 = pushAct(e, { s: A, k: "pass", p: taker.p.name, q: null, d: d.p.name, ok: false, ax: 0.93, ay: 0.5, ax2: 0.9, ay2: 0.5, to: { s: D, name: d.p.name }, w: 0.9, cap: `${d.p.short} clears the corner` });
+      L(e, at2, "corner", fmt("{d} heads it clear.", ctx), {});
+      d.p.st.ic++;
+      ball.s = D; ball.car = d.i; ball.ax = 0.2; ball.ay = 0.5; ball.mode = R() < 0.3 ? "trans" : "build"; ball.tcount = 2; ball.dead = null;
+    }
+  }
+  function doFreeKick(e) {
+    const A = ball.s, D = opp(A);
+    const takers = outfield(A);
+    const taker = wpick(takers, o => Math.pow(o.p.a.cre / 78, 4) * (o.p.tags.indexOf("setpiece") > -1 ? 2.6 : 1));
+    ball.dead = null;
+    const near = ball.ax > 0.72, central = Math.abs(ball.ay - 0.5) < 0.24;
+    if (near && central && R() < 0.38) {
+      const at = pushAct(e, { s: A, k: "set", p: taker.p.name, q: null, ok: true, ax: ball.ax, ay: ball.ay, ax2: ball.ax, ay2: ball.ay, w: 1.0, cap: `${taker.p.short} lines up a free kick` });
+      L(e, at, "foul", `${taker.p.short} stands over the free kick, central and not far out.`, {});
+      doShot(e, taker.i, null, "fk", { ax: ball.ax, ay: ball.ay }, 1);
+    } else if (ball.ax > 0.55 && R() < 0.62) {
+      const rec = wpick(outfield(A).filter(o => o.i !== taker.i), o => Math.pow(o.p.a.phy / 76, 4) * (o.p.pos === "DF" ? 0.9 : o.p.pos === "FW" ? 1.1 : 0.4));
+      const d = pickDef(D, 0.9, 0.5);
+      const ok = R() < 0.46 + 0.1 * T[A].tactics.setPiece;
+      const ctx = ctxFor(A, taker.p, rec.p, d.p);
+      const at = pushAct(e, { s: A, k: "cross", p: taker.p.name, q: rec.p.name, d: ok ? null : d.p.name, ok, ax: ball.ax, ay: ball.ay, ax2: 0.92, ay2: 0.5, w: 1.3, cap: `${taker.p.short} delivers the free kick to ${rec.p.short}` });
+      L(e, at, "chance", fmt("{p} sends the free kick into the box.", ctx), {});
+      if (ok) { ball.ax = 0.92; doShot(e, rec.i, taker.i, "header", { ax: 0.92, ay: 0.5 + (R() - 0.5) * 0.2 }, 0); }
+      else { d.p.st.ic++; ball.s = D; ball.car = d.i; ball.ax = 0.18; ball.ay = 0.5; ball.mode = "build"; }
+    } else {
+      /* short restart */
+      const rec = wpick(outfield(A).filter(o => o.i !== taker.i), o => Math.exp(-Math.hypot((shape(A)[o.i].x - ball.ax) * 105, (shape(A)[o.i].y - ball.ay) * 68) / 20));
+      const sh = shape(A)[rec.i];
+      pushAct(e, { s: A, k: "pass", p: taker.p.name, q: rec.p.name, ok: true, ax: ball.ax, ay: ball.ay, ax2: sh.x, ay2: sh.y, w: 0.9, cap: `${taker.p.short} plays the free kick short to ${rec.p.short}` });
+      ball.car = rec.i; ball.ax = sh.x; ball.ay = sh.y;
+    }
+  }
+  function doPenalty(e, victim, defender) {
+    const A = ball.s, D = opp(A);
+    const taker = wpick(outfield(A), o => ({ FW: 4, MF: 2, DF: 0.05 }[o.p.pos] || 0.05) * Math.pow(cmpSho(o.p.a.sho) / 80, 4));
+    const ctx = ctxFor(A, taker.p, victim, defender);
+    const at = pushAct(e, { s: A, k: "set", p: victim.name, q: null, d: defender.name, ok: false, ax: ball.ax, ay: ball.ay, ax2: 0.87, ay2: 0.5, w: 1.2, cap: `Penalty to ${T[A].name}` });
+    L(e, at, "penalty", fmt("{d} brings down {q} in the area. The referee points to the spot.", ctx), { key: true, head: `Penalty, ${T[A].name}` });
+    S[D].st.fouls++;
+    if (R() < 0.3 && defender.st.yc === 0) book(e, at, D, defender, false);
+    ball.ax = 0.895; ball.ay = 0.5; ball.mode = "build";
+    const pc = clamp(0.77 * Math.pow(taker.p.a.sho / 85, 2) / Math.pow(S[D].slots[0].a.gk / 85, 0.8) * (F[A].fin > 1 ? 1.03 : 0.98), 0.6, 0.9);
+    const v = R();
+    if (v < pc) {
+      /* force a goal through doShot with a high xG by overriding location factors */
+      const sx = S[A].st; sx.shots++; sx.sot++; sx.xg += 0.78; taker.p.st.sh++; taker.p.st.sot++; taker.p.st.xg += 0.78; sx.big++;
+      score[A]++; sx.goals++; taker.p.st.g++; S[D].slots[0].st.gc++;
+      const a2 = pushAct(e, { s: A, k: "shot", p: taker.p.name, ok: true, end: "goal", to: { x: A === "h" ? 1 : 0, y: 0.5 + (R() - 0.5) * 0.1 }, ax: 0.895, ay: 0.5, ax2: 0.895, ay2: 0.5, xg: 0.78, how: "pen", w: 2.2, cap: `GOAL! ${taker.p.short} converts the penalty` });
+      L(e, a2, "goal", fmt("{p} sends {k} the wrong way from the spot.", { ...ctx, k: S[D].slots[0].short }), { key: true, when: "end", head: fmt("Goal, {t}!", ctx), tail: `${scoreText()}  ·  xG 0.78` });
+      e.events.push({ k: "goal", s: A, name: taker.p.name, assist: "", at: a2, sc: [score.h, score.a], pen: true });
+      e.goals.push({ s: A, name: taker.p.name, assist: "", label: e.label, pen: true });
+      ball.s = D; ball.ax = 0.5; ball.ay = 0.5; ball.car = 6; ball.mode = "build"; ball.dead = null;
+    } else {
+      const sx = S[A].st; sx.shots++; sx.xg += 0.78; taker.p.st.sh++; taker.p.st.xg += 0.78; sx.big++;
+      const gk = S[D].slots[0];
+      if (v < pc + (1 - pc) * 0.6) {
+        sx.sot++; taker.p.st.sot++; gk.st.sv += 1.6;
+        const a2 = pushAct(e, { s: A, k: "shot", p: taker.p.name, ok: false, end: "save", to: { s: D, name: gk.name }, d: gk.name, ax: 0.895, ay: 0.5, ax2: 0.895, ay2: 0.5, xg: 0.78, how: "pen", w: 2, cap: `${gk.short} saves the penalty` });
+        L(e, a2, "save", fmt("{k} guesses right and keeps out {p}'s penalty.", { ...ctx, k: gk.short }), { key: true, when: "end", head: "Penalty saved", tail: "xG 0.78" });
+      } else {
+        const a2 = pushAct(e, { s: A, k: "shot", p: taker.p.name, ok: false, end: "miss", to: { x: A === "h" ? 1.03 : -0.03, y: 0.36 }, ax: 0.895, ay: 0.5, ax2: 0.895, ay2: 0.5, xg: 0.78, how: "pen", w: 2, cap: `${taker.p.short} misses the penalty` });
+        L(e, a2, "shot", fmt("{p} blazes the penalty over the bar.", ctx), { key: true, when: "end", head: "Penalty missed", tail: "xG 0.78" });
+      }
+      ball.s = D; ball.car = 0; ball.ax = 0.06; ball.ay = 0.5; ball.mode = "build"; ball.dead = null;
+    }
+  }
+
+  /* ----- one action by the player on the ball ----- */
+  function step(e) {
+    if (ball.dead === "corner") { flushRun(e); ball.dead = null; doCorner(e); return 2; }
+    if (ball.dead === "fk") {
+      flushRun(e);
+      const car0 = wpick(outfield(ball.s), o => 1);
+      doFreeKick(e); return 2;
+    }
+    const A = ball.s, D = opp(A);
+    let carI = ball.car, car = S[A].slots[carI];
+    if (!car) { const o = pick(outfield(A)); carI = o.i; car = o.p; ball.car = carI; }
+    car.st.t++; S[A].st.acts++;
+    const tx = T[A].tactics, ef = S[A].ef, ax = ball.ax, ay = ball.ay;
+    const dE = dirE(A), wide = Math.abs(ay - 0.5) > 0.27;
+    const ca = car.a, isGK = carI === 0, trans = ball.mode === "trans", SXc = STYX[car.sty];
+    if (trans) { ball.tcount--; if (ball.tcount <= 0) ball.mode = "build"; }
+    const wf = {};
+    const openW = Math.pow(open, 0.6);
+    if (isGK) {
+      wf.short = 3.2 * (1.2 - dE * 0.8); wf.long = 0.7 + dE * 3.2;
+    } else {
+      wf.short = 3.0 * (1.15 - dE * 0.75);
+      wf.recycle = ax > 0.5 ? 0.9 * (1 - tx.risk * 0.7) * (1 - dE * 0.6) : 0.12;
+      wf.prog = 1.1 * (0.4 + dE + (trans ? 0.4 : 0)) * Math.pow(clamp(ca.cre / 76, 0.5, 1.5), 3) * (ax > 0.25 ? 1 : 0.4) * openW * SXc.pr;
+      wf.long = ax < 0.45 ? 0.55 * dE * dE * 3.2 * (carI <= 4 ? 1.2 : 0.7) * Math.pow(clamp(ca.pas / 78, 0.6, 1.4), 2) * SXc.lg : 0;
+      wf.cross = wide && ax > 0.58 ? 1.2 * (0.5 + tx.width) * Math.pow(clamp(ca.cre / 76, 0.5, 1.5), 2) * SXc.cr : 0;
+      wf.dribble = (0.30 + tx.risk * 0.7) * Math.pow(clamp(ca.dri / 78, 0.5, 1.5), 3) * SXc.dr * (car.pos === "DF" ? 0.5 : 1) * (trans ? 1.35 : 1) * (ax > 0.30 ? 1 : 0.45) * (wide ? 1.25 : 1) * openW;
+      const zone = ax > 0.84 ? (Math.abs(ay - 0.5) < 0.3 ? 1.0 : 0.6) : ax > 0.76 ? 0.36 : ax > 0.68 ? 0.12 : 0;
+      wf.shoot = zone * Math.pow(clamp(cmpSho(ca.sho) / 80, 0.3, 1.5), 2) * SXc.sh * 0.85 * openW * (car.tags.indexOf("longshot") > -1 && ax < 0.84 ? 2 : 1);
+      if (car.pos === "DF" && ax > 0.55) wf.shoot *= 0.1;
+    }
+    const keys = Object.keys(wf).filter(k => wf[k] > 0);
+    const kind = wpick(keys, k => wf[k]);
+    const sh = shape(A);
+    const myPos = sh[carI];
+
+    /* ---- pick opponent in the duel ---- */
+    const d = pickDef(D, ax, ay);
+    const press = pressure(A, D);
+    const hb = HA[A] ? 0.014 : 0;
+    const men = (11 - S[A].men) * 0.025;
+    const fAD = Math.pow(F[A].att * cur[A] / (F[D].def * Math.sqrt(cur[D])), 0.35), cd = cdOf(A);
+    const escape = clamp((ca.pas - 74) / 40, 0, 1);
+
+    /* sometimes the defence just commits a foul */
+    if (!isGK && R() < 0.052 * (0.7 + S[D].ef.press * 0.6) * (D === "a" ? 1.06 : 1) * clamp(1 + (ca.dri - 80) * 0.025, 0.8, 1.5) && kind !== "shoot") {
+      flushRun(e);
+      if (ax > 0.82 && Math.abs(ay - 0.5) < 0.3 && R() < 0.06) { doPenalty(e, car, d.p); return 3; }
+      foul(e, A, d.p, car, 1); return 1;
+    }
+
+    /* ---- shoot ---- */
+    if (kind === "shoot") {
+      flushRun(e);
+      const stopP = clamp(0.22 + 0.2 * T[D].tactics.compact + (d.p.a.def - 78) * 0.004 - (ca.dri - 78) * 0.003 - (trans ? 0.12 : 0) - 0.03 * HA[A], 0.05, 0.5);
+      if (R() < stopP) {
+        d.p.st.tk++; S[D].st.tk++; car.st.df++;
+        pushAct(e, { s: A, k: "tackle", p: car.name, q: null, d: d.p.name, ok: false, to: { s: D, name: d.p.name }, ax, ay, ax2: ax, ay2: ay, w: 1.1, cap: `${d.p.short} gets across to stop ${car.short}` });
+        const at = e.acts.length - 1;
+        L(e, at, "chance", fmt(pick(TX.stopped), ctxFor(A, car, null, d.p)), { p: 0.6 });
+        if (R() < 0.12) { ball.dead = "corner"; ball.s = A; } else turnover(e, D, d.i, ax, ay, A);
+        return 1;
+      }
+      const how = trans && ax > 0.8 ? "through" : "open";
+      const cut = car.pos === 'FW' && car.sty !== 'target' && car.sty !== 'poacher' ? 0.5 : 0.8;
+      doShot(e, carI, null, how, { ax: clamp(ax - R() * 0.03, 0.7, 0.96), ay: clamp(0.5 + (ay - 0.5) * cut + gauss() * 0.05, 0.12, 0.88) }, 0);
+      return 2;
+    }
+
+    /* ---- dribble: a take-on can become a carry. Beat enough men and the defence is broken open ---- */
+    if (kind === "dribble") {
+      flushRun(e);
+      let cx = ax, cy = ay, duels = 0, dd = d;
+      const maxD = SXc.dr >= 2 ? 3 : SXc.dr >= 1.3 ? 2 : 1;
+      let lost = false;
+      for (;;) {
+        const dp = dd.p;
+        const win = clamp(0.50 + (ca.dri - dp.a.def) * 0.016 + (ca.pac - dp.a.pac) * 0.004 + SXc.ds - 0.07 - 0.1 * T[D].tactics.compact * (cx > 0.65 ? 1 : 0.3) + (S[D].ef.line - 0.5) * 0.1 * (trans ? 2 : 1) + 0.025 * HA[A] + 0.10 * cd - men - 0.03 * duels, 0.12, 0.85) * clamp(fAD, 0.8, 1.2) ** 0.5;
+        if (R() < win) {
+          duels++;
+          const gain = 0.05 + R() * 0.09 + (SXc.dr >= 2 ? 0.03 : 0);
+          const nx = clamp(cx + gain, 0.05, 0.96), ny = clamp(cy + (R() - 0.5) * 0.18, 0.06, 0.94);
+          car.st.dr++; S[A].st.dr++; dp.st.df++;
+          pushAct(e, { s: A, k: "dribble", p: car.name, q: null, d: dp.name, ok: true, ax: cx, ay: cy, ax2: nx, ay2: ny, w: 1.5, cap: duels > 1 ? `${car.short} beats ${dp.short} too` : `${car.short} beats ${dp.short}` });
+          L(e, e.acts.length - 1, "chance", fmt(pick(duels > 1 ? TX.dribMore : TX.dribOk), ctxFor(A, car, null, dp)), { p: duels > 1 ? 1 : 0.8 });
+          cx = nx; cy = ny; ball.ax = cx; ball.ay = cy;
+          mom[A] = Math.min(0.32, mom[A] + 0.018 + 0.014 * duels);
+          ball.broke = Math.min(3, (ball.broke || 0) + 1);
+          /* defenders haul down a runner in the final third */
+          if (cx > 0.76) {
+            const inBox = cx > 0.84 && Math.abs(cy - 0.5) < 0.3;
+            const pF = (0.05 + 0.03 * duels) * clamp(1 + (ca.dri - 80) * 0.03, 0.7, 1.8);
+            if (R() < pF) {
+              if (inBox && R() < 0.09) { doPenalty(e, car, dp); return 3; }
+              foul(e, A, dp, car, 1); return 2;
+            }
+          }
+          if (duels < maxD && cx < 0.9 && R() < 0.34 + 0.22 * (SXc.dr >= 2 ? 1 : 0) + 0.1 * (car.fm > 1.15 ? 1 : 0)) { dd = pickDef(D, cx, cy); continue; }
+          break;
+        }
+        lost = true;
+        car.st.df++; dp.st.tk++; S[D].st.tk++;
+        pushAct(e, { s: A, k: "dribble", p: car.name, q: null, d: dp.name, ok: false, to: { s: D, name: dp.name }, ax: cx, ay: cy, ax2: cx, ay2: cy, w: 1.2, cap: `${dp.short} dispossesses ${car.short}` });
+        const at = e.acts.length - 1;
+        L(e, at, "chance", fmt(pick(TX.dribFail), ctxFor(A, car, null, dp)), { p: 0.7 });
+        turnover(e, D, dd.i, cx, cy, A);
+        if (ball.mode === "trans") L(e, at, "chance", fmt(pick(TX.counter), ctxFor(D, dp, null, null)), { p: 0.7 });
+        break;
+      }
+      if (!lost && cx > 0.74) {
+        /* he has beaten his man in the final third: shoot, square it, or keep running at them */
+        const pS = clamp(0.10 + 0.08 * (SXc.sh - 1) + 0.08 * (duels - 1) + (cx > 0.84 ? 0.12 : 0), 0.05, 0.6);
+        const u = R();
+        if (u < pS) { doShot(e, carI, null, "dribble", { ax: cx, ay: cy }, 0); return 3; }
+        if (u < pS + 0.12) {
+          const tg = wpick(outfield(A).filter(o => o.i !== carI && o.p.pos !== "DF"), o => Math.pow(cmpSho(o.p.a.sho) / 80, 2) * (o.p.pos === "FW" ? 1.6 : 0.7) * Math.exp(-Math.hypot((sh[o.i].x - 0.9) * 105, (sh[o.i].y - 0.5) * 68) / 22));
+          if (tg) {
+            pushAct(e, { s: A, k: "pass", p: car.name, q: tg.p.name, d: null, ok: true, ax: cx, ay: cy, ax2: 0.9, ay2: 0.5, w: 1.1, cap: `${car.short} squares it for ${tg.p.short}` });
+            L(e, e.acts.length - 1, "chance", fmt(pick(TX.cutback), ctxFor(A, car, tg.p, null)), {});
+            car.st.kp++; ball.car = tg.i; ball.ax = 0.9; ball.ay = 0.5;
+            doShot(e, tg.i, carI, "cutback", { ax: 0.9 + (R() - 0.5) * 0.03, ay: 0.5 + (R() - 0.5) * 0.2 }, 0);
+            return 3;
+          }
+        }
+      }
+      return lost ? 1 : duels;
+    }
+
+    /* ---- passes ---- */
+    const pk = kind;
+    let tgt = null;
+    const cands = present(A).filter(o => o.i !== carI && (o.i !== 0 || pk === "recycle"));
+    const tpos = i => sh[i];
+    if (pk === "short") {
+      tgt = wpick(cands.filter(o => o.i !== 0 || ax < 0.2), o => {
+        const dx = tpos(o.i).x - ax, dist = Math.hypot(dx * 105, (tpos(o.i).y - ay) * 68);
+        return Math.exp(-dist / 20) * Math.max(0.05, 1 + 6 * dx * (0.25 + dE)) * Math.pow(o.p.r / 80, 2) * (isGK ? (o.p.pos === "DF" ? 2 : 0.4) : 1);
+      });
+    } else if (pk === "prog") {
+      const c2 = cands.filter(o => tpos(o.i).x > ax + 0.06 && o.i !== 0);
+      tgt = c2.length ? wpick(c2, o => (tpos(o.i).x - ax + 0.05) * Math.pow(o.p.r / 80, 2) * ({ FW: 1.2, MF: 1, DF: 0.25 }[o.p.pos] || 0.2) * (o.i === 9 ? 0.7 : 1) * Math.exp(-Math.hypot((tpos(o.i).x - ax) * 105, (tpos(o.i).y - ay) * 68) / 38)) : null;
+    } else if (pk === "cross") {
+      const c2 = cands.filter(o => tpos(o.i).x > 0.7 && Math.abs(tpos(o.i).y - 0.5) < 0.38 && o.i !== 0);
+      tgt = c2.length ? wpick(c2, o => Math.pow((o.p.a.phy + cmpSho(o.p.a.sho)) / 160, 2) * ({ FW: 1.4, MF: 0.9, DF: 0.5 }[o.p.pos] || 0.3) * (o.i === 9 ? 0.65 : 1) * Math.exp(-Math.abs(tpos(o.i).y - 0.5) * 1.6)) : null;
+    } else if (pk === "long") {
+      const c2 = cands.filter(o => tpos(o.i).x > ax + 0.18 && o.i !== 0);
+      tgt = c2.length ? wpick(c2, o => ({ FW: 3, MF: 1, DF: 0.1 }[o.p.pos] || 0.1) * Math.pow((o.p.a.phy + o.p.a.pac) / 150, 2)) : null;
+    } else {
+      const c2 = cands.filter(o => tpos(o.i).x < ax - 0.02 || o.i === 0);
+      tgt = c2.length ? wpick(c2, o => Math.exp(-Math.hypot((tpos(o.i).x - ax) * 105, (tpos(o.i).y - ay) * 68) / 20) * (o.p.pos === "MF" ? 1.5 : o.i === 0 ? 0.4 : 1)) : null;
+    }
+    if (!tgt) { tgt = wpick(cands.filter(o => o.i !== 0), o => Math.pow(o.p.r / 80, 2)); }
+    const rec = tgt.p, rI = tgt.i, rp = tpos(rI);
+    const dx = rp.x - ax, progd = Math.max(0, dx);
+    let ps;
+    if (pk === "short") ps = 0.91 + 0.20 * cd + 0.006 * (ca.pas - 80) - 0.004 * (d.p.a.def - 78) - 0.7 * progd - 0.22 * press * (1 - 0.35 * escape) + hb - men - (ax > 0.72 ? 0.07 : 0);
+    else if (pk === "prog") {
+      const space = clamp(S[D].ef.line * (0.6 + (rec.a.pac - 72) / 60), 0, 1) + (trans ? 0.12 : 0);
+      ps = (0.50 + 0.009 * (ca.cre - 78) + 0.003 * (ca.pas - 80) - 0.006 * (d.p.a.def - 78) + 0.14 * cd - 0.20 * press * (1 - 0.3 * escape) + 0.22 * space - 0.10 * T[D].tactics.compact * (ax > 0.6 ? 1 : 0.3) + hb - men) * fAD;
+    }
+    else if (pk === "long") ps = 0.50 + 0.004 * (ca.pas - 80) + 0.006 * (rec.a.phy - d.p.a.phy) - 0.06 * press + hb - men;
+    else if (pk === "cross") ps = 0.27 + 0.006 * (ca.cre - 76) - 0.10 * T[D].tactics.compact - 0.08 * press + 0.05 * tx.width + hb - men;
+    else ps = 0.95 - 0.1 * press + hb;
+    ps = clamp(ps, 0.08, 0.97);
+    const ctx = ctxFor(A, car, rec, d.p);
+    const capName = `${car.short} to ${rec.short}`;
+
+    if (R() < ps) {
+      /* ----- success ----- */
+      car.st.pa++; S[A].st.acts += 0;
+      if (pk === "prog") {
+        const offP = clamp(0.06 + 0.22 * S[D].ef.line * (rec.pos === "FW" ? 1 : 0.5) - 0.04 * T[D].tactics.compact, 0, 0.32);
+        if (rp.x > 0.7 && R() < offP) {
+          flushRun(e);
+          S[A].st.off++;
+          pushAct(e, { s: A, k: "prog", p: car.name, q: rec.name, d: null, ok: false, offside: true, ax, ay, ax2: rp.x, ay2: rp.y, w: 1.3, cap: `${rec.short} is flagged offside` });
+          L(e, e.acts.length - 1, "foul", fmt(pick(TX.offside), ctx), {});
+          ball.s = D; ball.dead = null; ball.car = 0; ball.ax = 0.06; ball.ay = 0.5; ball.mode = "build";
+          const f = S[D].slots[0]; ball.car = 0;
+          return 1;
+        }
+        flushRun(e);
+        car.st.kp++; rec.st.t++;
+        const at = pushAct(e, { s: A, k: "prog", p: car.name, q: rec.name, d: null, ok: true, ax, ay, ax2: rp.x, ay2: rp.y, w: 1.3, cap: `${car.short} plays ${rec.short} through` });
+        L(e, at, "chance", fmt(pick(TX.prog), ctx), {});
+        ball.car = rI; ball.ax = clamp(rp.x, 0.05, 0.97); ball.ay = rp.y;
+        if (ball.ax > 0.78 && R() < 0.5) {
+          const asI = carI; const how = ball.ax > 0.88 && Math.abs(rp.y - 0.5) < 0.12 && R() < 0.4 ? "through" : (wide && R() < 0.4 ? "cutback" : "open");
+          doShot(e, rI, asI, how, { ax: clamp(ball.ax + (R() - 0.5) * 0.04 - R() * 0.03, 0.76, 0.92), ay: clamp(0.5 + (rp.y - 0.5) * (rec.pos === "FW" && rI !== 9 ? 0.55 : 0.85) + gauss() * 0.06, 0.2, 0.8) }, 0);
+          return 3;
+        }
+        return 1;
+      }
+      if (pk === "cross") {
+        flushRun(e);
+        const at = pushAct(e, { s: A, k: "cross", p: car.name, q: rec.name, d: null, ok: true, ax, ay, ax2: 0.92, ay2: 0.5, w: 1.3, cap: `${car.short} crosses for ${rec.short}` });
+        L(e, at, "chance", fmt(pick(TX.cross), ctx), {});
+        car.st.kp++; ball.car = rI; ball.ax = 0.92; ball.ay = 0.5;
+        doShot(e, rI, carI, R() < 0.78 ? "header" : "open", { ax: 0.92 + (R() - 0.5) * 0.04, ay: 0.5 + (R() - 0.5) * 0.22 }, 0);
+        return 3;
+      }
+      if (pk === "long") {
+        flushRun(e);
+        const at = pushAct(e, { s: A, k: "long", p: car.name, q: rec.name, d: null, ok: true, ax, ay, ax2: rp.x, ay2: rp.y, w: 1.6, cap: `${car.short} goes long for ${rec.short}` });
+        L(e, at, "chance", fmt(pick(TX.long), ctx) + " " + fmt(pick(TX.longOk), ctx), {});
+        ball.car = rI; ball.ax = clamp(rp.x, 0.05, 0.96); ball.ay = rp.y;
+        return 1;
+      }
+      /* short or recycle */
+      const at = pushAct(e, { s: A, k: "pass", p: car.name, q: rec.name, d: null, ok: true, ax, ay, ax2: rp.x, ay2: rp.y, w: 1, cap: capName });
+      if (run && run.s === A) { if (run.names[run.names.length - 1] !== car.short) run.names.push(car.short); if (run.names[run.names.length - 1] !== rec.short) run.names.push(rec.short); }
+      else { flushRun(e); run = { s: A, at, names: [car.short, rec.short] }; }
+      ball.car = rI; ball.ax = clamp(rp.x, 0.04, 0.96); ball.ay = rp.y;
+      return 1;
+    }
+    /* ----- failure ----- */
+    flushRun(e);
+    car.st.pf++; d.p.st.ic++;
+    const out = pk === "cross" ? R() < 0.3 : R() < 0.16;
+    if (pk === "cross" && R() < 0.2) {
+      pushAct(e, { s: A, k: "cross", p: car.name, q: rec.name, d: d.p.name, ok: false, ax, ay, ax2: 0.95, ay2: ay < 0.5 ? 0.02 : 0.98, to: { s: D, name: d.p.name }, w: 1.3, cap: `${d.p.short} blocks ${car.short}'s cross` });
+      L(e, e.acts.length - 1, "chance", fmt(pick(TX.cross), ctx) + " " + fmt("It is deflected behind for a corner.", ctx), {});
+      ball.dead = "corner"; ball.s = A;
+      return 1;
+    }
+    const kk = pk === "recycle" ? "pass" : pk;
+    const at = pushAct(e, { s: A, k: kk, p: car.name, q: rec.name, d: d.p.name, ok: false, ax, ay, ax2: ax, ay2: ay, to: { s: D, name: d.p.name }, w: pk === "long" ? 1.6 : 1.2, cap: `${d.p.short} intercepts ${car.short}'s pass` });
+    const high = ax > 0.55, tr = pk === "short" && ax < 0.4 && S[D].ef.press > 0.65 && R() < 0.5;
+    if (pk === "long") L(e, at, "chance", fmt(pick(TX.long), ctx) + " " + fmt(pick(TX.longFail), ctx), { p: 0.6 });
+    else if (pk === "cross") L(e, at, "chance", fmt(pick(TX.crossFail), ctx), { p: 0.6 });
+    else if (tr || (ax < 0.35 && S[D].ef.press > 0.7)) L(e, at, "chance", fmt(pick(TX.pressWin), ctxFor(D, car, null, d.p)), { p: 0.8 });
+    else L(e, at, "chance", fmt(pick(TX.progFail), ctx), { p: 0.55 });
+    turnover(e, D, d.i, ax, ay, A);
+    if (ball.mode === "trans") L(e, at, "chance", fmt(pick(TX.counter), ctxFor(D, d.p, null, null)), { p: 0.7 });
+    return 1;
+  }
+
+  /* ----- build the clock ----- */
+  const s1 = 1 + Math.floor(R() * 4), s2 = 2 + Math.floor(R() * 5);
+  const clock = [];
+  for (let m = 1; m <= 45; m++) clock.push({ label: m + "'", half: 1, base: m });
+  for (let x = 1; x <= s1; x++) clock.push({ label: `45+${x}'`, half: 1, base: 45, extra: x });
+  clock.push({ label: "HT", type: "ht" });
+  for (let m = 46; m <= 90; m++) clock.push({ label: m + "'", half: 2, base: m });
+  for (let x = 1; x <= s2; x++) clock.push({ label: `90+${x}'`, half: 2, base: 90, extra: x });
+  clock.push({ label: "FT", type: "ft" });
+
+  const subPlan = { h: [], a: [] };
+  for (const s of ["h", "a"]) {
+    const n = 2 + Math.floor(R() * 2), w = new Set();
+    while (w.size < n) w.add(Math.floor(55 + R() * 29));
+    subPlan[s] = [...w].sort((a, b) => a - b);
+  }
+  /* ----- fitness: stamina drains with work rate, tactics and low starting fitness; tired or hurt players lose sharpness and get injured more ----- */
+  function applyFit(p) {
+    const gk = p.pos === "GK";
+    const pen = Math.max(0, 82 - p.stam) * (gk ? 0.12 : 0.33) + (p.inj ? (gk ? 5 : 12) : 0);
+    for (const k in p.a0) p.a[k] = p.a0[k] - (k === "gk" ? (gk ? pen * 0.5 : 0) : pen * (k === "pac" || k === "def" ? 1.15 : k === "sho" ? 0.6 : 0.85));
+  }
+  const PARTS = ["hamstring", "ankle", "knee", "calf", "groin", "thigh"];
+  function injure(e, s, i) {
+    const p = S[s].slots[i];
+    if (!p || p.inj) return;
+    p.inj = true; p.st.inj = true;
+    const part = pick(PARTS);
+    L(e, 0, "inj", `${p.short} goes down holding his ${part}. The physios come on.`, { key: true, head: "Injury" });
+    e.events.push({ k: "inj", s, name: p.name, part, at: 0 });
+    if (!(R() < 0.6 && doSub(e, s, i, true))) L(e, 0, "inj", S[s].subs >= 5 ? `${p.short} has to play on, ${T[s].name} have used all their changes.` : `${p.short} signals he can continue, but he is clearly limited.`, {});
+  }
+  function tickFitness(e) {
+    for (const s of ["h", "a"]) {
+      const ef = S[s].ef;
+      S[s].slots.forEach((p, i) => {
+        if (!p) return;
+        const gk = p.pos === "GK";
+        const pos = { GK: 0.04, DF: 0.88, MF: 1.12, FW: 1.0 }[p.pos];
+        const tg = (p.tags.indexOf("engine") > -1 ? 0.82 : 1) * (p.tags.indexOf("wingback") > -1 ? 1.15 : 1) * (p.tags.indexOf("press") > -1 ? 1.06 : 1);
+        const rate = 0.22 * pos * tg * (0.8 + 0.5 * ef.press + 0.3 * ef.tempo) * (1 + (100 - p.fit0) / 80);
+        const used = p.st.t - (p.lt || 0); p.lt = p.st.t;
+        p.stam = Math.max(8, p.stam - rate - 0.02 * used - (p.inj ? 0.35 : 0));
+        if (!gk && !p.tired && p.stam < 48 && R() < 0.5) { p.tired = true; L(e, 0, "phase", `${p.short} is running on empty now.`, { p: 0.7 }); }
+        if (!p.inj) {
+          const haz = 0.00005 * (gk ? 0.3 : { DF: 0.9, MF: 1, FW: 1.1 }[p.pos]) * (1 + (100 - p.stam) / 30) * (1 + (100 - p.fit0) / 20);
+          if (R() < haz) injure(e, s, i);
+        } else if (R() < 0.25) doSub(e, s, i, true);
+        applyFit(S[s].slots[i] || p);
+      });
+    }
+  }
+  function doSub(e, s, forceI, hurt) {
+    if (S[s].subs >= 5 || !S[s].bench.length) return false;
+    const cand = S[s].slots.map((p, i) => ({ p, i })).filter(o => o.p && o.p.pos !== "GK");
+    if (!cand.length && forceI === undefined) return false;
+    const out = forceI !== undefined ? { p: S[s].slots[forceI], i: forceI } : wpick(cand, o => Math.pow(100 - o.p.r, 2) * 0.4 + Math.pow(100 - o.p.stam, 2));
+    if (!out.p) return false;
+    const pool = S[s].bench.filter(b => b.pos === out.p.pos);
+    const fb = S[s].bench.filter(b => b.pos !== "GK");
+    if (!pool.length && !fb.length) return false;
+    const inn = pick(pool.length ? pool : fb);
+    S[s].bench.splice(S[s].bench.indexOf(inn), 1);
+    inn.st.played = true; S[s].gone.push(out.p); S[s].slots[out.i] = inn; S[s].subs++;
+    inn.lt = 0;
+    L(e, 0, "sub", hurt ? `${inn.short} comes on for the injured ${out.p.short}.` : `${T[s].name} make a change: ${inn.short} comes on for ${out.p.short}.`, { head: hurt ? "Injury substitution" : "Substitution" });
+    e.events.push({ k: "sub", s, out: out.p.name, in: inn.name, slot: out.i, at: 0 });
+    if (ball.s === s && ball.car === out.i) ball.car = out.i;
+    return true;
+  }
+  function refreshTactics(e, s, minute) {
+    const t = T[s].tactics, diff = score[s] - score[opp(s)];
+    let line = t.line, direct = t.direct, press = t.press, tempo = t.tempo, shift = "none";
+    if (minute >= 30 && diff < 0) {
+      const k = Math.min(2, -diff) * clamp((minute - 25) / 40, 0.3, 1);
+      line += 0.10 * k; direct += 0.10 * k; tempo += 0.10 * k; press += 0.06 * k; shift = "chase";
+    } else if (minute >= 35 && diff > 0) {
+      const k = Math.min(2, diff) * clamp((minute - 30) / 40, 0.3, 1);
+      line -= 0.10 * k; tempo -= 0.08 * k; press -= 0.12 * k; direct += 0.04 * k; shift = "protect";
+    }
+    const lost = 11 - S[s].men;
+    if (lost) { line -= 0.08 * lost; press -= 0.1 * lost; }
+    press *= 1 - 0.28 * t.press * Math.pow(minute / 95, 2);
+    S[s].ef = { ...t, line: clamp(line, 0.1, 0.98), direct: clamp(direct, 0, 1), press: clamp(press, 0.1, 1), tempo: clamp(tempo, 0.2, 1) };
+    if (shift !== S[s].shift && (shift !== "none" || S[s].shift !== "none")) {
+      if (shift === "chase" && S[s].shift === "none") L(e, 0, "phase", `${T[s].name} push their line higher and go more direct. They need a goal.`, { head: "Tactical change" });
+      if (shift === "protect" && S[s].shift === "none") L(e, 0, "phase", `${T[s].name} drop a little deeper and slow the game down. They are protecting the lead.`, { head: "Tactical change" });
+      S[s].shift = shift;
+    }
+  }
+
+  let spell = null;
+  const M = [], goals = [];
+  const snapshot = (e, minuteIdx) => {
+    e.fit = {}; for (const q of ["h", "a"]) S[q].slots.forEach(p => { if (p) e.fit[p.name] = Math.round(p.stam); });
+    e.score = [score.h, score.a];
+    e.stats = { h: { ...S.h.st, xg: +S.h.st.xg.toFixed(2) }, a: { ...S.a.st, xg: +S.a.st.xg.toFixed(2) } };
+    e.tact = { h: { line: S.h.ef.line, press: S.h.ef.press, direct: S.h.ef.direct, tempo: S.h.ef.tempo }, a: { line: S.a.ef.line, press: S.a.ef.press, direct: S.a.ef.direct, tempo: S.a.ef.tempo } };
+  };
+
+  for (const c of clock) {
+    const e = { label: c.label, type: c.type || "play", half: c.half || 0, acts: [], lines: [], events: [], goals, dur: 1, score: null, stats: null, tact: null };
+    if (c.type === "ht" || c.type === "ft") {
+      flushRun(e);
+      e.dur = c.type === "ht" ? 3 : 1;
+      const tot = S.h.st.acts + S.a.st.acts || 1, pp = Math.round(100 * S.h.st.acts / tot);
+      if (c.type === "ht") L(e, 0, "phase", `${scoreText()}. Shots ${S.h.st.shots} to ${S.a.st.shots}, xG ${S.h.st.xg.toFixed(1)} to ${S.a.st.xg.toFixed(1)}, possession ${pp} to ${100 - pp}.`, { key: true, head: "Half time" });
+      else L(e, 0, "phase", `${scoreText()}. ${score.h === score.a ? "Honours even." : (score.h > score.a ? T.h.name : T.a.name) + " take the three points."} The expected goals finished ${S.h.st.xg.toFixed(1)} to ${S.a.st.xg.toFixed(1)}.`, { key: true, head: "Full time" });
+      if (c.type === "ht") for (const q of ["h", "a"]) S[q].slots.forEach(p => { if (p) p.stam = Math.min(100, p.stam + 5); });
+      if (c.type === "ht") { ball.s = opp(ball.s); ball.ax = 0.5; ball.ay = 0.5; ball.car = 6; ball.mode = "build"; ball.dead = null; }
+      snapshot(e); M.push(e); continue;
+    }
+    minuteNow = c.base; updWave(c.base); tickFitness(e); mom.h *= 0.93; mom.a *= 0.93;
+    refreshTactics(e, "h", c.base); refreshTactics(e, "a", c.base);
+    if (c.base > 3 && c.base < 88 && !c.extra) {
+      const lr = Math.log(cur.h / cur.a), who = lr > 0 ? "h" : "a";
+      if (spell === null && Math.abs(lr) > 0.4) { spell = who; L(e, 0, "phase", fmt(pick(["{t} have taken control of the game now.", "{t} are on top here, pinning {o} back.", "The momentum has swung to {t}. {o} cannot get out."]), { t: T[who].name, o: T[opp(who)].name }), { head: "Momentum" }); }
+      else if (spell !== null && (Math.abs(lr) < 0.12 || (lr > 0 ? "h" : "a") !== spell)) spell = null;
+    }
+    if (c.base === 1 && !c.extra) L(e, 0, "phase", `${T[ball.s].name} get us started${ball.s === "h" ? ` at ${T.h.ground}` : ""}. The home side attack towards the right of your screen.`, { key: true, head: "Kick off" });
+    if (c.base === 1 && !c.extra) for (const s of ["h", "a"]) if (PL[s].pl.t) L(e, 0, "phase", fmt(PL[s].pl.t, { c: T[s].name, o: T[opp(s)].name }), { head: "Game plan" });
+    if (c.half === 2 && !c.extra) {
+      for (const s of ["h", "a"]) if (subPlan[s].includes(c.base)) { const n = R() < 0.45 ? 2 : 1; for (let i = 0; i < n; i++) doSub(e, s); }
+    }
+    const tempoMix = (S.h.ef.tempo + S.a.ef.tempo) / 2;
+    let budget = Math.round(clamp(2.3 + 2.3 * tempoMix * Math.sqrt(open) + R() * 1.7, 2, 7));
+    let guard = 0;
+    while (budget > 0 && guard++ < 14) budget -= step(e);
+    flushRun(e);
+    if (!e.lines.some(l => l.t !== "sub" && l.t !== "phase")) {
+      const A = ball.s, car = S[A].slots[ball.car] || outfield(A)[0].p;
+      L(e, Math.max(0, e.acts.length - 1), "quiet", fmt(pick(TX.quiet), { t: T[A].name, o: T[opp(A)].name, p: car.short }), {});
+    }
+    /* order lines by action, then keep insertion order */
+    e.lines = e.lines.map((l, i) => ({ l, i })).sort((a, b) => a.l.at - b.l.at || a.i - b.i).map(o => o.l);
+    if (!e.acts.length) {
+      const A = ball.s, sh = shape(A);
+      e.acts.push({ s: A, k: "hold", p: (S[A].slots[ball.car] || {}).name || null, ok: true, ax: ball.ax, ay: ball.ay, ax2: ball.ax, ay2: ball.ay, w: 1, cap: "Ball in play" });
+    }
+    snapshot(e); M.push(e);
+  }
+
+  /* ----- ratings ----- */
+  const ratings = {};
+  const everyone = [];
+  for (const s of ["h", "a"]) {
+    const cs = score[opp(s)] === 0;
+    [...S[s].slots.filter(Boolean), ...S[s].gone, ...S[s].bench].forEach(p => {
+      if (!p.st.played) return;
+      const t = p.st;
+      let r = 6.1 + 0.9 * t.g + 0.6 * t.as + 0.08 * t.kp + 0.03 * t.pa - 0.08 * t.pf + 0.12 * t.dr - 0.07 * t.df + 0.1 * t.tk - 0.04 * t.tf + 0.08 * t.ic + 0.12 * t.sot + 0.35 * t.xg + 0.25 * t.xa - 0.5 * t.yc - 1.5 * (t.red ? 1 : 0);
+      if (p.pos === "GK") r += 0.2 * Math.min(t.sv, 9) - 0.3 * t.gc + (cs ? 0.4 : 0);
+      else if (p.pos === "DF" && cs && !t.red) r += 0.45;
+      r = clamp(Math.round(r * 10) / 10, 3, 9.9);
+      ratings[p.name] = r;
+      everyone.push({ s, p, r, won: score[s] > score[opp(s)] });
+    });
+  }
+  let best = null;
+  everyone.forEach(o => { const v = o.r + (o.won ? 0.3 : 0); if (!best || v > best.v) best = { v, name: o.p.name, short: o.p.short, s: o.s, g: o.p.st.g, as: o.p.st.as, sv: o.p.st.sv, r: o.r }; });
+  const fit0 = {};
+  for (const q of ["h", "a"]) [...S[q].slots.filter(Boolean), ...S[q].gone, ...S[q].bench].forEach(p => { fit0[p.name] = p.fit0; });
+  return { T, S, M, score: { ...score }, goals, ratings, motm: best, subPlan, fit0, factors: { open, dom, F } };
+}
+
+/* the picker readout */
+function tacticReadout(id) {
+  const t = TEAMS[id].tactics;
+  return { press: Math.round(t.press * 100), line: Math.round(t.line * 100), direct: Math.round(t.direct * 100), tempo: Math.round(t.tempo * 100) };
+}
+function kitDist(a, b) { const f = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)); const x = f(a), y = f(b); return Math.hypot(x[0] - y[0], x[1] - y[1], x[2] - y[2]); }
+function kitsFor(homeId, awayId) {
+  const h = TEAMS[homeId].kit.home, a = TEAMS[awayId].kit;
+  return { h, a: kitDist(h[0], a.home[0]) < 110 ? a.away : a.home };
+}
+function manOfTheMatch(sim) { return sim.motm ? { name: sim.motm.name, short: sim.motm.short, s: sim.motm.s, goals: sim.motm.g, assists: sim.motm.as, saves: Math.round(sim.motm.sv), rating: sim.motm.r } : null; }
+
+if (typeof module !== "undefined") module.exports = { simulate, TEAMS, TEAM_ORDER, kitsFor, tacticReadout, manOfTheMatch, mulberry32, shapeTeam, toDisplay, FORMS };
+
+</script>
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text !== undefined) n.textContent = text; return n; }
+  function clamp01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+
+  /* ---------- setup screen ---------- */
+  var pickState = { h: "arsenal", a: "liverpool" };
+  function buildClubs(side) {
+    var box = $("clubs-" + side);
+    box.textContent = "";
+    TEAM_ORDER.forEach(function (id) {
+      var t = TEAMS[id], r = tacticReadout(id);
+      var label = el("label", "club");
+      var input = el("input"); input.type = "radio"; input.name = "side-" + side; input.value = id; input.id = "c-" + side + "-" + id;
+      input.checked = pickState[side] === id;
+      input.addEventListener("change", function () { pickState[side] = id; syncPicks(); });
+      var face = el("span", "club-face");
+      var kit = el("span", "kit"); kit.style.setProperty("--k1", t.kit.home[0]); kit.style.setProperty("--k2", t.kit.home[1]);
+      var text = el("span", "club-text");
+      text.appendChild(el("span", "club-name", t.name));
+      var meta = el("span", "club-meta"); meta.appendChild(el("span", "", t.coach + ", " + t.ground));
+      text.appendChild(meta);
+      text.appendChild(el("span", "club-style", t.style));
+      text.appendChild(el("span", "club-nums", "Press " + r.press + "  Line " + r.line + "  Direct " + r.direct + "  Tempo " + r.tempo));
+      face.appendChild(kit); face.appendChild(text);
+      label.appendChild(input); label.appendChild(face);
+      box.appendChild(label);
+    });
+  }
+  function syncPicks() {
+    ["h", "a"].forEach(function (side) {
+      var other = pickState[side === "h" ? "a" : "h"];
+      TEAM_ORDER.forEach(function (id) {
+        var n = $("c-" + side + "-" + id);
+        n.disabled = id === other; n.checked = pickState[side] === id;
+      });
+    });
+    var ok = pickState.h && pickState.a && pickState.h !== pickState.a;
+    $("kickoff").disabled = !ok;
+    var fx = $("fixture"); fx.textContent = "";
+    if (ok) {
+      fx.appendChild(document.createTextNode(TEAMS[pickState.h].name + " v " + TEAMS[pickState.a].name));
+      fx.appendChild(el("small", "", "at " + TEAMS[pickState.h].ground));
+    }
+  }
+  buildClubs("h"); buildClubs("a"); syncPicks();
+  $("random").addEventListener("click", function () {
+    var ids = TEAM_ORDER.slice();
+    var h = ids.splice(Math.floor(Math.random() * ids.length), 1)[0];
+    pickState.h = h; pickState.a = ids[Math.floor(Math.random() * ids.length)]; syncPicks();
+  });
+  function freshSeed() { return ((Math.random() * 4294967296) ^ (Date.now() & 0x7fffffff) ^ (performance.now() * 1000)) >>> 0; }
+  $("kickoff").addEventListener("click", function () { startMatch(freshSeed()); });
+
+  /* ---------- match state ---------- */
+  var sim = null, kits = null, seed = 0;
+  var idx = 0, aj = 0, tin = 0, playing = false, msPerMin = 1300, last = 0;
+  var hold = 0, holding = false;
+  var fitNow = {}, slotNames = { h: [], a: [] }, playerBy = {}, tags = {}, rated = false;
+  var trails = [], bubbles = [], xgSeries = { h: [], a: [] };
+  var statsRows = [
+    ["Possession", "poss"], ["Expected goals", "xg"], ["Shots", "shots"], ["On target", "sot"], ["Big chances", "big"],
+    ["Dribbles won", "dr"], ["Tackles won", "tk"], ["Corners", "corners"], ["Fouls", "fouls"], ["Offsides", "off"],
+    ["Yellow cards", "yc"], ["Red cards", "rc"]
+  ];
+  var statEls = {}, tactEls = { h: {}, a: {} };
+  function setKit(n, k) { n.style.setProperty("--k1", k[0]); n.style.setProperty("--k2", k[1]); }
+  function short(name) { return playerBy[name] ? playerBy[name].short : name; }
+
+  function startMatch(s) {
+    seed = s;
+    sim = simulate(pickState.h, pickState.a, seed);
+    kits = kitsFor(pickState.h, pickState.a);
+    idx = 0; aj = 0; tin = 0; hold = 0; holding = false; last = 0; playing = true; rated = false;
+    tags = {}; playerBy = {}; trails = []; bubbles = []; xgSeries = { h: [], a: [] };
+    ["h", "a"].forEach(function (side) {
+      sim.T[side].players.forEach(function (p) { playerBy[p.name] = p; });
+      slotNames[side] = sim.T[side].players.slice(0, 11).map(function (p) { return p.name; });
+    });
+    $("setup").hidden = true; $("match").hidden = false;
+    $("name-h").textContent = sim.T.h.name; $("name-a").textContent = sim.T.a.name;
+    setKit($("kit-h"), kits.h); setKit($("kit-a"), kits.a);
+    $("sc-h").textContent = "0"; $("sc-a").textContent = "0";
+    $("clock").textContent = "0'"; $("phase").textContent = "Kick off";
+    $("feed").textContent = ""; $("marks").textContent = "";
+    $("tfill").style.transform = "scaleX(0)";
+    $("ft").hidden = true; $("controls").hidden = false;
+    $("pause").textContent = "Pause";
+    $("matchno").textContent = "Match " + seed;
+    $("now-text").textContent = "Kick off";
+    setKit($("now-kit"), kits.h);
+    $("xg-key-h").textContent = sim.T.h.name; $("xg-key-a").textContent = sim.T.a.name;
+    fitNow = Object.assign({}, sim.fit0);
+    buildStats(); buildTeams(); buildTactics(); resetDots(); drawXg();
+    window.scrollTo(0, 0);
+    enterMinute(0);
+    if (sim.M[0].acts.length) startAct(0, 0);
+  }
+
+  /* ----- stats ----- */
+  function buildStats() {
+    var box = $("stats"); box.textContent = ""; statEls = {};
+    statsRows.forEach(function (r) {
+      var row = el("div", "stat");
+      var vh = el("span", "v vh", "0"), lab = el("span", "lab", r[0]), va = el("span", "v va", "0");
+      var bar = el("div", "bar"), fill = el("i"); bar.appendChild(fill);
+      row.appendChild(vh); row.appendChild(lab); row.appendChild(va); row.appendChild(bar);
+      box.appendChild(row);
+      statEls[r[1]] = { vh: vh, va: va, fill: fill };
+    });
+  }
+  function updateStats(st) {
+    statsRows.forEach(function (r) {
+      var k = r[1], x = statEls[k], h = st.h[k === "poss" ? "acts" : k], a = st.a[k === "poss" ? "acts" : k], share;
+      if (k === "poss") {
+        var tot = h + a || 1, ph = Math.round(100 * h / tot);
+        x.vh.textContent = ph + "%"; x.va.textContent = (100 - ph) + "%"; share = h / tot;
+      } else if (k === "xg") {
+        x.vh.textContent = h.toFixed(2); x.va.textContent = a.toFixed(2); share = h + a === 0 ? 0.5 : h / (h + a);
+      } else {
+        x.vh.textContent = h; x.va.textContent = a; share = h + a === 0 ? 0.5 : h / (h + a);
+      }
+      x.fill.style.transform = "scaleX(" + share.toFixed(3) + ")";
+    });
+  }
+
+  /* ----- tactics panel ----- */
+  var meterRows = [["Press", "press"], ["Defensive line", "line"], ["Tempo", "tempo"], ["Directness", "direct"]];
+  function buildTactics() {
+    var box = $("tactics"); box.textContent = ""; tactEls = { h: {}, a: {} };
+    ["h", "a"].forEach(function (s) {
+      var T = sim.T[s], col = el("div", "tcol");
+      var h3 = el("h3"); var k = el("span", "kit"); setKit(k, kits[s]); h3.appendChild(k);
+      h3.appendChild(document.createTextNode(T.name + ", " + T.coach));
+      col.appendChild(h3);
+      col.appendChild(el("p", "phil", T.philosophy));
+      var note = el("p", "tshift", ""); col.appendChild(note); tactEls[s].note = note;
+      meterRows.forEach(function (m) {
+        var row = el("div", "meter");
+        var lab = el("span", "lab", m[0]), track = el("div", "track"), fill = el("i"), val = el("span", "val", "");
+        track.appendChild(fill); row.appendChild(lab); row.appendChild(track); row.appendChild(val);
+        col.appendChild(row);
+        tactEls[s][m[1]] = { fill: fill, val: val };
+      });
+      box.appendChild(col);
+    });
+  }
+  function updateTactics(t) {
+    if (!t) return;
+    ["h", "a"].forEach(function (s) {
+      var base = sim.T[s].tactics;
+      meterRows.forEach(function (m) {
+        var v = t[s][m[1]], x = tactEls[s][m[1]];
+        x.fill.style.transform = "scaleX(" + clamp01(v).toFixed(3) + ")";
+        x.val.textContent = Math.round(v * 100);
+      });
+      var dl = t[s].line - base.line;
+      tactEls[s].note.textContent = dl > 0.04 ? "Pushing higher up the pitch" : dl < -0.04 ? "Dropping deeper" : "";
+    });
+  }
+
+  /* ----- line-ups ----- */
+  function buildTeams() {
+    var box = $("teams"); box.textContent = "";
+    ["h", "a"].forEach(function (side) { var col = el("div"); col.id = "team-" + side; box.appendChild(col); });
+    renderTeams();
+  }
+  function renderTeams() {
+    ["h", "a"].forEach(function (side) {
+      var col = $("team-" + side), T = sim.T[side];
+      col.textContent = "";
+      var h3 = el("h3"); var k = el("span", "kit"); setKit(k, kits[side]);
+      h3.appendChild(k); h3.appendChild(document.createTextNode(T.name));
+      col.appendChild(h3);
+      var ol = el("ol");
+      T.players.slice(0, 11).forEach(function (p) { ol.appendChild(playerLi(p)); });
+      col.appendChild(ol);
+      col.appendChild(el("div", "sub", "Bench"));
+      var ul = el("ul");
+      T.players.slice(11).forEach(function (p) { ul.appendChild(playerLi(p)); });
+      col.appendChild(ul);
+    });
+  }
+  function playerLi(p) {
+    var li = el("li"), t = tags[p.name] || [];
+    if (t.some(function (x) { return x.indexOf("off ") === 0 || x.indexOf("red") === 0; })) li.className = "off";
+    li.appendChild(el("span", "pos", p.pos));
+    var fv = fitNow[p.name], ft = el("span", "fit"), fi = el("i");
+    ft.setAttribute("data-n", p.name); ft.title = "Fitness " + fv + "%";
+    fi.style.transform = "scaleX(" + (fv / 100).toFixed(3) + ")"; if (fv < 50) ft.className = "fit low"; else if (fv < 70) ft.className = "fit mid";
+    ft.appendChild(fi); li.appendChild(ft);
+    if (rated) {
+      var rv = sim.ratings[p.name], rt = el("span", "rt", rv !== undefined ? rv.toFixed(1) : "");
+      if (sim.motm && sim.motm.name === p.name) rt.className = "rt best";
+      li.appendChild(rt);
+    }
+    li.appendChild(el("span", "nm", p.name));
+    if (p.arch) li.appendChild(el("span", "arch", p.arch));
+    if (t.length) li.appendChild(el("span", "tags", t.join(", ")));
+    return li;
+  }
+  function updateFit() {
+    var els = document.querySelectorAll(".fit[data-n]");
+    for (var i = 0; i < els.length; i++) {
+      var n = els[i].getAttribute("data-n"), f = fitNow[n];
+      if (f === undefined) continue;
+      els[i].firstChild.style.transform = "scaleX(" + (f / 100).toFixed(3) + ")";
+      els[i].className = f < 50 ? "fit low" : f < 70 ? "fit mid" : "fit";
+      els[i].title = "Fitness " + f + "%";
+    }
+  }
+  function addTag(name, text) { (tags[name] = tags[name] || []).push(text); }
+
+  /* ----- xG race ----- */
+  function drawXg() {
+    var box = $("xgchart");
+    var N = Math.max(1, sim.M.length - 1), W = 600, H = 210, pl = 34, pr = 12, pt = 10, pb = 26;
+    var hs = xgSeries.h, as = xgSeries.a;
+    var mx = 1;
+    for (var i = 0; i < hs.length; i++) mx = Math.max(mx, hs[i], as[i]);
+    mx = Math.ceil(mx * 2) / 2;
+    var X = function (i) { return pl + (W - pl - pr) * i / N; };
+    var Y = function (v) { return pt + (H - pt - pb) * (1 - v / mx); };
+    var s = '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Cumulative expected goals for each team through the match">';
+    [0, mx / 2, mx].forEach(function (v) {
+      s += '<line class="gl" x1="' + pl + '" x2="' + (W - pr) + '" y1="' + Y(v).toFixed(1) + '" y2="' + Y(v).toFixed(1) + '"/>';
+      s += '<text class="ax" x="' + (pl - 6) + '" y="' + (Y(v) + 4).toFixed(1) + '" text-anchor="end">' + v.toFixed(1) + "</text>";
+    });
+    var i45 = 44, i90 = 0;
+    sim.M.forEach(function (m, i) { if (m.label === "45'") i45 = i; if (m.label === "90'") i90 = i; });
+    [[0, "0"], [i45, "45"], [i90, "90"]].forEach(function (t) {
+      s += '<text class="ax" x="' + X(t[0]).toFixed(1) + '" y="' + (H - 6) + '" text-anchor="middle">' + t[1] + "</text>";
+    });
+    ["h", "a"].forEach(function (side) {
+      var arr = xgSeries[side]; if (arr.length < 2) return;
+      var pts = arr.map(function (v, i) { return X(i).toFixed(1) + "," + Y(v).toFixed(1); }).join(" ");
+      s += '<polyline class="xl xl-' + side + '" points="' + pts + '"/>';
+    });
+    var gi = 0;
+    sim.M.forEach(function (m, i) {
+      if (i >= hs.length) return;
+      m.events.forEach(function (ev) {
+        if (ev.k !== "goal") return;
+        var arr = xgSeries[ev.s];
+        s += '<circle class="gm gm-' + ev.s + '" cx="' + X(i).toFixed(1) + '" cy="' + Y(arr[i]).toFixed(1) + '" r="4.5"/>';
+      });
+    });
+    box.innerHTML = s + "</svg>";
+  }
+
+  /* ----- feed and events ----- */
+  function phaseText(e) {
+    if (e.type === "ht") return "Half time";
+    if (e.type === "ft") return "Full time";
+    return (e.half === 1 ? "First half" : "Second half") + (e.label.indexOf("+") > -1 ? ", added time" : "");
+  }
+  function addLine(e, l) {
+    var li = el("li", "line " + l.t + (l.key ? " key" : "") + (l.head === "Red card" ? " red" : ""));
+    li.appendChild(el("span", "min", e.label));
+    var body = el("div", "body");
+    if (l.head) body.appendChild(el("span", "head", l.head));
+    body.appendChild(el("p", "", l.text));
+    if (l.tail) body.appendChild(el("span", "tail", l.tail));
+    li.appendChild(body);
+    var feed = $("feed"); feed.insertBefore(li, feed.firstChild);
+  }
+  function mark(kind, name, e) {
+    var m = el("span", "tmark " + kind);
+    m.style.left = (100 * idx / (sim.M.length - 1)).toFixed(2) + "%";
+    m.title = e.label + " " + name;
+    $("marks").appendChild(m);
+  }
+
+  function enterMinute(i) {
+    var e = sim.M[i];
+    idx = i; aj = 0; tin = 0;
+    $("clock").textContent = e.label;
+    $("phase").textContent = phaseText(e);
+    var prev = i > 0 ? sim.M[i - 1] : null;
+    if (prev) { updateStats(prev.stats); xgSeries.h.push(prev.stats.h.xg); xgSeries.a.push(prev.stats.a.xg); if (i % 2 === 0 || e.type !== "play") drawXg(); }
+    else { xgSeries.h.push(0); xgSeries.a.push(0); }
+    updateTactics(e.tact);
+    if (e.fit) { for (var fn in e.fit) fitNow[fn] = e.fit[fn]; updateFit(); }
+    var changed = false;
+    e.events.forEach(function (ev) {
+      if (ev.k === "inj") { addTag(ev.name, "hurt " + e.label); changed = true; }
+      if (ev.k === "sub") { addTag(ev.out, "off " + e.label); addTag(ev.in, "on " + e.label); slotNames[ev.s][ev.slot] = ev.in; changed = true; }
+    });
+    if (changed) renderTeams();
+    $("tfill").style.transform = "scaleX(" + (i / (sim.M.length - 1)).toFixed(4) + ")";
+    if (!e.acts.length) {
+      e.lines.forEach(function (l) { addLine(e, l); });
+      if (e.type === "ft") finish();
+    }
+  }
+  function startAct(i, j) {
+    var e = sim.M[i], a = e.acts[j];
+    e.lines.forEach(function (l) { if (l.at === j && l.when !== "end") addLine(e, l); });
+    var tagged = false;
+    e.events.forEach(function (ev) {
+      if (ev.at !== j || ev.k === "goal" || ev.k === "sub") return;
+      if (ev.k === "yc") { addTag(ev.name, "yellow " + e.label); mark("yc", ev.name, e); tagged = true; }
+      else if (ev.k === "rc") { addTag(ev.name, "red " + e.label); mark("rc", ev.name, e); tagged = true; var si = slotNames[ev.s].indexOf(ev.name); if (si > -1) slotNames[ev.s][si] = null; }
+    });
+    if (tagged) renderTeams();
+    $("now-text").textContent = a.cap || "";
+    setKit($("now-kit"), kits[a.s]);
+    if (a.k === "shot" && a.xg !== undefined) bubbles.push({ s: a.s, name: a.p, text: "xG " + a.xg.toFixed(2), t0: performance.now(), life: Math.max(1600, msPerMin * 1.3) });
+  }
+  function endAct(i, j) {
+    var e = sim.M[i], a = e.acts[j];
+    e.lines.forEach(function (l) { if (l.at === j && l.when === "end") addLine(e, l); });
+    e.events.forEach(function (ev) {
+      if (ev.at !== j || ev.k !== "goal") return;
+      $("sc-h").textContent = ev.sc[0]; $("sc-a").textContent = ev.sc[1];
+      addTag(ev.name, "goal " + e.label); if (ev.assist) addTag(ev.assist, "assist " + e.label);
+      mark("goal", ev.name, e); renderTeams();
+      $("announce").textContent = "Goal for " + sim.T[ev.s].name + ", " + short(ev.name) + ". " + ev.sc[0] + " " + ev.sc[1];
+      hold = Math.max(900, msPerMin * 0.9);
+    });
+    if (a._f && a._t && a.k !== "hold" && a.k !== "foul") trails.push({ f: a._f, t: a._t, k: a.k, ok: a.ok, s: a.s, t0: performance.now() });
+    if (trails.length > 8) trails.shift();
+  }
+  function nextMinute() {
+    if (idx >= sim.M.length - 1) return;
+    enterMinute(idx + 1);
+    var e = sim.M[idx];
+    if (e.acts.length) startAct(idx, 0);
+  }
+  function stepNext() {
+    var e = sim.M[idx];
+    aj++;
+    if (aj >= e.acts.length) { nextMinute(); return false; }
+    startAct(idx, aj);
+    return true;
+  }
+  function advance(dt) {
+    if (holding) { hold -= dt; if (hold > 0) return; holding = false; hold = 0; stepNext(); return; }
+    var e = sim.M[idx];
+    tin += dt;
+    if (!e.acts.length) { if (tin >= msPerMin * e.dur) nextMinute(); return; }
+    var u = msPerMin / 6, guard = 0;
+    while (guard++ < 8) {
+      var a = e.acts[aj], dur = Math.max(80, u * a.w);
+      if (tin < dur) return;
+      tin -= dur; endAct(idx, aj);
+      if (hold > 0) { holding = true; return; }
+      if (!stepNext()) return;
+      e = sim.M[idx];
+      if (!e.acts.length) return;
+    }
+  }
+  function finish() {
+    playing = false; holding = false;
+    updateStats(sim.M[sim.M.length - 1].stats);
+    xgSeries.h.push(sim.M[sim.M.length - 1].stats.h.xg); xgSeries.a.push(sim.M[sim.M.length - 1].stats.a.xg);
+    drawXg(); updateTactics(sim.M[sim.M.length - 1].tact);
+    $("controls").hidden = true;
+    var r = sim.score;
+    $("ft-title").textContent = "Full time: " + sim.T.h.name + " " + r.h + ", " + sim.T.a.name + " " + r.a;
+    ["h", "a"].forEach(function (s) {
+      $("ft-" + s + "n").textContent = sim.T[s].name;
+      var ul = $("ft-" + s + "l"); ul.textContent = "";
+      var gs = sim.goals.filter(function (g) { return g.s === s; });
+      if (!gs.length) ul.appendChild(el("li", "", "No goals"));
+      gs.forEach(function (g) { ul.appendChild(el("li", "", short(g.name) + " " + g.label + (g.pen ? " (pen)" : ""))); });
+    });
+    var mo = manOfTheMatch(sim);
+    if (mo) {
+      var bits = [];
+      if (mo.goals) bits.push(mo.goals + (mo.goals === 1 ? " goal" : " goals"));
+      if (mo.assists) bits.push(mo.assists + (mo.assists === 1 ? " assist" : " assists"));
+      if (mo.saves) bits.push(mo.saves + (mo.saves === 1 ? " save" : " saves"));
+      $("ft-motm").textContent = "Player of the match: " + mo.name + " for " + sim.T[mo.s].name + ", rated " + mo.rating.toFixed(1) + (bits.length ? " (" + bits.join(", ") + ")" : "") + ".";
+    }
+    rated = true; renderTeams();
+    $("ft").hidden = false;
+    $("now-text").textContent = "Full time";
+    $("announce").textContent = "Full time. " + sim.T.h.name + " " + r.h + ", " + sim.T.a.name + " " + r.a;
+  }
+
+  /* ----- controls ----- */
+  $("pause").addEventListener("click", function () {
+    if (!sim || idx >= sim.M.length - 1) return;
+    playing = !playing;
+    $("pause").textContent = playing ? "Pause" : "Resume";
+  });
+  Array.prototype.forEach.call(document.querySelectorAll(".seg .btn"), function (b) {
+    b.addEventListener("click", function () {
+      msPerMin = +b.getAttribute("data-ms");
+      Array.prototype.forEach.call(document.querySelectorAll(".seg .btn"), function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+    });
+  });
+  $("skip").addEventListener("click", function () {
+    if (!sim) return;
+    holding = false; hold = 0;
+    var e = sim.M[idx];
+    if (e.acts.length) {
+      endAct(idx, aj); hold = 0;
+      for (var j = aj + 1; j < e.acts.length; j++) { startAct(idx, j); endAct(idx, j); hold = 0; }
+    }
+    for (var i = idx + 1; i < sim.M.length; i++) {
+      enterMinute(i);
+      var m = sim.M[i];
+      for (var k = 0; k < m.acts.length; k++) { startAct(i, k); endAct(i, k); hold = 0; }
+    }
+    trails = []; bubbles = [];
+    $("tfill").style.transform = "scaleX(1)";
+  });
+  $("replay").addEventListener("click", function () { startMatch(seed); });
+  $("rematch").addEventListener("click", function () { startMatch(freshSeed()); });
+  $("another").addEventListener("click", function () {
+    sim = null; playing = false;
+    $("match").hidden = true; $("setup").hidden = false; window.scrollTo(0, 0);
+  });
+  $("keyonly").addEventListener("change", function (ev) { $("feed").classList.toggle("keyonly", ev.target.checked); });
+
+  /* ---------- pitch drawing ---------- */
+  var cv = $("pitch"), ctx = cv.getContext("2d");
+  var W = 0, H = 0, dpr = 1, layer = null;
+  var pos = { h: [], a: [] };
+  var ball = { x: .5, y: .5 };
+
+  function effTx(side, tact) {
+    var base = sim.T[side].tactics, t = tact ? tact[side] : base;
+    return { press: t.press, line: t.line, width: base.width, compact: base.compact, direct: t.direct, tempo: t.tempo };
+  }
+  function resetDots() {
+    ["h", "a"].forEach(function (s) {
+      var tx = effTx(s, sim.M[0].tact), sh = shapeTeam(sim.T[s].form, tx, 0.5, 0.5, false);
+      pos[s] = sh.map(function (p) { var d = toDisplay(s, p.x, p.y); return { x: d.x, y: d.y }; });
+    });
+    ball = { x: .5, y: .5 };
+  }
+  function paintLayer() {
+    layer = document.createElement("canvas");
+    layer.width = Math.max(1, Math.round(W * dpr)); layer.height = Math.max(1, Math.round(H * dpr));
+    var g = layer.getContext("2d");
+    g.scale(dpr, dpr);
+    var pad = Math.max(8, W * 0.015);
+    var px = (W - 2 * pad) / 105, x0 = pad, y0 = (H - 68 * px) / 2;
+    for (var i = 0; i < 14; i++) {
+      g.fillStyle = i % 2 ? "#4A7641" : "#527F48";
+      g.fillRect(x0 + i * (105 * px / 14), 0, 105 * px / 14 + 1, H);
+    }
+    g.fillStyle = "#4A7641"; g.fillRect(0, 0, x0, H); g.fillRect(W - x0, 0, x0, H);
+    g.strokeStyle = "rgba(244,246,239,.82)"; g.lineWidth = Math.max(1.5, W * 0.0028);
+    function R(a, b, c, d) { g.strokeRect(x0 + a * px, y0 + b * px, c * px, d * px); }
+    R(0, 0, 105, 68);
+    g.beginPath(); g.moveTo(x0 + 52.5 * px, y0); g.lineTo(x0 + 52.5 * px, y0 + 68 * px); g.stroke();
+    g.beginPath(); g.arc(x0 + 52.5 * px, y0 + 34 * px, 9.15 * px, 0, Math.PI * 2); g.stroke();
+    g.fillStyle = "rgba(244,246,239,.82)";
+    g.beginPath(); g.arc(x0 + 52.5 * px, y0 + 34 * px, g.lineWidth * 0.9, 0, Math.PI * 2); g.fill();
+    [0, 1].forEach(function (side) {
+      var sx = side ? 105 : 0, dir = side ? -1 : 1, bx = side ? 105 - 16.5 : 0;
+      R(bx, 34 - 20.16, 16.5, 40.32);
+      R(side ? 105 - 5.5 : 0, 34 - 9.16, 5.5, 18.32);
+      var sp = sx + dir * 11;
+      g.beginPath(); g.arc(x0 + sp * px, y0 + 34 * px, g.lineWidth * 0.9, 0, Math.PI * 2); g.fill();
+      var ang = Math.acos(5.5 / 9.15);
+      g.beginPath();
+      if (!side) g.arc(x0 + sp * px, y0 + 34 * px, 9.15 * px, -ang, ang);
+      else g.arc(x0 + sp * px, y0 + 34 * px, 9.15 * px, Math.PI - ang, Math.PI + ang);
+      g.stroke();
+      g.strokeRect(x0 + (side ? 105 : -2.4) * px, y0 + (34 - 3.66) * px, 2.4 * px, 7.32 * px);
+    });
+  }
+  function fit() {
+    var r = cv.getBoundingClientRect();
+    if (!r.width) return;
+    dpr = Math.min(2, window.devicePixelRatio || 1);
+    W = r.width; H = r.height;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    paintLayer();
+  }
+  if (window.ResizeObserver) new ResizeObserver(fit).observe(cv.parentNode);
+  window.addEventListener("resize", fit);
+
+  function dotOf(side, name) {
+    if (!name) return null;
+    var i = slotNames[side].indexOf(name);
+    return i > -1 ? pos[side][i] : null;
+  }
+  var GKC = { h: "#E9C235", a: "#2FA36B" };
+  var LOFT = { long: 1, cross: 1, corner: 1 };
+
+  function draw(ts, dt) {
+    if (!W || !layer) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    ctx.drawImage(layer, 0, 0, W, H);
+    if (!sim) return;
+    var e = sim.M[idx], a = e.acts[aj] || null, tact = e.tact;
+    var pad = Math.max(8, W * 0.015), px = (W - 2 * pad) / 105, y0 = (H - 68 * px) / 2;
+    var X = function (u) { return pad + u * 105 * px; }, Y = function (v) { return y0 + v * 68 * px; };
+    var prog = 1;
+    if (a && !holding) { var dur = Math.max(80, (msPerMin / 6) * a.w); prog = Math.min(1, tin / dur); }
+    var ease = prog * prog * (3 - 2 * prog);
+    var bax = a ? a.ax + (a.ax2 - a.ax) * ease : 0.5, bay = a ? a.ay + (a.ay2 - a.ay) * ease : 0.5;
+    var poss = a ? a.s : null;
+    var kk = reduce ? 1 : 1 - Math.exp(-dt / 140);
+    var tgt = { h: [], a: [] };
+    ["h", "a"].forEach(function (s) {
+      var own = poss === null ? [0.5, 0.5] : (s === poss ? [bax, bay] : [1 - bax, 1 - bay]);
+      var sh = shapeTeam(sim.T[s].form, effTx(s, tact), own[0], own[1], s === poss);
+      sh.forEach(function (p, i) { tgt[s][i] = toDisplay(s, p.x, p.y); });
+    });
+    /* the player on the ball */
+    var ballDisp = a ? toDisplay(a.s, bax, bay) : { x: 0.5, y: 0.5 };
+    if (a && a.k === "dribble" && a.ok) {
+      var ci = slotNames[a.s].indexOf(a.p);
+      if (ci > -1) tgt[a.s][ci] = { x: ballDisp.x, y: ballDisp.y };
+    }
+    ["h", "a"].forEach(function (s) {
+      for (var i = 0; i < 11; i++) {
+        if (!slotNames[s][i]) continue;
+        var p = pos[s][i], t = tgt[s][i];
+        var wob = reduce ? 0 : 0.006;
+        var tx2 = t.x + Math.sin(ts / 900 + i * 1.7 + (s === "a" ? 2 : 0)) * wob, ty2 = t.y + Math.cos(ts / 1100 + i * 2.3) * wob * 1.5;
+        p.x += (tx2 - p.x) * kk; p.y += (ty2 - p.y) * kk;
+      }
+    });
+    /* ball */
+    var from = null, to = null;
+    if (a) {
+      from = a.from ? { x: a.from.x, y: a.from.y } : (dotOf(a.s, a.p) || ballDisp);
+      if (a.to) to = a.to.name ? dotOf(a.to.s, a.to.name) : { x: a.to.x, y: a.to.y };
+      else if (a.q) to = dotOf(a.s, a.q);
+      if (!to) to = a.k === "dribble" ? ballDisp : from;
+      a._f = { x: from.x, y: from.y }; a._t = { x: to.x, y: to.y };
+    }
+    var bx = ball.x, by = ball.y, lift = 0;
+    if (a) {
+      var ex = a.k === "dribble" && a.ok ? ease : ease;
+      var tx3 = from.x + (to.x - from.x) * ex, ty3 = from.y + (to.y - from.y) * ex;
+      if (a.k === "dribble" && a.ok) { tx3 = ballDisp.x + 0.006; ty3 = ballDisp.y + 0.004; }
+      var bk = reduce ? 1 : 1 - Math.exp(-dt / 38);
+      ball.x += (tx3 - ball.x) * bk; ball.y += (ty3 - ball.y) * bk;
+      if (LOFT[a.k] || (a.k === "shot" && a.how === "header")) lift = Math.sin(Math.PI * ease) * H * 0.06;
+    } else { ball.x += (0.5 - ball.x) * 0.2; ball.y += (0.5 - ball.y) * 0.2; }
+
+    /* defensive lines and pressing ring: the tactics, drawn */
+    ["h", "a"].forEach(function (s) {
+      var xs = 0, n = 0;
+      for (var i = 1; i <= 4; i++) { if (slotNames[s][i]) { xs += pos[s][i].x; n++; } }
+      if (!n) return;
+      var lx = X(xs / n);
+      ctx.save();
+      ctx.strokeStyle = kits[s][0]; ctx.globalAlpha = 0.55; ctx.lineWidth = 1.5; ctx.setLineDash([5, 6]);
+      ctx.beginPath(); ctx.moveTo(lx, Y(0.06)); ctx.lineTo(lx, Y(0.94)); ctx.stroke();
+      ctx.restore();
+    });
+    if (a && poss) {
+      var dside = poss === "h" ? "a" : "h", pr = effTx(dside, tact).press;
+      var rr = (0.03 + 0.075 * pr) * W;
+      ctx.save();
+      ctx.beginPath(); ctx.arc(X(ball.x), Y(ball.y), rr, 0, Math.PI * 2);
+      ctx.fillStyle = kits[dside][0]; ctx.globalAlpha = 0.10 + 0.08 * pr; ctx.fill();
+      ctx.globalAlpha = 0.6; ctx.lineWidth = 1.5; ctx.setLineDash([4, 4]); ctx.strokeStyle = kits[dside][0] === "#F4F4F0" ? kits[dside][1] : kits[dside][0]; ctx.stroke();
+      ctx.restore();
+    }
+
+    /* trails of the last few actions */
+    for (var q = trails.length - 1; q >= 0; q--) {
+      var tr = trails[q], age = ts - tr.t0, life = Math.max(1500, msPerMin * 1.2);
+      if (age > life) { trails.splice(q, 1); continue; }
+      var al = 1 - age / life;
+      ctx.save();
+      ctx.globalAlpha = al * 0.9; ctx.lineCap = "round";
+      var col = tr.ok ? kits[tr.s][0] : "#FFFFFF";
+      if (tr.k === "dribble") {
+        ctx.strokeStyle = "rgba(255,255,255,.9)"; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(X(tr.f.x), Y(tr.f.y)); ctx.lineTo(X(tr.t.x), Y(tr.t.y)); ctx.stroke();
+        ctx.strokeStyle = col; ctx.lineWidth = 3.5; ctx.beginPath(); ctx.moveTo(X(tr.f.x), Y(tr.f.y)); ctx.lineTo(X(tr.t.x), Y(tr.t.y)); ctx.stroke();
+      } else if (tr.k === "shot") {
+        ctx.strokeStyle = "#FFFFFF"; ctx.lineWidth = 2; ctx.setLineDash([2, 5]); ctx.beginPath(); ctx.moveTo(X(tr.f.x), Y(tr.f.y)); ctx.lineTo(X(tr.t.x), Y(tr.t.y)); ctx.stroke();
+      } else {
+        ctx.strokeStyle = "rgba(255,255,255,.9)"; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(X(tr.f.x), Y(tr.f.y)); ctx.lineTo(X(tr.t.x), Y(tr.t.y)); ctx.stroke();
+        ctx.strokeStyle = tr.ok ? col : "#C23B22"; ctx.lineWidth = 2; if (!tr.ok) ctx.setLineDash([5, 4]);
+        ctx.beginPath(); ctx.moveTo(X(tr.f.x), Y(tr.f.y)); ctx.lineTo(X(tr.t.x), Y(tr.t.y)); ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    /* players */
+    var rad = Math.max(5, W * 0.0105), labels = [];
+    ["h", "a"].forEach(function (s) {
+      for (var i = 0; i < 11; i++) {
+        var nm = slotNames[s][i];
+        if (!nm) continue;
+        var p = pos[s][i], col = i === 0 ? [GKC[s], "#1F2A22"] : kits[s];
+        ctx.beginPath(); ctx.arc(X(p.x), Y(p.y), rad, 0, Math.PI * 2);
+        ctx.fillStyle = col[0]; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = col[1]; ctx.stroke();
+        if (a && ((a.s === s && a.p === nm) || (a.s === s && a.q === nm && prog > 0.45 && a.ok !== false) || (a.to && a.to.name === nm && a.to.s === s && prog > 0.45)))
+          labels.push({ x: X(p.x), y: Y(p.y), n: short(nm), you: a.p === nm && a.s === s });
+      }
+    });
+    labels.forEach(function (l) {
+      ctx.beginPath(); ctx.arc(l.x, l.y, rad + 4, 0, Math.PI * 2);
+      ctx.lineWidth = 2; ctx.strokeStyle = l.you ? "rgba(255,255,255,.98)" : "rgba(255,255,255,.55)"; ctx.stroke();
+      ctx.font = "700 " + Math.max(11, W * 0.016) + "px Archivo, 'Helvetica Neue', sans-serif"; ctx.textBaseline = "middle";
+      var tw = ctx.measureText(l.n).width, tx = l.x + rad + 8; if (tx + tw > W - 4) tx = l.x - rad - 8 - tw;
+      var ty = l.y - rad - 6 < 10 ? l.y + rad + 8 : l.y - rad - 6;
+      ctx.lineWidth = 4; ctx.strokeStyle = "rgba(24,36,28,.85)"; ctx.strokeText(l.n, tx, ty);
+      ctx.fillStyle = "#F6F8F1"; ctx.fillText(l.n, tx, ty);
+    });
+    /* xG bubbles */
+    for (var b2 = bubbles.length - 1; b2 >= 0; b2--) {
+      var bb = bubbles[b2], age2 = ts - bb.t0;
+      if (age2 > bb.life) { bubbles.splice(b2, 1); continue; }
+      var d0 = dotOf(bb.s, bb.name); if (!d0) continue;
+      var fa = Math.min(1, (bb.life - age2) / 400);
+      ctx.save(); ctx.globalAlpha = fa;
+      ctx.font = "500 " + Math.max(11, W * 0.0155) + "px 'DM Mono', ui-monospace, Menlo, monospace";
+      var w2 = ctx.measureText(bb.text).width + 12, bx0 = X(d0.x) - w2 / 2, by0 = Y(d0.y) + rad + 8;
+      if (by0 + 20 > H) by0 = Y(d0.y) - rad - 28;
+      bx0 = Math.max(4, Math.min(W - w2 - 4, bx0));
+      ctx.fillStyle = "rgba(24,36,28,.88)"; ctx.fillRect(bx0, by0, w2, 20);
+      ctx.fillStyle = "#F6F8F1"; ctx.textBaseline = "middle"; ctx.fillText(bb.text, bx0 + 6, by0 + 10);
+      ctx.restore();
+    }
+    /* the ball */
+    var br = Math.max(3.5, W * 0.0068), bpx = X(ball.x), bpy = Y(ball.y);
+    if (lift) { ctx.beginPath(); ctx.ellipse(bpx, bpy + 2, br * 0.9, br * 0.45, 0, 0, Math.PI * 2); ctx.fillStyle = "rgba(0,0,0,.28)"; ctx.fill(); }
+    ctx.beginPath(); ctx.arc(bpx, bpy - lift, br, 0, Math.PI * 2);
+    ctx.fillStyle = "#FFFFFF"; ctx.fill(); ctx.lineWidth = 1.5; ctx.strokeStyle = "#1B241E"; ctx.stroke();
+  }
+
+  function loop(ts) {
+    requestAnimationFrame(loop);
+    var dt = Math.min(64, ts - (last || ts)); last = ts;
+    if (sim && playing) {
+      advance(dt);
+      var tot = sim.M.length - 1;
+      var e = sim.M[idx], frac = e && e.acts.length ? Math.min(1, tin / Math.max(1, msPerMin)) : 0;
+      $("tfill").style.transform = "scaleX(" + Math.min(1, (idx + frac) / tot).toFixed(4) + ")";
+    }
+    draw(ts, dt);
+  }
+  requestAnimationFrame(function (ts) { last = ts; fit(); loop(ts); });
+})();
+
+</script>
+
+</body></html>
