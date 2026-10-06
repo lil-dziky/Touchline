@@ -143,6 +143,20 @@ h1, h2 { text-wrap: balance; }
 .ready { display: flex; flex-direction: column; gap: var(--s4); padding-top: var(--s4); border-top: 1px solid var(--rule); }
 .fixture { font: 800 var(--t-xl)/1.05 var(--ui); font-stretch: 105%; letter-spacing: -0.01em; overflow-wrap: anywhere; }
 .fixture small { display: block; margin-top: var(--s2); font: 400 var(--t-sm)/1.4 var(--ui); color: var(--ink-soft); letter-spacing: 0; }
+.matchup { display: flex; flex-direction: column; gap: var(--s3); max-width: 40rem; padding: var(--s4) 0 var(--s2); border-top: 1px solid var(--rule); }
+.mu-head { display: flex; align-items: baseline; gap: var(--s3) var(--s5); flex-wrap: wrap; }
+.mu-score { font: 500 var(--t-xl)/1 var(--mono); color: var(--accent); }
+.mu-score small { font: 400 var(--t-sm)/1 var(--ui); color: var(--ink-soft); }
+.mu-tier { font: 800 var(--t-lg)/1.1 var(--ui); font-stretch: 105%; }
+.mu-read { font-size: var(--t-base); line-height: 1.5; color: var(--ink-soft); }
+.mu-bar { display: flex; height: 10px; border-radius: 1px; overflow: hidden; background: var(--rule); }
+.mu-seg { display: block; height: 100%; min-width: 0; }
+.mu-h { background: var(--ink); }
+.mu-d { background: var(--rule); background-image: repeating-linear-gradient(135deg, transparent 0 3px, rgba(255, 255, 255, 0.35) 3px 5px); }
+.mu-a { background: var(--accent); }
+.mu-nums { display: flex; justify-content: space-between; gap: var(--s3); font: 500 var(--t-sm)/1.3 var(--mono); }
+.mu-nums span:nth-child(2) { color: var(--ink-soft); text-align: center; }
+.mu-nums span:last-child { text-align: right; }
 .actions { display: flex; flex-wrap: wrap; gap: var(--s3); }
 .fine { font: 400 var(--t-sm)/1.5 var(--ui); color: var(--ink-soft); max-width: 44rem; }
 
@@ -303,6 +317,12 @@ h1, h2 { text-wrap: balance; }
       </div>
       <div class="ready">
         <div class="fixture" id="fixture"></div>
+        <div class="matchup" id="matchup" hidden>
+          <div class="mu-head"><span class="mu-score" id="mu-score"></span><span class="mu-tier" id="mu-tier"></span></div>
+          <p class="mu-read" id="mu-read"></p>
+          <div class="mu-bar" id="mu-bar" role="img"><span class="mu-seg mu-h" id="mu-bh"></span><span class="mu-seg mu-d" id="mu-bd"></span><span class="mu-seg mu-a" id="mu-ba"></span></div>
+          <div class="mu-nums"><span id="mu-nh"></span><span id="mu-nd"></span><span id="mu-na"></span></div>
+        </div>
         <div class="actions">
           <button class="btn primary" id="kickoff" type="button">Kick off</button>
           <button class="btn" id="random" type="button">Random fixture</button>
@@ -340,6 +360,7 @@ h1, h2 { text-wrap: balance; }
             <h2 id="ft-title">Full time</h2>
             <div class="scorers"><div><div class="label" id="ft-hn"></div><ul id="ft-hl"></ul></div><div><div class="label" id="ft-an"></div><ul id="ft-al"></ul></div></div>
             <p id="ft-motm"></p>
+            <p id="ft-exp"></p>
             <div class="actions">
               <button class="btn primary" id="rematch" type="button">Play it again, new match</button>
               <button class="btn" id="replay" type="button">Rewatch this one</button>
@@ -626,6 +647,34 @@ const TX = {
 };
 
 /* ---------- the match ---------- */
+/* ---------- how competitive is this pairing? ----------
+   squadPower rates the first XI (attack, defence, midfield, keeper) on one scale.
+   assess() turns the gap, plus home advantage, into win/draw/loss odds with an ordered-logit
+   curve that was fitted to this simulator's own results, then into a 0..1 balance. */
+const CAL = { k: 0.15, hadv: 0.16, c: 0.58 };
+function squadPower(id) {
+  const ps = TEAMS[id].players.slice(0, 11).map(p => p.a);
+  const mean = (arr, f) => arr.reduce((t, x) => t + f(x), 0) / arr.length;
+  const att = 0.5 * mean(ps.slice(8, 11), a => 0.4 * a.sho + 0.3 * a.dri + 0.15 * a.cre + 0.15 * a.pac)
+    + 0.3 * mean(ps.slice(5, 8), a => 0.35 * a.cre + 0.3 * a.pas + 0.2 * a.dri + 0.15 * a.sho)
+    + 0.2 * mean(ps.slice(1, 5), a => 0.5 * a.cre + 0.3 * a.pas + 0.2 * a.dri);
+  const def = 0.6 * mean(ps.slice(1, 5), a => 0.55 * a.def + 0.25 * a.phy + 0.2 * a.pac)
+    + 0.4 * mean(ps.slice(5, 8), a => 0.6 * a.def + 0.25 * a.phy + 0.15 * a.pac);
+  const mid = mean(ps.slice(5, 8), a => 0.5 * a.pas + 0.3 * a.cre + 0.2 * a.def);
+  const gk = ps[0].gk;
+  return { att, def, mid, gk, all: 0.38 * att + 0.34 * def + 0.16 * mid + 0.12 * gk };
+}
+function assess(homeId, awayId) {
+  const h = squadPower(homeId), a = squadPower(awayId);
+  const gap = h.all - a.all, lat = CAL.k * gap + CAL.hadv;
+  const sg = x => 1 / (1 + Math.exp(-x));
+  const pA = sg(-CAL.c - lat), pH = 1 - sg(CAL.c - lat), pD = 1 - pA - pH;
+  const balance = clamp(1 - Math.abs(pH - pA), 0, 1);
+  const fav = pH > pA ? "h" : "a", fp = Math.max(pH, pA), up = Math.min(pH, pA);
+  const tier = balance >= 0.86 ? "toss" : balance >= 0.62 ? "close" : balance >= 0.36 ? "edge" : "mismatch";
+  return { power: { h, a }, gap, p: { h: pH, d: pD, a: pA }, balance, tier, fav, favP: fp, upset: up };
+}
+
 function simulate(homeId, awayId, seed) {
   const rnd = mulberry32(seed >>> 0);
   const R = () => rnd();
@@ -647,13 +696,25 @@ function simulate(homeId, awayId, seed) {
     { n: "counter", p: .16, d: { line: -.08, direct: .14, counter: .14, press: -.08 }, t: "{c} look to absorb pressure and hit {o} on the break." },
     { n: "press", p: .1, d: { press: .1, line: .06, tempo: .06, risk: .06 }, t: "{c} start with a ferocious press, trying to rattle {o} early." }
   ];
-  const planFor = tac => {
-    let r = R(), pl = PLANS[0];
-    for (const x of PLANS) { r -= x.p; if (r <= 0) { pl = x; break; } }
+  /* how evenly the sides match up decides how they set out: favourites lean forward, underdogs sit and hit back */
+  const AS = assess(homeId, awayId), bal = AS.balance, mis = 1 - bal;
+  const roleOf = { h: AS.fav === "h" ? 1 : -1, a: AS.fav === "a" ? 1 : -1 };
+  const planW = (x, role) => {
+    const m = mis * mis * 1.15 + mis * 0.15;
+    if (x.n === "attack") return x.p * (1 + 0.9 * m * role - (role < 0 ? 0.3 * m : 0));
+    if (x.n === "press") return x.p * (1 + 0.5 * m * role);
+    if (x.n === "cautious") return x.p * (1 - 0.7 * m * role);
+    if (x.n === "counter") return x.p * (role < 0 ? 1 + 1.1 * m : 1 - 0.4 * m);
+    return x.p;
+  };
+  const planFor = (tac, role) => {
+    const ws = PLANS.map(x => Math.max(0.02, planW(x, role))), tw = ws.reduce((t, x) => t + x, 0);
+    let r = R() * tw, pl = PLANS[PLANS.length - 1];
+    for (let i = 0; i < PLANS.length; i++) { r -= ws[i]; if (r <= 0) { pl = PLANS[i]; break; } }
     const o = { ...tac }; for (const k in pl.d) o[k] = clamp(o[k] + pl.d[k], 0.05, 0.98);
     return { pl, tac: o };
   };
-  const PL = { h: planFor(TEAMS[homeId].tactics), a: planFor(TEAMS[awayId].tactics) };
+  const PL = { h: planFor(TEAMS[homeId].tactics, roleOf.h), a: planFor(TEAMS[awayId].tactics, roleOf.a) };
   const T = { h: { ...TEAMS[homeId], tactics: PL.h.tac }, a: { ...TEAMS[awayId], tactics: PL.a.tac } };
   const mom = { h: 0, a: 0 };
   /* individual form on the day: most are normal, a few have a hero day or a nightmare */
@@ -696,8 +757,8 @@ function simulate(homeId, awayId, seed) {
   F.h.def *= Math.exp(-dom * 0.04); F.a.def *= Math.exp(dom * 0.04);
   /* spells of the match: each side's grip comes and goes in waves, so the underdog can own a quarter of an hour */
   const WV = {};
-  for (const s of ["h", "a"]) WV[s] = [0, 1].map(() => ({ amp: 0.10 + R() * 0.17, per: 14 + R() * 30, ph: R() * 6.283 }));
-  const cur = { h: 1, a: 1 }, grip = { h: gauss() * 0.2, a: gauss() * 0.2 };
+  for (const s of ["h", "a"]) WV[s] = [0, 1].map(() => ({ amp: (0.10 + R() * 0.17) * (0.75 + 0.55 * bal), per: 14 + R() * 30, ph: R() * 6.283 }));
+  const cur = { h: 1, a: 1 }, grip = { h: gauss() * 0.2 * (0.7 + 0.5 * bal), a: gauss() * 0.2 * (0.7 + 0.5 * bal) };
   const updWave = m => { for (const s of ["h", "a"]) cur[s] = Math.exp(grip[s] + WV[s].reduce((t, w) => t + w.amp * Math.sin(m / w.per * 6.283 + w.ph), 0)); };
   const cdOf = A => clamp(Math.log(cur[A] / cur[opp(A)]) + F[A].ctrl - F[opp(A)].ctrl, -0.9, 0.9);
   const HA = { h: 1, a: 0 };
@@ -792,6 +853,8 @@ function simulate(homeId, awayId, seed) {
     let xg = xgAt(ax, ay);
     xg *= how === "header" ? 0.72 : how === "through" ? 1.05 : how === "cutback" ? 1.2 : how === "fk" ? 0.8 : how === "rebound" ? 1.15 : how === "dribble" ? 1.06 : 1;
     xg *= 1 + 0.07 * Math.min(2, ball.broke || 0) + 0.5 * mom[A]; ball.broke = 0;
+    /* game state: in an even contest the side ahead eases off and the side behind lifts, so two-goal gaps are rarer */
+    xg *= Math.exp(-0.11 * clamp(score[A] - score[opp(A)], -3, 3) * (0.3 + bal));
     xg *= 1 - 0.14 * T[D].tactics.compact;
     xg *= Math.pow(F[A].att * cur[A] / (F[D].def * Math.sqrt(cur[D])), 0.3) * (A === "h" ? 1.03 : 1);
     const trans = ball.mode === "trans";
@@ -1277,18 +1340,21 @@ function simulate(homeId, awayId, seed) {
     const t = T[s].tactics, diff = score[s] - score[opp(s)];
     let line = t.line, direct = t.direct, press = t.press, tempo = t.tempo, shift = "none";
     if (minute >= 30 && diff < 0) {
-      const k = Math.min(2, -diff) * clamp((minute - 25) / 40, 0.3, 1);
+      const k = Math.min(2, -diff) * clamp((minute - 25) / 40, 0.3, 1) * (0.8 + 0.5 * bal);
       line += 0.10 * k; direct += 0.10 * k; tempo += 0.10 * k; press += 0.06 * k; shift = "chase";
     } else if (minute >= 35 && diff > 0) {
-      const k = Math.min(2, diff) * clamp((minute - 30) / 40, 0.3, 1);
+      const k = Math.min(2, diff) * clamp((minute - 30) / 40, 0.3, 1) * (0.8 + 0.6 * mis * (roleOf[s] > 0 ? 1.2 : 0.6));
       line -= 0.10 * k; tempo -= 0.08 * k; press -= 0.12 * k; direct += 0.04 * k; shift = "protect";
     }
+    /* a tight game in the final stretch: both sides throw caution aside */
+    if (minute >= 72 && Math.abs(diff) <= 1 && bal > 0.5) { const t = (bal - 0.5) * 2 * clamp((minute - 70) / 15, 0, 1); line += 0.06 * t; tempo += 0.07 * t; direct += 0.04 * t; press -= 0.02 * t; if (shift === "none" && t > 0.3) shift = "push"; }
     const lost = 11 - S[s].men;
     if (lost) { line -= 0.08 * lost; press -= 0.1 * lost; }
     press *= 1 - 0.28 * t.press * Math.pow(minute / 95, 2);
     S[s].ef = { ...t, line: clamp(line, 0.1, 0.98), direct: clamp(direct, 0, 1), press: clamp(press, 0.1, 1), tempo: clamp(tempo, 0.2, 1) };
     if (shift !== S[s].shift && (shift !== "none" || S[s].shift !== "none")) {
       if (shift === "chase" && S[s].shift === "none") L(e, 0, "phase", `${T[s].name} push their line higher and go more direct. They need a goal.`, { head: "Tactical change" });
+      if (shift === "push" && S[s].shift === "none") L(e, 0, "phase", `${T[s].name} throw players forward. The game is there to be won and neither side is settling for a point.`, { head: "Late push" });
       if (shift === "protect" && S[s].shift === "none") L(e, 0, "phase", `${T[s].name} drop a little deeper and slow the game down. They are protecting the lead.`, { head: "Tactical change" });
       S[s].shift = shift;
     }
@@ -1365,7 +1431,7 @@ function simulate(homeId, awayId, seed) {
   everyone.forEach(o => { const v = o.r + (o.won ? 0.3 : 0); if (!best || v > best.v) best = { v, name: o.p.name, short: o.p.short, s: o.s, g: o.p.st.g, as: o.p.st.as, sv: o.p.st.sv, r: o.r }; });
   const fit0 = {};
   for (const q of ["h", "a"]) [...S[q].slots.filter(Boolean), ...S[q].gone, ...S[q].bench].forEach(p => { fit0[p.name] = p.fit0; });
-  return { T, S, M, score: { ...score }, goals, ratings, motm: best, subPlan, fit0, factors: { open, dom, F } };
+  return { T, S, M, score: { ...score }, goals, ratings, motm: best, subPlan, fit0, factors: { open, dom, F, assess: AS, plans: { h: PL.h.pl.n, a: PL.a.pl.n } } };
 }
 
 /* the picker readout */
@@ -1380,7 +1446,7 @@ function kitsFor(homeId, awayId) {
 }
 function manOfTheMatch(sim) { return sim.motm ? { name: sim.motm.name, short: sim.motm.short, s: sim.motm.s, goals: sim.motm.g, assists: sim.motm.as, saves: Math.round(sim.motm.sv), rating: sim.motm.r } : null; }
 
-if (typeof module !== "undefined") module.exports = { simulate, TEAMS, TEAM_ORDER, LEAGUES, kitsFor, tacticReadout, manOfTheMatch, mulberry32, shapeTeam, toDisplay, FORMS };
+if (typeof module !== "undefined") module.exports = { simulate, assess, squadPower, TEAMS, TEAM_ORDER, LEAGUES, kitsFor, tacticReadout, manOfTheMatch, mulberry32, shapeTeam, toDisplay, FORMS };
 
 </script>
 <script>
@@ -1428,6 +1494,7 @@ if (typeof module !== "undefined") module.exports = { simulate, TEAMS, TEAM_ORDE
     });
     var ok = pickState.h && pickState.a && pickState.h !== pickState.a;
     $("kickoff").disabled = !ok;
+    renderMatchup(ok);
     var fx = $("fixture"); fx.textContent = "";
     if (ok) {
       fx.appendChild(document.createTextNode(TEAMS[pickState.h].name + " v " + TEAMS[pickState.a].name));
@@ -1435,6 +1502,29 @@ if (typeof module !== "undefined") module.exports = { simulate, TEAMS, TEAM_ORDE
     }
   }
 
+  var TIER = { toss: "Too close to call", close: "A competitive game", edge: "A clear favourite", mismatch: "A mismatch on paper" };
+  function pct(x) { return Math.round(x * 100); }
+  function tierRead(as, hn, an) {
+    var f = as.fav === "h" ? hn : an, u = as.fav === "h" ? an : hn;
+    if (as.tier === "toss") return "Almost nothing between the two sides, so one goal is likely to decide it, and a draw is a real possibility.";
+    if (as.tier === "close") return f + " hold a slight edge, but " + u + " are well in this and the lead could change hands.";
+    if (as.tier === "edge") return f + " are the better side on paper. " + u + " can still cause an upset, but they will need a good day.";
+    return u + " are up against a much stronger side. They will have to defend deep, hit on the break and hope for a rare day.";
+  }
+  function renderMatchup(ok) {
+    var box = $("matchup");
+    if (!ok) { box.hidden = true; return; }
+    var as = assess(pickState.h, pickState.a), hn = TEAMS[pickState.h].name, an = TEAMS[pickState.a].name;
+    box.hidden = false;
+    $("mu-score").textContent = Math.round(as.balance * 100); $("mu-score").appendChild(el("small", "", " / 100 competitive"));
+    $("mu-tier").textContent = TIER[as.tier];
+    $("mu-read").textContent = tierRead(as, hn, an);
+    var ph = pct(as.p.h), pa = pct(as.p.a), pd = 100 - ph - pa;
+    $("mu-bh").style.flexBasis = ph + "%"; $("mu-bd").style.flexBasis = pd + "%"; $("mu-ba").style.flexBasis = pa + "%";
+    $("mu-nh").textContent = hn + " " + ph + "%"; $("mu-nd").textContent = "Draw " + pd + "%"; $("mu-na").textContent = an + " " + pa + "%";
+    $("mu-bar").setAttribute("aria-label", hn + " " + ph + " percent to win, draw " + pd + " percent, " + an + " " + pa + " percent");
+    $("mu-score").setAttribute("title", "Competitiveness out of 100: how evenly the two squads match up");
+  }
   /* ----- league dropdowns (one per side) ----- */
   var lgs = {};
   function makeLeagueDD(side) {
@@ -1818,6 +1908,17 @@ if (typeof module !== "undefined") module.exports = { simulate, TEAMS, TEAM_ORDE
     drawXg(); updateTactics(sim.M[sim.M.length - 1].tact);
     $("controls").hidden = true;
     var r = sim.score;
+    (function () {
+      var as = sim.factors.assess, h = sim.T.h.name, an = sim.T.a.name, d = r.h - r.a;
+      var fh = as.fav === "h" ? h : an, fu = as.fav === "h" ? an : h, favGoal = as.fav === "h" ? d : -d;
+      var odds = "Before kick-off the model gave " + h + " " + pct(as.p.h) + "%, a draw " + pct(as.p.d) + "% and " + an + " " + pct(as.p.a) + "%. ";
+      var res;
+      if (as.tier === "toss" || as.tier === "close") res = d === 0 ? "A draw was one of the likeliest results." : (d > 0 ? h : an) + " came out on top in a game that was always close on paper.";
+      else if (favGoal > 0) res = fh + " did what was expected.";
+      else if (favGoal === 0) res = fu + " held the favourites to a draw.";
+      else res = "An upset: " + fu + " had only a " + pct(as.upset) + "% chance of winning.";
+      $("ft-exp").textContent = odds + res;
+    })();
     $("ft-title").textContent = "Full time: " + sim.T.h.name + " " + r.h + ", " + sim.T.a.name + " " + r.a;
     ["h", "a"].forEach(function (s) {
       $("ft-" + s + "n").textContent = sim.T[s].name;
