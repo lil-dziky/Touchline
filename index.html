@@ -675,6 +675,10 @@ h1, h2 { text-wrap: balance; }
             <div class="opt-txt"><span class="opt-t" id="o-cn-l">Pre-match cutscene <span class="beta">Beta</span></span><span class="opt-d" id="o-cn-d">A one-minute opening before kick-off: the buses, the tunnel, the dressing room, the commentators, the tifo and the walk out. You can skip it at any time.</span></div>
             <button class="sw" id="o-cn" type="button" role="switch" aria-checked="false" aria-labelledby="o-cn-l" aria-describedby="o-cn-d"></button>
           </div>
+          <div class="opt-row">
+            <div class="opt-txt"><span class="opt-t" id="o-pm-l">Post-match cutscene <span class="beta">Beta</span></span><span class="opt-d" id="o-pm-d">A 40 second finish after the final whistle: the players leave the pitch, the stands, the dressing rooms, the commentators on the result, then the crowd going home or, in a cup final, the medals and the trophy.</span></div>
+            <button class="sw" id="o-pm" type="button" role="switch" aria-checked="false" aria-labelledby="o-pm-l" aria-describedby="o-pm-d"></button>
+          </div>
           <div class="opt-row" id="o-au-row" hidden>
             <div class="opt-txt"><span class="opt-t" id="o-au-l">Cutscene sound <span class="beta">Beta</span></span><span class="opt-d" id="o-au-d">Generated music and a spoken commentary read by your browser's text-to-speech voices. Turn your sound on. Voices differ between browsers and devices.</span></div>
             <button class="sw" id="o-au" type="button" role="switch" aria-checked="false" aria-labelledby="o-au-l" aria-describedby="o-au-d"></button>
@@ -2496,7 +2500,7 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
   /* ----- a low-poly person: shoulders, head and a walking cycle. s is a scale (1 = about 60 units tall) ----- */
   function person(g, x, y, s, o) {
     o = o || {};
-    var dir = o.dir || 1, ph = o.ph || 0, c1 = o.c1 || "#8A9A8F", c2 = o.c2 || "#F4F4F0", skin = o.skin || SKIN[0], hair = o.hair || HAIR[0], sw = Math.sin(ph) * (o.walk === false ? 0 : 1);
+    var dir = o.dir || 1, ph = o.ph || 0, c1 = o.c1 || "#8A9A8F", c2 = o.c2 || "#F4F4F0", skin = o.skin || SKIN[0], hair = o.hair || HAIR[0], sw = Math.sin(ph) * (o.walk === false ? 0 : 1) * (o.amp === undefined ? 1 : o.amp);
     var H = 60 * s, hipY = y - H * 0.46, shY = y - H * 0.8, hd = H * 0.1;
     g.save();
     g.fillStyle = "rgba(10,16,12,.28)"; g.beginPath(); g.ellipse(x, y + 1 * s, H * 0.2, H * 0.05, 0, 0, Math.PI * 2); g.fill();
@@ -2513,11 +2517,12 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
       poly(g, [[ax - H * 0.04, sy], [ax + H * 0.04, sy], [hx + H * 0.03, hy], [hx - H * 0.03, hy]], k > 0 ? shade(c1, -0.14) : shade(c1, -0.04));
     });
     if (o.scarf) poly(g, [[x - H * 0.13, shY - H * 0.01], [x + H * 0.13, shY - H * 0.01], [x + H * 0.11, shY + H * 0.05], [x - H * 0.11, shY + H * 0.05]], o.scarf);
-    var hy0 = shY - H * 0.1;
+    var hy0 = shY - H * 0.1 + (o.hang || 0) * H * 0.07;
     poly(g, [[x - hd, hy0], [x - hd * 0.5, hy0 - hd * 1.05], [x + hd * 0.5, hy0 - hd * 1.05], [x + hd, hy0], [x + hd * 0.5, hy0 + hd * 0.9], [x - hd * 0.5, hy0 + hd * 0.9]], skin);
     poly(g, [[x, hy0 - hd * 1.05], [x + hd * 0.5, hy0 - hd * 1.05], [x + hd, hy0], [x + hd * 0.5, hy0 + hd * 0.9], [x, hy0 + hd * 0.9]], shade(skin, -0.09));
     if (o.hat) poly(g, [[x - hd * 1.05, hy0 - hd * 0.1], [x - hd * 0.6, hy0 - hd * 1.3], [x + hd * 0.6, hy0 - hd * 1.3], [x + hd * 1.05, hy0 - hd * 0.1]], o.hat);
     else poly(g, [[x - hd * 1.0, hy0 - hd * 0.2], [x - hd * 0.5, hy0 - hd * 1.2], [x + hd * 0.5, hy0 - hd * 1.2], [x + hd * 1.0, hy0 - hd * 0.2], [x, hy0 - hd * 0.55]], hair);
+    if (o.back) { poly(g, [[x - hd, hy0], [x - hd * 0.5, hy0 - hd * 1.05], [x + hd * 0.5, hy0 - hd * 1.05], [x + hd, hy0], [x + hd * 0.5, hy0 + hd * 0.9], [x - hd * 0.5, hy0 + hd * 0.9]], hair); if (o.num !== undefined) txt(g, String(o.num), x, shY + H * 0.27, H * 0.15, c2, 800, "center"); }
     g.restore();
   }
   /* seen from above: shoulders and a head */
@@ -2727,7 +2732,7 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
 
   /* ----- scene 5: the commentary booth, 15 to 35 s ----- */
   function sBooth(g, u, t, c, lines) {
-    var tt = u * 20;
+    var tt = u * (lines.dur || 20);
     mesh(g, 0, 0, 1000, 800, [[0, "#1B2620"], [1, "#2A3A31"]], 14, 10, 111, 0.05);
     /* the window over the pitch: dusk sky, the far stand and the turf */
     g.save(); g.beginPath(); g.rect(60, 70, 880, 330); g.clip();
@@ -2795,7 +2800,8 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
       g.restore();
     }
     /* win-chance strip, once the numbers are mentioned */
-    var sa = ease((tt - lines.numT) / 0.5) * (1 - ease((tt - lines.numT - 5) / 0.5));
+    if (c.post) scoreBug(g, c, 1);
+    var sa = c.post ? 0 : ease((tt - lines.numT) / 0.5) * (1 - ease((tt - lines.numT - 5) / 0.5));
     if (sa > 0.01) {
       g.save(); g.globalAlpha = sa;
       poly(g, [[690, 420], [960, 420], [960, 484], [690, 484]], "rgba(14,21,17,.92)");
@@ -2894,6 +2900,13 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
     g.restore();
   }
 
+  /* spread the lines over the booth scene, longer lines getting longer */
+  function timeLines(L, dur) {
+    var tot = 0, out = [], t0 = 0;
+    L.forEach(function (l) { l[1] = l[1].replace(/\s+/g, " ").trim(); tot += 2.2 + l[1].length; });
+    L.forEach(function (l) { var d = dur * (2.2 + l[1].length) / tot; out.push({ who: l[0], text: l[1], t0: t0, t1: t0 + d }); t0 += d; });
+    out.dur = dur; return out;
+  }
   /* ----- the commentary script, written from the actual fixture ----- */
   function script(c) {
     if (c.cupX) return scriptCup(c);
@@ -2907,10 +2920,7 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
     L.push([1, read]);
     L.push([0, "The numbers say " + h + " " + ph + "%, a draw " + pd + "%, " + a + " " + pa + "%." + (c.homeAdv ? " The home crowd will count for something." : " It is neutral ground, so nobody has the crowd.") + (c.tie ? " If it is level after ninety, " + c.tie + "." : "")]);
     L.push([1, c.cup ? "Silverware on the line, big names on the pitch. The teams are in the tunnel. Here we go." : "The teams are lining up in the tunnel. Here we go."]);
-    var tot = 0, out = [], t0 = 0;
-    L.forEach(function (l) { l[1] = l[1].replace(/\s+/g, " ").trim(); tot += 2.2 + l[1].length; });
-    L.forEach(function (l) { var d = 20 * (2.2 + l[1].length) / tot; out.push({ who: l[0], text: l[1], t0: t0, t1: t0 + d }); t0 += d; });
-    return out;
+    return L;
   }
 
   /* ----- the director ----- */
@@ -2931,10 +2941,7 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
     L.push([0, read]);
     L.push([1, "The numbers say " + h + " " + ph + "%, a draw " + pd + "%, " + a + " " + pa + "%." + (c.tie ? " If it is level after ninety, " + c.tie + "." : "")]);
     L.push([0, X.final ? "The captains will be hoping to lift it tonight. The teams are in the tunnel. Here we go." : "A place in the next round is at stake. The teams are in the tunnel. Here we go."]);
-    var tot = 0, out = [], t0 = 0;
-    L.forEach(function (l) { l[1] = l[1].replace(/\s+/g, " ").trim(); tot += 2.2 + l[1].length; });
-    L.forEach(function (l) { var d = 20 * (2.2 + l[1].length) / tot; out.push({ who: l[0], text: l[1], t0: t0, t1: t0 + d }); t0 += d; });
-    return out;
+    return L;
   }
 
   /* ----- a low-poly trophy ----- */
@@ -3051,14 +3058,14 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
     for (var q = 0; q < 3; q++) for (var r = 0; r < 2; r++) poly(g, [[mx - 38 + q * 27, 104 + r * 27], [mx - 14 + q * 27, 104 + r * 27], [mx - 14 + q * 27, 126 + r * 27], [mx - 38 + q * 27, 126 + r * 27]], "#F5E9B8");
   }
   /* the stadium seen from the car park: sky, hills, the tiered wall under the roof */
-  function skyAndStadium(g, seed) {
-    mesh(g, -80, -40, 1160, 500, [[0, "#223F3C"], [0.45, "#4F7A5E"], [0.8, "#C2B070"], [1, "#EBCF8A"]], 20, 9, seed, 0.05);
-    poly(g, [[-80, 400], [90, 340], [260, 386], [440, 330], [640, 380], [820, 336], [1080, 384], [1080, 470], [-80, 470]], "#243A2E");
-    var wall = "#B9C0AE", roof = "#3C5A4A", i, k;
+  function skyAndStadium(g, seed, night) {
+    mesh(g, -80, -40, 1160, 500, night ? [[0, "#0B1417"], [0.5, "#1D3532"], [0.85, "#3E5B4C"], [1, "#7C8F6A"]] : [[0, "#223F3C"], [0.45, "#4F7A5E"], [0.8, "#C2B070"], [1, "#EBCF8A"]], 20, 9, seed, 0.05);
+    poly(g, [[-80, 400], [90, 340], [260, 386], [440, 330], [640, 380], [820, 336], [1080, 384], [1080, 470], [-80, 470]], night ? "#14241B" : "#243A2E");
+    var wall = night ? "#6E776A" : "#B9C0AE", roof = "#3C5A4A", i, k;
     poly(g, [[60, 250], [940, 250], [990, 470], [10, 470]], shade(wall, -0.22));
     facet(g, [100, 214], [900, 214], [930, 262], [70, 262], roof, 0.1);
     for (i = 0; i < 16; i++) { var x0 = 70 + i * 55; poly(g, [[x0, 262], [x0 + 55, 262], [x0 + 60, 470], [x0 - 5, 470]], shade(wall, i % 2 ? -0.1 : -0.24)); }
-    for (k = 0; k < 15; k++) { var ax = 90 + k * 56; poly(g, [[ax, 470], [ax, 420], [ax + 14, 408], [ax + 28, 420], [ax + 28, 470]], "#1A2A23"); }
+    for (k = 0; k < 15; k++) { var ax = 90 + k * 56; poly(g, [[ax, 470], [ax, 420], [ax + 14, 408], [ax + 28, 420], [ax + 28, 470]], night ? "#F2DC95" : "#1A2A23"); }
     mast(g, 40); mast(g, 960);
   }
 
@@ -3324,8 +3331,8 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
   }
 
   /* ----- after the commentary 3: the supporters, high on it ----- */
-  function sFans(g, u, t, c) {
-    var kit = c.kh, i, r;
+  function sFansX(g, u, t, c, o) {
+    o = o || {}; var kit = o.kit || c.kh, oth = o.oth || c.ka, amp = o.amp === undefined ? 1 : o.amp, i, r;
     g.save();
     var z = reduce ? 1 : lerp(1.0, 1.08, u); g.translate(500, 600); g.scale(z, z); g.translate(-500, -600);
     mesh(g, -60, -40, 1120, 840, [[0, "#1B2620"], [1, "#26362B"]], 18, 10, 301, 0.06);
@@ -3339,18 +3346,18 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
       var xs = [];
       for (i = 0; i < n + 1; i++) xs.push(-sp * 0.2 + i * sp + (r % 2) * sp * 0.4 + (rn(r * 20 + i) - 0.5) * sp * 0.15);
       xs.forEach(function (fx, idx) {
-        var jump = reduce ? 0 : Math.abs(Math.sin(t * (7 + (idx % 3)) + idx * 1.7 + r)) * (20 + r * 8), k = (rn(r * 31 + idx) < 0.6) ? kit : c.ka, yy = ry + 112 - jump;
-        person(g, fx, yy, sc, { c1: light(k[0]), c2: k[1], skin: SKIN[(idx + r) % 5], hair: HAIR[(idx * 2 + r) % 5], dir: 1, walk: false, armsUp: true, stripe: true, legs: shade(k[0], -0.3), scarf: kit[1] });
+        var jump = reduce ? 0 : Math.abs(Math.sin(t * (7 + (idx % 3)) + idx * 1.7 + r)) * amp * (20 + r * 8), k = (rn(r * 31 + idx) < 0.6) ? kit : oth, yy = ry + 112 - jump;
+        person(g, fx, yy, sc, { c1: light(k[0]), c2: k[1], skin: SKIN[(idx + r) % 5], hair: HAIR[(idx * 2 + r) % 5], dir: 1, walk: false, armsUp: o.up !== false, stripe: true, legs: shade(k[0], -0.3), scarf: kit[1] });
       });
       /* a scarf held between neighbours */
-      for (i = 0; i < xs.length - 1; i += 2) {
-        var H = 60 * sc, jmp = reduce ? 0 : Math.abs(Math.sin(t * (7 + (i % 3)) + i * 1.7 + r)) * (20 + r * 8), hy = ry + 112 - jmp - H * 1.08, hx0 = xs[i] + H * 0.23, hx1 = xs[i + 1] - H * 0.23, sag = 10 * sc / 2;
+      for (i = 0; o.up !== false && i < xs.length - 1; i += 2) {
+        var H = 60 * sc, jmp = reduce ? 0 : Math.abs(Math.sin(t * (7 + (i % 3)) + i * 1.7 + r)) * amp * (20 + r * 8), hy = ry + 112 - jmp - H * 1.08, hx0 = xs[i] + H * 0.23, hx1 = xs[i + 1] - H * 0.23, sag = 10 * sc / 2;
         poly(g, [[hx0, hy], [(hx0 + hx1) / 2, hy + sag], [hx1, hy], [hx1, hy + 9 * sc / 2], [(hx0 + hx1) / 2, hy + sag + 9 * sc / 2], [hx0, hy + 9 * sc / 2]], kit[0]);
         poly(g, [[hx0, hy + 3 * sc / 2], [(hx0 + hx1) / 2, hy + sag + 3 * sc / 2], [hx1, hy + 3 * sc / 2], [hx1, hy + 6 * sc / 2], [(hx0 + hx1) / 2, hy + sag + 6 * sc / 2], [hx0, hy + 6 * sc / 2]], kit[1]);
       }
     }
     /* flares and smoke in the home colours */
-    [[150, 560], [840, 520], [500, 430]].forEach(function (fl, k) {
+    (o.flares === false ? [] : [[150, 560], [840, 520], [500, 430]]).forEach(function (fl, k) {
       poly(g, [[fl[0] - 3, fl[1]], [fl[0] + 3, fl[1]], [fl[0] + 3, fl[1] - 40], [fl[0] - 3, fl[1] - 40]], "#C2543A");
       for (var s2 = 0; s2 < 7; s2++) {
         var p = ((reduce ? 0.4 : t * 0.35) + s2 / 7 + k * 0.2) % 1, sx = fl[0] + Math.sin(p * 5 + s2 + k) * 24 * (0.4 + p), sy = fl[1] - 40 - p * 360, rr = 30 + p * 70;
@@ -3362,8 +3369,9 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
     /* confetti */
     for (i = 0; i < 46; i++) { var cxp = rn(i * 3) * 1000, cyp = ((reduce ? 0.3 : t * 0.4) * 400 * (0.6 + rn(i)) + rn(i * 7) * 900) % 880 - 40; poly(g, [[cxp, cyp], [cxp + 9, cyp + 3], [cxp + 6, cyp + 11], [cxp - 3, cyp + 8]], i % 3 ? (i % 2 ? kit[0] : kit[1]) : "#F6F8F1"); }
     g.restore();
-    capt(g, u, c.home + " supporters", "The home end, on its feet");
+    capt(g, u, o.cap ? o.cap[0] : c.home + " supporters", o.cap ? o.cap[1] : "The home end, on its feet");
   }
+  function sFans(g, u, t, c) { sFansX(g, u, t, c, {}); }
 
   /* ----- after the commentary 4: the tifo ----- */
   var NICK = {
@@ -3512,6 +3520,7 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
   function auSchedule(tNow) {
     var A = AU, sc = st.sc, total = st.total, i, k;
     A.T0 = auNow() - tNow;
+    if (st.mode === "post") { auSchedulePost(tNow); return; }
     function tag(n) { for (var q = 0; q < sc.length; q++) if (sc[q].tag === n) return sc[q]; return null; }
     var tro = tag("trophy"), ext = tag("ext"), wrk = tag("work"), bus = tag("bus"), exs = sc.filter(function (s) { return s.tag === "exit"; }), wlk = tag("walk"), fun = tag("funnel"), dre = tag("dress"), boo = tag("booth"), mon = tag("montage"), pep = tag("pep"), fan = tag("fans"), tif = tag("tifo"), tun = tag("tunnel"), dro = tag("drone"), zom = tag("zoom");
     /* levels */
@@ -3561,6 +3570,32 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
       timp(dro.a, 0.7); burst(dro.a, 2.4, 0.16, { type: "highpass", f: 3000 });
       [45, 57, 64, 69, 72, 76].forEach(function (m, j) { tone("sawtooth", mtof(m), dro.a, total - dro.a, 0.06, { a: 0.12, r: 1.0, lp: 2400, det: (j - 2.5) * 5 }); });
       for (i = 0; i < 6; i++) tone("triangle", mtof([69, 72, 76, 81, 84, 88][i]), dro.a + 0.1 + i * 0.12, 0.5, 0.05, { perc: true, lp: 3500 });
+    }
+  }
+
+  /* the post-match bed: warm and major after a win, open and quiet after a draw, a fanfare for a cup */
+  function auSchedulePost(tNow) {
+    var A = AU, sc = st.sc, total = st.total, k, Q = st.c.post, win = !!Q.winner;
+    function tag(n) { for (var q = 0; q < sc.length; q++) if (sc[q].tag === n) return sc[q]; return null; }
+    var pit = tag("ppitch"), fans = tag("pfans"), par = tag("pparty"), boo = tag("booth"), med = tag("medals"), tro = tag("ptrophy"), exo = tag("exodus"), fin = !!med;
+    curve(A.master.gain, [[0, 0.0001], [1.2, 0.55], [total - 1.4, 0.55], [total - 0.1, 0.0001]], tNow);
+    curve(A.musG.gain, [[0, 0.0001], [1.0, 0.5], [fans.a, win ? 0.7 : 0.5], [par.b, 0.6], [boo.a + 0.7, 0.2], [boo.b - 0.9, 0.2], [boo.b + 0.8, 0.65], [total - 0.1, 0.8]], tNow);
+    curve(A.crwG.gain, [[0, 0.0001], [0.8, 0.16], [fans.a - 0.2, 0.2], [fans.a + 0.5, win ? 0.75 : 0.3], [fans.b, win ? 0.7 : 0.3], [fans.b + 0.3, 0.04], [par.a, win ? 0.2 : 0.04], [par.b, win ? 0.2 : 0.04], [boo.a + 0.3, 0.05], [boo.b, 0.05], [boo.b + 1.0, fin ? 0.5 : 0.35], [total - 0.4, fin ? 0.6 : 0.3]], tNow);
+    var bpm = win ? 100 : 78, beat = 60 / bpm, bar = beat * 4;
+    var CH = win ? [[48, 52, 55], [53, 57, 60], [55, 59, 62], [45, 48, 52]] : [[45, 48, 52], [41, 45, 48], [48, 52, 55], [43, 47, 50]];
+    for (k = 0; k * beat < total; k++) {
+      var t = k * beat, ci = Math.floor(t / bar) % 4, ch = CH[ci], bt = k % 4, inBooth = t >= boo.a && t < boo.b;
+      if (t + beat < tNow - 0.1) continue;
+      if (bt === 0) ch.forEach(function (m, j) { tone("triangle", mtof(m + 12), t, bar + 0.2, inBooth ? 0.04 : 0.06, { a: 0.5, r: 0.5, lp: 1000, det: (j - 1) * 6 }); });
+      if (!inBooth && bt % 2 === 0) tone("triangle", mtof(ch[0]), t, beat * 1.8, 0.14, { a: 0.02, r: 0.2, lp: 400 });
+      if (!inBooth) for (var h = 0; h < 2; h++) { var th = t + h * beat / 2, m2 = ch[(k * 2 + h) % 3] + 24; if (win ? true : h === 0 && bt % 2 === 0) tone("triangle", mtof(m2), th, 0.35, win ? 0.045 : 0.035, { perc: true, lp: 2800 }); }
+      if (win && t >= fans.a && t < fans.b + 0.4) { kick(t, 0.32); if (bt % 2 === 1) snare(t, 0.08); hat(t + beat / 2, 0.03); }
+    }
+    if (fin) {
+      timp(med.a + 0.1, 0.5); timp(med.a + 1.4, 0.4);
+      [48, 55, 60, 64, 67].forEach(function (m, j) { tone("sawtooth", mtof(m), tro.a - 0.1, tro.b - tro.a + 0.4, 0.06, { a: 0.25, r: 0.7, lp: 2200, det: (j - 2) * 5 }); });
+      burst(tro.a - 0.1, 1.6, 0.14, { type: "highpass", f: 3200 }); timp(tro.a - 0.1, 0.6);
+      for (k = 0; k < 6; k++) tone("sine", mtof(88 + (k % 3) * 4), tro.a + 0.2 + k * 0.22, 0.6, 0.04, { perc: true });
     }
   }
 
@@ -3621,17 +3656,322 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
   }
 
 
+  /* ======================================================================
+     The post-match cutscene (beta), 40 seconds, told from the actual result:
+     the pitch, the tunnel, the stands, the dressing rooms, the booth, then
+     either the medals and the trophy, or the crowd heading home.
+     ====================================================================== */
+  function mood(c, side) { var w = c.post.winner; return !w ? "draw" : w === side ? "win" : "loss"; }
+  function moodOpts(md, t, i) {
+    if (md === "win") return { armsUp: i % 3 !== 1, amp: 1.25 };
+    if (md === "loss") return { hang: 1, amp: 0.4 };
+    return {};
+  }
+  function arm(g, x0, y0, x1, y1, w, col) {
+    var dx = x1 - x0, dy = y1 - y0, L = Math.sqrt(dx * dx + dy * dy) || 1, nx = -dy / L * w / 2, ny = dx / L * w / 2;
+    poly(g, [[x0 + nx, y0 + ny], [x1 + nx, y1 + ny], [x1 - nx, y1 - ny], [x0 - nx, y0 - ny]], col);
+  }
+  function scoreBug(g, c, u) {
+    var Q = c.post, a = ease(u / 0.15), txtL = c.home + " " + Q.score.h + "  –  " + Q.score.a + " " + c.away;
+    g.save(); g.globalAlpha = a;
+    poly(g, [[250, 14], [750, 14], [750, 64], [250, 64]], "rgba(14,21,17,.9)"); poly(g, [[250, 14], [256, 14], [256, 64], [250, 64]], P.gold);
+    fit(g, txtL, 500, 44, 460, 26, "#F6F8F1", 800, "center");
+    txt(g, Q.pens ? "Full time, " + (Q.winner === "h" ? c.home : c.away) + " win " + Math.max(Q.pens.h, Q.pens.a) + "-" + Math.min(Q.pens.h, Q.pens.a) + " on penalties" : Q.how === "et" ? "After extra time" : Q.how === "golden" ? "Golden goal" : "Full time", 500, 60, 11, "rgba(246,248,241,.72)", 600, "center");
+    g.restore();
+  }
+  function nightBack(g, c, seed, hz) {
+    mesh(g, -80, -40, 1160, hz + 60, [[0, "#0B1417"], [0.55, "#1D3532"], [1, "#4B6B55"]], 18, 8, seed, 0.05);
+    poly(g, [[-80, hz - 150], [1080, hz - 150], [1080, hz], [-80, hz]], "#18241E");
+    for (var r = 0; r < 5; r++) for (var s = 0; s < 36; s++) { var sx = -70 + s * 31 + (r % 2) * 12, kk = rn(r * 40 + s + seed) < 0.5 ? c.kh : c.ka; poly(g, [[sx, hz - 140 + r * 24], [sx + 22, hz - 140 + r * 24], [sx + 22, hz - 126 + r * 24], [sx, hz - 126 + r * 24]], mix("#2A3A31", kk[0], 0.42)); }
+    [[70, 60], [930, 60]].forEach(function (m) { facet(g, [m[0] - 48, m[1] - 20], [m[0] + 48, m[1] - 20], [m[0] + 48, m[1] + 40], [m[0] - 48, m[1] + 40], "#303E36", 0.05); for (var q = 0; q < 3; q++) for (var w = 0; w < 2; w++) poly(g, [[m[0] - 40 + q * 28, m[1] - 12 + w * 28], [m[0] - 16 + q * 28, m[1] - 12 + w * 28], [m[0] - 16 + q * 28, m[1] + 8 + w * 28], [m[0] - 40 + q * 28, m[1] + 8 + w * 28]], "#F5E9B8"); });
+    poly(g, [[-80, hz], [1080, hz], [1080, hz + 14], [-80, hz + 14]], "#0E1511");
+    for (var b = 0; b < 10; b++) { var y0 = lerp(hz + 14, 800, Math.pow(b / 10, 1.35)), y1 = lerp(hz + 14, 800, Math.pow((b + 1) / 10, 1.35)); poly(g, [[-80, y0], [1080, y0], [1080, y1 + 1], [-80, y1 + 1]], b % 2 ? "#2F5A39" : "#35643F"); }
+  }
+  /* a person sitting on the grass, head low */
+  function sitter(g, x, y, s, o) {
+    var d = o.dir || 1, c1 = o.c1, legc = o.legs || shade(c1, -0.3), hip = [x, y - 9 * s], knee = [x + d * 30 * s, y - 34 * s], foot = [x + d * 48 * s, y - 2 * s], sh = [x + d * 13 * s, y - 45 * s], hd = [x + d * 27 * s, y - 49 * s];
+    g.fillStyle = "rgba(10,16,12,.28)"; g.beginPath(); g.ellipse(x + d * 20 * s, y + 1 * s, 36 * s, 5 * s, 0, 0, Math.PI * 2); g.fill();
+    arm(g, hip[0], hip[1], knee[0], knee[1], 12 * s, legc); arm(g, knee[0], knee[1], foot[0], foot[1], 9 * s, shade(legc, -0.1));
+    poly(g, [[foot[0] - d * 4 * s, foot[1] - 5 * s], [foot[0] + d * 12 * s, foot[1] - 5 * s], [foot[0] + d * 12 * s, foot[1] + 1 * s], [foot[0] - d * 4 * s, foot[1] + 1 * s]], "#1B1B1B");
+    arm(g, hip[0], hip[1], sh[0], sh[1], 19 * s, c1); arm(g, (hip[0] + sh[0]) / 2, (hip[1] + sh[1]) / 2, sh[0], sh[1], 19 * s, shade(c1, -0.1));
+    if (o.stripe) arm(g, hip[0] + (sh[0] - hip[0]) * 0.55, hip[1] + (sh[1] - hip[1]) * 0.55, hip[0] + (sh[0] - hip[0]) * 0.7, hip[1] + (sh[1] - hip[1]) * 0.7, 19 * s, o.c2);
+    var r = 7 * s;
+    poly(g, [[hd[0] - r, hd[1]], [hd[0] - r * 0.5, hd[1] - r * 1.05], [hd[0] + r * 0.5, hd[1] - r * 1.05], [hd[0] + r, hd[1]], [hd[0] + r * 0.5, hd[1] + r * 0.9], [hd[0] - r * 0.5, hd[1] + r * 0.9]], o.skin);
+    poly(g, [[hd[0] - r, hd[1] - r * 0.1], [hd[0] - r * 0.5, hd[1] - r * 1.15], [hd[0] + r * 0.5, hd[1] - r * 1.15], [hd[0] + r, hd[1] - r * 0.1], [hd[0], hd[1] - r * 0.5]], o.hair);
+    arm(g, sh[0], sh[1], knee[0] - d * 3 * s, knee[1] - 1 * s, 7 * s, shade(c1, -0.12));
+    if (o.faceHand) arm(g, sh[0], sh[1] + 2 * s, hd[0] - d * 2 * s, hd[1] + 5 * s, 6 * s, shade(c1, -0.05));
+  }
+
+  /* ----- 0 to 3.6 s: on the pitch. A draw is a handshake and a dap; a result is one player helping another up ----- */
+  function sPostPitch(g, u, t, c) {
+    var Q = c.post, w = Q.winner, i;
+    g.save();
+    var z = reduce ? 1 : lerp(1.0, 1.1, u); g.translate(500, 660); g.scale(z, z); g.translate(-500, -660);
+    nightBack(g, c, 401, 400);
+    for (i = 0; i < 6; i++) { var side = i < 3 ? "h" : "a", kk = side === "h" ? c.kh : c.ka, md = mood(c, side); person(g, 90 + i * 160 + u * 50, 476 + (i % 2) * 14, 0.9, Object.assign({ c1: kk[0], c2: kk[1], skin: SKIN[i % 5], hair: HAIR[i % 5], dir: 1, ph: reduce ? 0 : t * 3 + i, stripe: true, legs: shade(kk[0], -0.3) }, moodOpts(md, t, i))); }
+    if (!w) {
+      [[360, 664, 2.2, 0, 0, 2], [660, 596, 1.75, 0.12, 1, 4]].forEach(function (pr) {
+        var p = clamp((u - pr[3]) / 0.78, 0, 1), s = pr[2], gap = lerp(200, 74, ease(p / 0.45)) * s / 2.2, hug = ease((p - 0.72) / 0.22);
+        var xL = pr[0] - gap / 2 + hug * 14, xR = pr[0] + gap / 2 - hug * 14, y = pr[1], H = 60 * s, shY = y - H * 0.8, wk = p < 0.45;
+        var oL = { c1: c.kh[0], c2: c.kh[1], skin: SKIN[pr[4]], hair: HAIR[pr[4]], dir: 1, walk: wk, ph: reduce ? 0 : t * 5 + pr[4], stripe: true, legs: shade(c.kh[0], -0.3) };
+        var oR = { c1: c.ka[0], c2: c.ka[1], skin: SKIN[pr[5]], hair: HAIR[pr[5]], dir: -1, walk: wk, ph: reduce ? 0 : t * 5 + 2 + pr[5], stripe: true, legs: shade(c.ka[0], -0.3) };
+        person(g, xL, y, s, oL); person(g, xR, y, s, oR);
+        /* the dap: hands meet at chest height, then the arm goes round the back */
+        var meet = ease((p - 0.42) / 0.14), mx = (xL + xR) / 2, my = shY + H * 0.18 - 4 * Math.sin(clamp((p - 0.5) / 0.2, 0, 1) * Math.PI) * s;
+        if (meet > 0.02) {
+          arm(g, xL + H * 0.18, shY + H * 0.04, lerp(xL + H * 0.18, mx - 2 * s, meet), lerp(shY + H * 0.04, my, meet), H * 0.075, shade(c.kh[0], -0.06));
+          arm(g, xR - H * 0.18, shY + H * 0.04, lerp(xR - H * 0.18, mx + 2 * s, meet), lerp(shY + H * 0.04, my, meet), H * 0.075, shade(c.ka[0], -0.06));
+          poly(g, [[mx - 5 * s, my - 4 * s], [mx + 5 * s, my - 4 * s], [mx + 5 * s, my + 4 * s], [mx - 5 * s, my + 4 * s]], SKIN[pr[4]]);
+        }
+        if (hug > 0.05) { arm(g, xL + H * 0.1, shY + H * 0.02, xR + H * 0.02, shY + H * 0.12, H * 0.08, shade(c.kh[0], -0.12)); arm(g, xR - H * 0.1, shY + H * 0.02, xL - H * 0.02, shY + H * 0.12, H * 0.08, shade(c.ka[0], -0.12)); }
+      });
+    } else {
+      var lside = w === "h" ? "a" : "h", wk = w === "h" ? c.kh : c.ka, lk = lside === "h" ? c.kh : c.ka, s2 = 2.5, gy = 668, H2 = 60 * s2;
+      var lx = 470, wx = lerp(860, 600, ease((u - 0.24) / 0.3));
+      var rise = ease((u - 0.6) / 0.2), walkP = ease((u - 0.8) / 0.2), off = -walkP * 160;
+      var lo = { c1: lk[0], c2: lk[1], skin: SKIN[2], hair: HAIR[3], dir: 1, stripe: true, legs: shade(lk[0], -0.3) };
+      var wo = { c1: wk[0], c2: wk[1], skin: SKIN[1], hair: HAIR[1], dir: -1, stripe: true, legs: shade(wk[0], -0.3), ph: reduce ? 0 : t * 5 };
+      if (u < 0.24) { sitter(g, lx, gy, s2, Object.assign({ faceHand: Math.sin(t * 2) > -0.2 }, lo)); }
+      else {
+        if (u < 0.6) { person(g, wx, gy + 4, s2, Object.assign({ walk: u < 0.54 }, wo)); sitter(g, lx, gy, s2, Object.assign({ faceHand: false }, lo)); }
+        if (u >= 0.5 && u < 0.6) { var hp = ease((u - 0.5) / 0.1); arm(g, wx - H2 * 0.2, gy - H2 * 0.76, lerp(wx - H2 * 0.2, lx + 46 * s2, hp), lerp(gy - H2 * 0.76, gy - 52 * s2, hp), H2 * 0.075, shade(wk[0], -0.05)); }
+        if (u >= 0.6 && u < 0.8) {
+          var lxx = lerp(lx, 540, rise); person(g, 600 + off, gy + 4, s2, Object.assign({ walk: false }, wo));
+          if (rise < 0.5) sitter(g, lx, gy - rise * 26, s2, lo); else person(g, lxx, gy + 4, s2, Object.assign({ hang: 1, walk: false, dir: -1 }, lo));
+          arm(g, 600 - H2 * 0.2, gy - H2 * 0.76, lerp(lx + 46 * s2, lxx + H2 * 0.18, rise), lerp(gy - 52 * s2, gy - H2 * 0.7, rise), H2 * 0.075, shade(wk[0], -0.05));
+        }
+        if (u >= 0.8) {
+          var bx = 560 + off, ph2 = reduce ? 0 : t * 3.4;
+          person(g, bx - 8, gy + 4, s2, { c1: lk[0], c2: lk[1], skin: SKIN[2], hair: HAIR[3], dir: -1, stripe: true, legs: shade(lk[0], -0.3), hang: 1, amp: 0.45, ph: ph2 });
+          person(g, bx + 62, gy + 4, s2, Object.assign({ amp: 0.6, ph: ph2 + 0.4 }, wo));
+          arm(g, bx + 62 - H2 * 0.1, gy - H2 * 0.78, bx - 8 - H2 * 0.05, gy - H2 * 0.74, H2 * 0.085, shade(wk[0], -0.08));
+        }
+      }
+    }
+    g.restore();
+    scoreBug(g, c, u);
+    capt(g, u, !w ? "Respect, whatever the score" : "Sportsmanship", !w ? "A dap and a word between rivals" : (w === "h" ? c.home : c.away) + " help a beaten opponent to his feet");
+  }
+
+  /* ----- 3.6 to 7 s: the squads head for the tunnel, seen from behind ----- */
+  function sPostTunnel(g, u, t, c) {
+    var Q = c.post, i, list = [];
+    function bk(uu, v) { return [500 + uu * lerp(520, 70, Math.pow(v, 0.8)), lerp(790, 410, Math.pow(v, 0.8))]; }
+    g.save();
+    var z = reduce ? 1 : lerp(1.0, 1.06, u); g.translate(500, 700); g.scale(z, z); g.translate(-500, -700);
+    nightBack(g, c, 421, 400);
+    poly(g, [[420, 334], [580, 334], [580, 402], [420, 402]], "#0A100D"); poly(g, [[412, 326], [588, 326], [588, 336], [412, 336]], "#59675D");
+    poly(g, [[-80, 384], [420, 384], [420, 402], [-80, 402]], mix("#17221C", c.kh[0], 0.3)); poly(g, [[580, 384], [1080, 384], [1080, 402], [580, 402]], mix("#17221C", c.ka[0], 0.3));
+    for (i = 0; i < 14; i++) {
+      var home = i < 7, j = home ? i : i - 7, side = home ? "h" : "a", kit = home ? c.kh : c.ka, md = mood(c, side);
+      var uu = (home ? -1 : 1) * (0.14 + (j % 4) * 0.2 + rn(i + 3) * 0.06), v0 = 0.08 + (j % 3) * 0.1 + rn(i + 9) * 0.06, p = ease(clamp(u * 0.95 + 0.04 - j * 0.012, 0, 1));
+      var v = lerp(v0, 0.97, p * (md === "loss" ? 0.8 : 1)), uuE = lerp(uu, (home ? -1 : 1) * 0.07, Math.pow(p, 1.4)), pt = bk(uuE, v);
+      list.push({ i: i, x: pt[0], y: pt[1], v: v, kit: kit, md: md, a: v > 0.93 ? (1 - v) / 0.04 : 1, num: j + 2 + (home ? 0 : 8) });
+    }
+    /* the pair from the opening shot lead the way */
+    var lp = bk(0, lerp(0.0, 0.62, ease(u))), lsz = lerp(2.6, 0.9, Math.pow(lerp(0.0, 0.62, ease(u)), 0.8));
+    list.sort(function (a, b) { return a.v - b.v; });
+    list.forEach(function (n) {
+      if (n.a <= 0) return;
+      var s = lerp(2.3, 0.62, Math.pow(n.v, 0.8)), bob = n.md === "win" && !reduce ? Math.abs(Math.sin(t * 6 + n.i)) * 10 * s / 2 : 0;
+      g.globalAlpha = clamp(n.a, 0, 1);
+      person(g, n.x, n.y - bob, s, Object.assign({ c1: n.kit[0], c2: n.kit[1], skin: SKIN[n.i % 5], hair: HAIR[(n.i * 2) % 5], dir: 1, ph: reduce ? 0 : t * (n.md === "loss" ? 3 : 5.5) + n.i * 1.3, stripe: true, legs: shade(n.kit[0], -0.3), back: true, num: n.num }, moodOpts(n.md, t, n.i)));
+      g.globalAlpha = 1;
+    });
+    var w = Q.winner, k1 = w ? (w === "h" ? c.kh : c.ka) : c.kh, k2 = w ? (w === "h" ? c.ka : c.kh) : c.ka, ph = reduce ? 0 : t * 4;
+    [[-1, k1, 1, 0], [1, k2, 3, 1]].forEach(function (pp) {
+      var x = lp[0] + pp[0] * 34 * lsz / 2.2, bob = 0;
+      person(g, x, lp[1], lsz, { c1: pp[1][0], c2: pp[1][1], skin: SKIN[pp[2]], hair: HAIR[pp[2]], dir: 1, ph: ph + pp[3], stripe: true, legs: shade(pp[1][0], -0.3), back: true, num: 7 + pp[3] * 3, amp: w ? 0.6 : 1, hang: w && pp[3] === 1 ? 1 : 0 });
+    });
+    arm(g, lp[0] - 30 * lsz / 2.2, lp[1] - 60 * lsz * 0.78, lp[0] + 30 * lsz / 2.2, lp[1] - 60 * lsz * 0.76, 60 * lsz * 0.085, shade(k1[0], -0.1));
+    g.restore();
+    scoreBug(g, c, 1);
+    capt(g, u, "Into the tunnel", !Q.winner ? "Honours even" : (Q.winner === "h" ? c.home : c.away) + " in high spirits, the others quiet");
+  }
+
+  /* ----- 7 to 10 s: the stands. The winners' end goes wild; after a draw the home end applauds ----- */
+  function sPostFans(g, u, t, c) {
+    var Q = c.post, w = Q.winner, side = w || "h", kit = side === "h" ? c.kh : c.ka, oth = side === "h" ? c.ka : c.kh;
+    sFansX(g, u, t, c, { kit: kit, oth: w ? [shade(kit[0], -0.3), kit[1]] : oth, up: !!w, amp: w ? 1.15 : 0.35, flares: !!w, cap: [(side === "h" ? c.home : c.away) + (side === "h" ? " supporters" : " travelling fans"), w ? "Bedlam in the stands" : "Applause for both sides"] });
+  }
+
+  /* ----- the lockers behind the dressing-room scenes ----- */
+  function lockers(g, kit, seed) {
+    mesh(g, 0, 0, 1000, 470, [[0, "#26362B"], [1, "#3A4F42"]], 14, 7, seed, 0.06);
+    for (var i = 0; i < 4; i++) poly(g, [[60 + i * 250, 36], [230 + i * 250, 36], [220 + i * 250, 52], [70 + i * 250, 52]], "#F5E9B8");
+    for (i = 0; i < 12; i++) {
+      var lx = 20 + i * 82;
+      facet(g, [lx, 130], [lx + 70, 130], [lx + 70, 470], [lx, 470], "#4E6556", 0.05);
+      poly(g, [[lx + 6, 146], [lx + 64, 146], [lx + 64, 330], [lx + 6, 330]], shade("#4E6556", -0.18));
+      poly(g, [[lx + 14, 150], [lx + 56, 150], [lx + 50, 262], [lx + 20, 262]], light(kit[0])); poly(g, [[lx + 35, 150], [lx + 56, 150], [lx + 50, 262], [lx + 35, 262]], shade(light(kit[0]), -0.12));
+      poly(g, [[lx + 14, 150], [lx + 56, 150], [lx + 52, 166], [lx + 18, 166]], kit[1]);
+    }
+    mesh(g, 0, 470, 1000, 330, [[0, "#1B2620"], [1, "#2F3E36"]], 14, 4, seed + 4, 0.12);
+    for (var k = 0; k < 14; k++) { g.strokeStyle = "rgba(232,235,221,.07)"; g.lineWidth = 2; g.beginPath(); g.moveTo(k * 80, 470); g.lineTo(500 + (k - 7) * 140, 800); g.stroke(); }
+  }
+  /* ----- 10 to 15 s: each squad goes into its dressing room ----- */
+  function sPostDress(g, u, t, c, l, side) {
+    var home = side === "h", kit = home ? c.kh : c.ka, nm = home ? c.home : c.away, md = mood(c, side), d = home ? -1 : 1, doorX = home ? 70 : 810, i;
+    lockers(g, kit, home ? 501 : 521);
+    poly(g, [[doorX - 18, 110], [doorX + 128, 110], [doorX + 128, 540], [doorX - 18, 540]], "#17221C"); poly(g, [[doorX, 126], [doorX + 110, 126], [doorX + 110, 540], [doorX, 540]], "#F2DC95"); poly(g, [[doorX + 55, 126], [doorX + 110, 126], [doorX + 110, 540], [doorX + 55, 540]], shade("#F2DC95", -0.08));
+    poly(g, [[doorX - 22, 62], [doorX + 132, 62], [doorX + 132, 102], [doorX - 22, 102]], kit[0]); fit(g, nm, doorX + 55, 91, 140, 22, inkOn(kit[0]), 800, "center");
+    var p = ease(u);
+    for (i = 0; i < 7; i++) {
+      var off = i * 105, x = d < 0 ? lerp(1020 + off, 40 + off * 0.5, p) : lerp(-20 - off, 960 - off * 0.5, p), y = 640 + (i % 2) * 14, bob = md === "win" && !reduce ? Math.abs(Math.sin(t * 6 + i)) * 12 : 0;
+      person(g, x, y - bob, 1.85, Object.assign({ c1: kit[0], c2: kit[1], skin: SKIN[(i + (home ? 0 : 3)) % 5], hair: HAIR[(i * 2) % 5], dir: d, ph: reduce ? 0 : t * (md === "loss" ? 3 : 5.5) + i * 1.7, stripe: true, legs: shade(kit[0], -0.28) }, moodOpts(md, t, i)));
+    }
+    capt(g, u, nm, md === "win" ? "Into the dressing room, delighted" : md === "loss" ? "Into the dressing room, in silence" : "Into the dressing room, level");
+  }
+  /* ----- 15 to 17 s: the winners celebrate in the dressing room ----- */
+  function sPostParty(g, u, t, c) {
+    var w = c.post.winner, side = w || "h", kit = side === "h" ? c.kh : c.ka, cel = !!w, i;
+    g.save();
+    var z = reduce ? 1 : lerp(1.0, 1.08, u); g.translate(500, 640); g.scale(z, z); g.translate(-500, -640);
+    lockers(g, kit, 541);
+    var ring = [], n = 10;
+    for (i = 0; i < n; i++) { var a = i / n * Math.PI * 2 + 0.4; ring.push({ x: 500 + Math.cos(a) * 290, y: 625 + Math.sin(a) * 58, i: i }); }
+    ring.sort(function (a, b) { return a.y - b.y; });
+    ring.forEach(function (r) {
+      var sc = lerp(1.9, 2.6, clamp((r.y - 565) / 120, 0, 1)), bob = reduce ? 0 : Math.abs(Math.sin(t * (cel ? 7 : 3) + r.i * 0.8)) * (cel ? 38 : 4) * sc / 2;
+      person(g, r.x, r.y - bob, sc, { c1: kit[0], c2: kit[1], skin: SKIN[(r.i + (side === "h" ? 0 : 2)) % 5], hair: HAIR[(r.i * 2 + 1) % 5], dir: 1, walk: false, armsUp: cel, stripe: true, legs: shade(kit[0], -0.28) });
+    });
+    if (cel) {
+      for (i = 0; i < 40; i++) { var p = ((reduce ? 0.3 : t * 0.9) + i / 40) % 1, sx = 500 + (rn(i) - 0.5) * 520 * (0.3 + p), sy = 470 - Math.sin(p * Math.PI) * 330 + p * 260; poly(g, [[sx, sy], [sx + 7, sy + 2], [sx + 5, sy + 9], [sx - 2, sy + 7]], i % 2 ? "#F6F8F1" : P.gold); }
+      for (i = 0; i < 40; i++) { var q = ((reduce ? 0.2 : t * 0.35) + i / 40) % 1, cx = rn(i * 3) * 1000, cy = q * 840 - 20; poly(g, [[cx, cy], [cx + 9, cy + 3], [cx + 6, cy + 11], [cx - 3, cy + 8]], i % 3 ? (i % 2 ? kit[0] : kit[1]) : "#F6F8F1"); }
+    }
+    g.restore();
+    capt(g, u, (side === "h" ? c.home : c.away), cel ? "The winners celebrate in the dressing room" : "A point each, and a quiet word");
+  }
+
+  /* ----- cup final: the medals, then the trophy up close ----- */
+  function medal(g, x, y, s, col, a) {
+    g.save(); g.globalAlpha = a;
+    poly(g, [[x - 7 * s, y - 34 * s], [x - 2 * s, y - 34 * s], [x + 4 * s, y], [x - 1 * s, y]], "#C2543A"); poly(g, [[x + 7 * s, y - 34 * s], [x + 2 * s, y - 34 * s], [x - 4 * s, y], [x + 1 * s, y]], "#F6F8F1");
+    var pts = []; for (var i = 0; i < 8; i++) pts.push([x + Math.cos(i / 8 * Math.PI * 2 + 0.39) * 8 * s, y + 6 * s + Math.sin(i / 8 * Math.PI * 2 + 0.39) * 8 * s]);
+    poly(g, pts, col[1], 1); poly(g, [[x, y - 2 * s], [x + 8 * s, y + 6 * s], [x, y + 14 * s]], col[2], 1);
+    g.restore();
+  }
+  function sMedals(g, u, t, c) {
+    var Q = c.post, w = Q.winner || "h", X = c.cupX, wk = w === "h" ? c.kh : c.ka, lk = w === "h" ? c.ka : c.kh, m = METALS[(X.trophy && X.trophy.metal) || "gold"] || METALS.gold, i;
+    g.save();
+    var z = reduce ? 1 : lerp(1.0, 1.07, u); g.translate(500, 560); g.scale(z, z); g.translate(-500, -560);
+    nightBack(g, c, 431, 370);
+    poly(g, [[420, 304], [580, 304], [580, 372], [420, 372]], "#0A100D"); poly(g, [[412, 296], [588, 296], [588, 306], [412, 306]], "#59675D");
+    poly(g, [[462, 372], [538, 372], [660, 800], [340, 800]], "#14613C"); poly(g, [[462, 372], [466, 372], [346, 800], [340, 800]], P.gold); poly(g, [[538, 372], [534, 372], [654, 800], [660, 800]], P.gold);
+    facet(g, [410, 600], [590, 600], [610, 640], [390, 640], "#33463B", 0.05); poly(g, [[410, 600], [590, 600], [590, 608], [410, 608]], m[0]);
+    drawTrophy(g, 500, 600, 0.4, m);
+    var squads = [{ kit: wk, x0: 150, dir: 1, md: "win", gold: true }, { kit: lk, x0: 850, dir: -1, md: "loss", gold: false }];
+    squads.forEach(function (sq, si) {
+      var list = [];
+      for (i = 0; i < 6; i++) {
+        var tgt = [sq.x0 + sq.dir * (i % 3) * 78 + (i > 2 ? sq.dir * 38 : 0), 668 + Math.floor(i / 3) * 46 - (i % 3) * 8], p = ease(clamp(u * 1.9 - i * 0.12 - si * 0.04, 0, 1));
+        list.push({ i: i, x: lerp(500, tgt[0], p), y: lerp(380, tgt[1], Math.pow(p, 0.9)), s: lerp(0.5, 1.7, Math.pow(p, 0.9)), p: p });
+      }
+      list.sort(function (a, b) { return a.y - b.y; });
+      list.forEach(function (n) {
+        var bob = sq.gold && n.p >= 1 && !reduce ? Math.abs(Math.sin(t * 6 + n.i + si)) * 9 : 0, ph = reduce ? 0 : t * 5 + n.i * 1.4;
+        person(g, n.x, n.y - bob, n.s, { c1: sq.kit[0], c2: sq.kit[1], skin: SKIN[(n.i + si * 2) % 5], hair: HAIR[(n.i * 2 + si) % 5], dir: 1, ph: ph, walk: n.p < 1, stripe: true, legs: shade(sq.kit[0], -0.28), armsUp: sq.gold && n.p >= 1 && n.i % 2 === 0, hang: !sq.gold && n.p >= 1 ? 0.6 : 0 });
+        var ma = ease((u - 0.5 - n.i * 0.03) / 0.12);
+        if (ma > 0.02 && n.p >= 1) medal(g, n.x, n.y - 60 * n.s * 0.74 - bob, n.s * 0.9, sq.gold ? m : METALS.silver, ma);
+      });
+    });
+    /* confetti once the cup is in sight */
+    for (i = 0; i < 70; i++) { var q = ((reduce ? 0.3 : t * 0.5) + i / 70 * 3) % 1, cx = rn(i * 3) * 1000, cy = q * 880 - 40; if (u > 0.5) poly(g, [[cx, cy], [cx + 9, cy + 3], [cx + 6, cy + 11], [cx - 3, cy + 8]], i % 3 ? (i % 2 ? wk[0] : wk[1]) : m[0]); }
+    g.restore();
+    capt(g, u, X.name, "Medals for the finalists");
+  }
+  function sTrophyClose(g, u, t, c) {
+    var Q = c.post, w = Q.winner || "h", X = c.cupX, wk = w === "h" ? c.kh : c.ka, m = METALS[(X.trophy && X.trophy.metal) || "gold"] || METALS.gold, i;
+    var z = reduce ? 1.5 : lerp(1.0, 1.9, ease(u));
+    g.save(); g.translate(500, 360); g.scale(z, z); g.translate(-500, -400);
+    mesh(g, -400, -400, 1800, 1500, [[0, "#0B100E"], [0.5, "#17221C"], [1, "#26362B"]], 20, 14, 551, 0.05);
+    [[300, 0.12], [700, 0.12], [500, 0.18]].forEach(function (bm) { poly(g, [[bm[0] - 20, -200], [bm[0] + 20, -200], [500 + (bm[0] - 500) * 0.2 + 120, 640], [500 + (bm[0] - 500) * 0.2 - 120, 640]], "rgba(246,240,214," + bm[1] + ")"); });
+    mesh(g, -400, 620, 1800, 500, [[0, "#2A3A31"], [1, "#121A16"]], 20, 4, 553, 0.1);
+    facet(g, [260, 700], [740, 700], [760, 760], [240, 760], "#33463B", 0.05); facet(g, [290, 640], [710, 640], [740, 700], [260, 700], "#3E5445", 0.05); facet(g, [330, 580], [670, 580], [710, 640], [290, 640], "#4A6454", 0.05);
+    poly(g, [[330, 580], [670, 580], [670, 586], [330, 586]], m[0]);
+    drawTrophy(g, 500, 580, 1.0, m);
+    /* the winners' ribbons on the handles */
+    [-1, 1].forEach(function (k) { poly(g, [[500 + k * 80, 404], [500 + k * 94, 404], [500 + k * 100, 470], [500 + k * 88, 470]], wk[0]); poly(g, [[500 + k * 86, 404], [500 + k * 94, 404], [500 + k * 100, 470], [500 + k * 92, 470]], wk[1]); });
+    for (i = 0; i < 8; i++) sparkle(g, 380 + rn(i) * 240, 330 + rn(i + 9) * 260, (8 + rn(i + 4) * 10) * (0.6 + 0.4 * Math.sin(t * 6 + i)), 0.9);
+    for (i = 0; i < 60; i++) { var q = ((reduce ? 0.3 : t * 0.5) + i / 60 * 2) % 1, cx = 100 + rn(i * 3) * 800, cy = -80 + q * 900; poly(g, [[cx, cy], [cx + 9, cy + 3], [cx + 6, cy + 11], [cx - 3, cy + 8]], i % 3 ? (i % 2 ? wk[0] : wk[1]) : m[0]); }
+    g.restore();
+    var a = ease((u - 0.2) / 0.3);
+    g.save(); g.globalAlpha = a;
+    poly(g, [[0, 684], [640, 684], [570, 800], [0, 800]], "rgba(14,21,17,.55)"); poly(g, [[44, 706], [44, 762], [48, 762], [48, 706]], P.gold);
+    fit(g, (w === "h" ? c.home : c.away) + " are champions", 64, 738, 520, 32, "#F6F8F1", 800); txt(g, X.name, 64, 764, 16, "rgba(246,248,241,.88)", 500);
+    g.restore();
+  }
+
+  /* ----- not a final: the crowd streams out into the night ----- */
+  function sExodus(g, u, t, c) {
+    var Q = c.post, w = Q.winner, i;
+    g.save();
+    var z = reduce ? 1 : lerp(1.0, 1.06, u); g.translate(500, 640); g.scale(z, z); g.translate(-500, -640);
+    skyAndStadium(g, 561, true);
+    poly(g, [[395, 540], [405, 398], [500, 372], [595, 398], [605, 540]], "#17221C"); poly(g, [[430, 540], [434, 410], [500, 392], [566, 410], [570, 540]], "#F2DC95"); poly(g, [[500, 392], [566, 410], [570, 540], [500, 540]], shade("#F2DC95", -0.12));
+    mesh(g, -80, 540, 1160, 300, [[0, "#454F46"], [1, "#2B332D"]], 18, 5, 563, 0.09);
+    var fans = [];
+    for (i = 0; i < 90; i++) {
+      var sd = rn(i * 3 + 1) < 0.5 ? -1 : 1, sp = 0.1 + rn(i + 40) * 0.08, p = (t * sp * (reduce ? 0 : 1) + rn(i * 5 + 2)) % 1, q = ease(p);
+      var ex = 500 + sd * (200 + rn(i + 9) * 500) + (rn(i + 4) - 0.5) * 60, ey = 760 + rn(i + 21) * 120, sx = 500 + (rn(i + 77) - 0.5) * 100;
+      fans.push({ x: lerp(sx, ex, q), y: lerp(540, ey, Math.pow(q, 0.85)), s: lerp(0.34, 1.35, Math.pow(q, 0.85)), f: i, sd: sd, a: p < 0.05 ? p / 0.05 : p > 0.94 ? (1 - p) / 0.06 : 1 });
+    }
+    fans.sort(function (a, b) { return a.y - b.y; });
+    fans.forEach(function (n) {
+      if (n.a <= 0.02) return;
+      var side = rn(n.f * 11 + 3) < 0.5 ? "h" : "a", kit = side === "h" ? c.kh : c.ka, md = mood(c, side), bob = md === "win" && !reduce ? Math.abs(Math.sin(t * 6 + n.f)) * 6 * n.s : 0;
+      g.globalAlpha = n.a;
+      person(g, n.x, n.y - bob, n.s, Object.assign({ c1: rn(n.f + 5) < 0.6 ? light(kit[0]) : mix("#8A9A8F", "#C9B58A", rn(n.f + 6)), c2: kit[1], skin: SKIN[Math.floor(rn(n.f + 7) * 5)], hair: HAIR[Math.floor(rn(n.f + 8) * 5)], dir: n.sd, ph: reduce ? 0 : t * (md === "loss" ? 4 : 7) + n.f, scarf: light(kit[1]) }, moodOpts(md, t, n.f)));
+      g.globalAlpha = 1;
+    });
+    g.restore();
+    capt(g, u, "Full time", w ? (w === "h" ? c.home : c.away) + " fans sing all the way home" : "The crowd heads home, honours even");
+  }
+
+  /* ----- the post-match script: written from the score, the goals, the stats and the man of the match ----- */
+  function scriptPost(c) {
+    var Q = c.post, h = c.home, a = c.away, sh = Q.score.h, sa = Q.score.a, w = Q.winner, W = w ? (w === "h" ? h : a) : "", Lz = w ? (w === "h" ? a : h) : "", X = c.cupX, L = [];
+    var pl = Q.pens ? Math.max(Q.pens.h, Q.pens.a) + "-" + Math.min(Q.pens.h, Q.pens.a) : "";
+    if (!w) L.push([0, "Full time. " + h + " " + sh + ", " + a + " " + sa + ", and the points are shared."]);
+    else if (Q.pens) L.push([0, W + " win it on penalties, " + pl + ", after a " + sh + "-" + sa + " draw."]);
+    else if (Q.how === "et" || Q.how === "golden") L.push([0, W + " win it in extra time, " + Math.max(sh, sa) + "-" + Math.min(sh, sa) + "."]);
+    else L.push([0, W + " win it " + Math.max(sh, sa) + "-" + Math.min(sh, sa) + (c.homeAdv ? " at " + c.ground : "") + "."]);
+    var gh = Q.goals.filter(function (x) { return x.s === "h"; }).map(function (x) { return x.name; }).filter(function (n, i, arr) { return arr.indexOf(n) === i; }).slice(0, 2);
+    var ga = Q.goals.filter(function (x) { return x.s === "a"; }).map(function (x) { return x.name; }).filter(function (n, i, arr) { return arr.indexOf(n) === i; }).slice(0, 2);
+    if (!gh.length && !ga.length) L.push([1, "Not a single goal. Both goalkeepers earned their wages tonight."]);
+    else L.push([1, (gh.length ? gh.join(" and ") + " scored for " + h : "") + (gh.length && ga.length ? ", " : "") + (ga.length ? ga.join(" and ") + " for " + a : "") + "."]);
+    L.push([0, h + " had " + Q.poss + "% of the ball and " + Q.shots[0] + " shots to " + Q.shots[1] + "."]);
+    if (Q.motm) L.push([1, "Player of the match: " + Q.motm.name + ", rated " + Q.motm.rating.toFixed(1) + "."]);
+    var ctx;
+    if (X && X.final && w) ctx = W + " lift the " + X.name + ". What a night.";
+    else if (X && w && X.stage === "ko") ctx = W + " go through." + (Q.agg ? " It is " + (sh + Q.agg.h) + "-" + (sa + Q.agg.a) + " on aggregate." : "");
+    else if (w) ctx = Q.favWon ? "That is what the numbers expected." : "A real upset. " + Lz + " had only a " + Q.upset + "% chance before kick-off." ;
+    else ctx = "A fair result, and the numbers expected a close one.";
+    L.push([0, ctx]);
+    L.push([1, (w ? Lz + " will be hurt." : "Neither side will mind much.") + " Goodnight from us both."]);
+    return L;
+  }
+
+
   var st = { run: false, t: 0, last: 0, done: null, c: null, lines: null, raf: 0, cv: null, g: null, W: 0, H: 0, onKey: null, sc: null, total: DUR, hand: DUR - 0.5 };
   /* the running order: cups open on the trophy and cut a montage in before the tunnel */
-  function buildScenes(cup) {
+  function buildScenes(cup, mode, bd, fin) {
     var L = [], t = 0;
     function add(d, fn, tag, join) { L.push({ a: t, b: t + d, fn: fn, tag: tag || "", join: !!join }); t += d; }
     var by = function (fn, side) { return function (g, u, tt, c, l) { fn(g, u, tt, c, l, side); }; };
+    if (mode === "post") {
+      /* 0-7 the pitch and the tunnel, 7-10 the stands, 10-15 the dressing rooms, 15-17 the party, then the booth, then the finish */
+      add(3.6, sPostPitch, "ppitch"); add(3.4, sPostTunnel, "ptun", 1); add(3, sPostFans, "pfans", 1);
+      add(2.5, by(sPostDress, "h"), "pdress", 1); add(2.5, by(sPostDress, "a"), "pdress", 1); add(2, sPostParty, "pparty", 1);
+      add(bd || 18, sBooth, "booth");
+      if (fin) { add(3.2, sMedals, "medals"); add(1.8, sTrophyClose, "ptrophy", 1); } else add(5, sExodus, "exodus");
+      return { list: L, total: t };
+    }
     if (cup) add(5.2, sTrophy, "trophy");
     add(5, sExterior, "ext"); add(2, sOverhead); add(3, sWorkers, "work");
     /* the arrival: buses, both squads off the bus, the tunnel, the funnel through the fans */
     add(2.6, sBus, "bus"); add(2, by(sExit, "h"), "exit", 1); add(2, by(sExit, "a"), "exit", 1); add(2, sTunnelWalk, "walk", 1); add(3, sFunnel, "funnel", 1);
-    add(5, sDressing, "dress"); add(20, sBooth, "booth");
+    add(5, sDressing, "dress"); add(bd || 20, sBooth, "booth");
     if (cup) add(2.8, sMontage, "montage");
     /* the build-up to kick-off: two team talks, the stands, the tifo */
     add(2, by(sPep, "h"), "pep"); add(2, by(sPep, "a"), "pep", 1); add(2.2, sFans, "fans", 1); add(2.6, sTifo, "tifo", 1);
@@ -3690,21 +4030,27 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
     document.removeEventListener("keydown", st.onKey);
     var cb = st.done; st.done = null; if (cb) cb(!!natural);
   }
-  function prep(info) {
-    st.c = info; st.lines = script(info); st.lines.numT = 0;
+  function prep(info, opts) {
+    var post = !!(opts && opts.post), raw, base = post ? 18 : 20, chars = 0;
+    st.mode = post ? "post" : "pre"; st.c = info;
+    raw = post ? scriptPost(info) : script(info);
+    raw.forEach(function (l) { chars += l[1].length; });
+    /* with a voice reading the lines the scene stretches so that nothing is cut off */
+    var dur = st.audio ? clamp(chars / 19, base, base + 14) : base;
+    st.lines = timeLines(raw, dur); st.lines.numT = post ? 1e9 : 0;
     st.lines.forEach(function (l) { if (/numbers say/.test(l.text)) st.lines.numT = l.t0 + 0.6; });
-    var b = buildScenes(!!info.cupX); st.sc = b.list; st.total = b.total; st.hand = b.total - 0.5;
-    /* the booth reads its lines against the time inside its own scene */
+    var b = buildScenes(!!info.cupX, st.mode, dur, !!(info.post && info.post.final)); st.sc = b.list; st.total = b.total; st.hand = b.total - 0.5;
   }
   window.CINE = {
     play: function (info, done, opts) {
       var box = document.getElementById("cine"), cv = document.getElementById("cine-cv");
       if (!box || !cv) { if (done) done(false); return; }
-      prep(info); st.audio = !!(opts && opts.audio); st.cv = cv; st.t = 0; st.last = 0; st.done = done; st.run = true;
+      st.audio = !!(opts && opts.audio); prep(info, opts); st.cv = cv; st.t = 0; st.last = 0; st.done = done; st.run = true;
       box.hidden = false; size();
       st.onKey = function (ev) { if (ev.key === "Escape") { ev.preventDefault(); stop(false); } };
       document.addEventListener("keydown", st.onKey);
-      var mb = document.getElementById("cine-mute");
+      var mb = document.getElementById("cine-mute"), skb = document.getElementById("cine-skip");
+      if (skb) skb.textContent = opts && opts.post ? "Skip" : "Skip intro";
       if (st.audio) { auStart(); }
       if (mb) {
         mb.hidden = !st.audio; mb.setAttribute("aria-pressed", String(AU.muted)); mb.textContent = AU.muted ? "Muted" : "Sound on";
@@ -3714,7 +4060,7 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
     },
     /* test hook: render the soundtrack offline for a given info and return the samples */
     _render: function (info, rate) {
-      prep(info); st.audio = true; rate = rate || 22050;
+      st.audio = true; prep(info, { post: !!info.post }); rate = rate || 22050;
       var oc = new OfflineAudioContext(1, Math.ceil(st.total * rate), rate); auOpen(oc); AU.muted = false; auSchedule(0);
       return oc.startRendering().then(function (b) { AU.ctx = null; return Array.prototype.slice.call(b.getChannelData(0)); });
     },
@@ -3785,6 +4131,8 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
   var TIE_NAME = { golden: "Golden goal", pens: "Penalty shootout", et: "Extra time and penalties" };
   var cineOn = false;
   try { cineOn = localStorage.getItem("touchline-cine") === "1"; } catch (e) {}
+  var postOn = false;
+  try { postOn = localStorage.getItem("touchline-post") === "1"; } catch (e) {}
   var cineAu = false;
   try { cineAu = localStorage.getItem("touchline-cine-au") === "1"; } catch (e) {}
   function curOpts() { return { homeAdv: opts.homeAdv, tie: opts.tieOn ? opts.tieType : "none" }; }
@@ -3795,7 +4143,7 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
     $("o-ha").setAttribute("aria-checked", String(opts.homeAdv));
     $("o-tb").setAttribute("aria-checked", String(opts.tieOn));
     $("o-cn").setAttribute("aria-checked", String(cineOn));
-    $("o-au-row").hidden = !cineOn; $("o-au").setAttribute("aria-checked", String(cineAu));
+    $("o-pm").setAttribute("aria-checked", String(postOn)); $("o-au-row").hidden = !(cineOn || postOn); $("o-au").setAttribute("aria-checked", String(cineAu));
     $("o-types").hidden = !opts.tieOn;
     Array.prototype.forEach.call(document.querySelectorAll(".opt-ty"), function (b) { b.setAttribute("aria-checked", String(b.getAttribute("data-tie") === opts.tieType)); });
     $("opt-sum").textContent = optLine(curOpts());
@@ -3810,6 +4158,7 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
   $("o-ha").addEventListener("click", function () { opts.homeAdv = !opts.homeAdv; syncOpts(); });
   $("o-tb").addEventListener("click", function () { opts.tieOn = !opts.tieOn; syncOpts(); });
   $("o-cn").addEventListener("click", function () { cineOn = !cineOn; try { localStorage.setItem("touchline-cine", cineOn ? "1" : "0"); } catch (e) {} syncOpts(); });
+  $("o-pm").addEventListener("click", function () { postOn = !postOn; try { localStorage.setItem("touchline-post", postOn ? "1" : "0"); } catch (e) {} syncOpts(); });
   $("o-au").addEventListener("click", function () { cineAu = !cineAu; try { localStorage.setItem("touchline-cine-au", cineAu ? "1" : "0"); } catch (e) {} syncOpts(); });
   Array.prototype.forEach.call(document.querySelectorAll(".opt-ty"), function (b, i, all) {
     b.addEventListener("click", function () { opts.tieType = b.getAttribute("data-tie"); syncOpts(); });
@@ -3944,6 +4293,7 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
 
   function startMatch(s) {
     seed = s;
+    if (window.CINE && CINE.active()) CINE.skip();
     sim = simulate(cupCtx ? cupCtx.home : pickState.h, cupCtx ? cupCtx.away : pickState.a, seed, cupCtx ? cupCtx.opts : curOpts());
     kits = kitsFor(cupCtx ? cupCtx.home : pickState.h, cupCtx ? cupCtx.away : pickState.a);
     ["rematch", "replay", "another"].forEach(function (b) { $(b).hidden = !!cupCtx; });
@@ -3975,7 +4325,7 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
     if (sim.M[0].acts.length) startAct(0, 0);
     if ((cupCtx ? !!cupCtx.cine : cineOn) && window.CINE) {
       playing = false; $("controls").hidden = true;
-      CINE.play(cineInfo(), function () { $("controls").hidden = false; playing = true; last = 0; }, { audio: cupCtx ? !!cupCtx.audio : cineOn && cineAu });
+      CINE.play(cineInfo(), function () { $("controls").hidden = false; playing = true; last = 0; }, { audio: cupCtx ? !!(cupCtx.audio && cupCtx.cine) : cineOn && cineAu });
     }
   }
   /* the fixture, as the cutscene tells it */
@@ -3995,6 +4345,18 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
       competition: cupCtx ? cupCtx.label : "Match " + seed,
       infoRight: sim.opts.homeAdv ? "Home advantage" : "Neutral ground", managers: Th.coach + "  ·  " + Ta.coach
     };
+  }
+
+  /* the finished match, as the post-match cutscene tells it */
+  function postInfo() {
+    var b = cineInfo(), r = sim.score, last = sim.M[sim.M.length - 1].stats, as = sim.factors.assess, w = sim.winner || null, pa = (last.h.acts + last.a.acts) || 1, mo = manOfTheMatch(sim);
+    b.post = {
+      score: { h: r.h, a: r.a }, winner: w, how: sim.how, pens: sim.pens ? { h: sim.pens.h, a: sim.pens.a } : null,
+      goals: sim.goals.map(function (g) { return { s: g.s, name: short(g.name), label: g.label, pen: !!g.pen }; }),
+      poss: Math.round(100 * last.h.acts / pa), shots: [last.h.shots, last.a.shots], xg: [last.h.xg, last.a.xg],
+      motm: mo ? { name: mo.short || mo.name, rating: mo.rating } : null, agg: sim.opts.agg || null, fav: as.fav, upset: Math.round(as.upset * 100), favWon: w === as.fav, final: !!(cupCtx && cupCtx.final)
+    };
+    return b;
   }
 
   /* ----- stats ----- */
@@ -4320,7 +4682,6 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
   }
   function finish() {
     playing = false; holding = false;
-    if (cupCtx && cupCtx.final && sim.winner) party = { s: sim.winner, t0: performance.now() };
     updateStats(sim.M[sim.M.length - 1].stats);
     xgSeries.h.push(sim.M[sim.M.length - 1].stats.h.xg); xgSeries.a.push(sim.M[sim.M.length - 1].stats.a.xg);
     drawXg(); updateTactics(sim.M[sim.M.length - 1].tact);
@@ -4366,6 +4727,10 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
     rated = true; renderTeams();
     $("ft").hidden = false;
     $("now-text").textContent = sim.how === "pens" ? "Penalty shootout over" : "Full time";
+    var fin = !!(cupCtx && cupCtx.final && sim.winner), mySim = sim;
+    if ((cupCtx ? !!cupCtx.post : postOn) && window.CINE) {
+      CINE.play(postInfo(), function () { if (sim !== mySim) return; if (fin) party = { s: sim.winner, t0: performance.now() }; }, { post: true, audio: cupCtx ? !!(cupCtx.audio && cupCtx.post) : postOn && cineAu });
+    } else if (fin) party = { s: sim.winner, t0: performance.now() };
     $("announce").textContent = "Full time. " + sim.T.h.name + " " + r.h + ", " + sim.T.a.name + " " + r.a + (sim.pens ? ". " + sim.T[sim.winner].name + " win on penalties " + sim.pens[sim.winner] + " to " + sim.pens[sim.winner === "h" ? "a" : "h"] : "");
   }
 
@@ -4398,7 +4763,7 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
     trails = []; bubbles = [];
     $("tfill").style.transform = "scaleX(1)";
   });
-  function leaveCup() { var c = cupCtx; cupCtx = null; sim = null; playing = false; $("match").hidden = true; if (c && c.back) c.back(); }
+  function leaveCup() { if (window.CINE && CINE.active()) CINE.skip(); var c = cupCtx; cupCtx = null; sim = null; playing = false; $("match").hidden = true; if (c && c.back) c.back(); }
   $("cine-skip").addEventListener("click", function () { if (window.CINE) CINE.skip(); });
   $("cupback").addEventListener("click", leaveCup); $("cupleave").addEventListener("click", leaveCup);
   window.TL = { watch: function (c) { cupCtx = c; if ($("cup")) $("cup").hidden = true; startMatch(c.seed); } };
@@ -5433,7 +5798,7 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
   var ALL = TEAM_ORDER.slice();
   var S = {
     mode: "match", sub: "create", step: 1, league: LEAGUES[0].id, query: "", teams: [], touched: { rounds: false, qS: false, groups: false, qG: false },
-    cfg: { name: "Touchline Cup", trophy: { design: "cup", metal: "gold" }, logo: { shape: "shield", c1: "#14613C", c2: "#F4F1EC", emblem: "initials" }, format: "ko", twoLegs: false, tie: "et", homeAdv: true, cutscene: false, cutAudio: false, rounds: 6, qS: 8, groups: 4, qG: 2 },
+    cfg: { name: "Touchline Cup", trophy: { design: "cup", metal: "gold" }, logo: { shape: "shield", c1: "#14613C", c2: "#F4F1EC", emblem: "initials" }, format: "ko", twoLegs: false, tie: "et", homeAdv: true, cutscene: false, postCut: false, cutAudio: false, rounds: 6, qS: 8, groups: 4, qG: 2 },
     cup: null, cupId: null, delArm: null, tab: "day", busy: false, anim: null, leaveArm: false
   };
   /* ---------- local database: every cup autosaves in this browser ---------- */
@@ -5498,7 +5863,7 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
   function kd(id) { var k = TEAMS[id].kit.home; return '<i class="kit" style="--k1:' + k[0] + ";--k2:" + k[1] + '"></i>'; }
   function cfgOut() {
     var c = S.cfg, f = c.format;
-    return { name: c.name.trim() || "Touchline Cup", trophy: c.trophy, logo: c.logo, format: f, twoLegs: f !== "rr" && c.twoLegs, tie: c.tie, homeAdv: c.homeAdv, cutscene: !!c.cutscene, cutAudio: !!(c.cutscene && c.cutAudio), rounds: c.rounds, qualifiers: f === "swiss" ? c.qS : c.qG, groups: c.groups };
+    return { name: c.name.trim() || "Touchline Cup", trophy: c.trophy, logo: c.logo, format: f, twoLegs: f !== "rr" && c.twoLegs, tie: c.tie, homeAdv: c.homeAdv, cutscene: !!c.cutscene, postCut: !!c.postCut, cutAudio: !!((c.cutscene || c.postCut) && c.cutAudio), rounds: c.rounds, qualifiers: f === "swiss" ? c.qS : c.qG, groups: c.groups };
   }
   function normalize() {
     var n = S.teams.length, c = S.cfg;
@@ -5570,7 +5935,8 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
     }
     h += sw("ha", c.homeAdv, "Home advantage", "The home side gets a small edge. The final is always played on neutral ground.");
     h += sw("cine", c.cutscene, 'Pre-match cutscene <span class="beta">Beta</span>', "Every match you watch opens with a cinematic: the trophy, the crowd, the commentators, a montage of past winners and the walk out. Skip it at any time.");
-    if (c.cutscene) h += sw("cineau", c.cutAudio, 'Cutscene sound <span class="beta">Beta</span>', "Generated music and a spoken commentary read by your browser's text-to-speech voices. Turn your sound on. Voices differ between browsers and devices.");
+    h += sw("post", c.postCut, 'Post-match cutscene <span class="beta">Beta</span>', "Every match you watch ends with a 40 second finish: the players leave the pitch, the stands, the dressing rooms and the commentators on the result. In a final it ends on the medals and the trophy.");
+    if (c.cutscene || c.postCut) h += sw("cineau", c.cutAudio, 'Cutscene sound <span class="beta">Beta</span>', "Generated music and a spoken commentary read by your browser's text-to-speech voices. Turn your sound on. Voices differ between browsers and devices.");
     h += "</div>";
     if (c.format !== "rr") {
       h += '<div class="cp-lab" style="margin-top:var(--s3)">If a knockout tie is level</div><div class="opt-types" role="radiogroup" aria-label="Level knockout ties">';
@@ -5651,6 +6017,7 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
     else if (a === "legs") c.twoLegs = !c.twoLegs;
     else if (a === "ha") c.homeAdv = !c.homeAdv;
     else if (a === "cine") c.cutscene = !c.cutscene;
+    else if (a === "post") c.postCut = !c.postCut;
     else if (a === "cineau") c.cutAudio = !c.cutAudio;
     else if (a === "tie") c.tie = v;
     else if (a === "next") S.step = 2;
@@ -5839,7 +6206,7 @@ if (false && typeof module !== "undefined") module.exports = { KO_SIZES, CUP_FOR
     var cup = S.cup, f = cup.fx[id], d = cup.days[f.day];
     window.TL.watch({
       home: f.home, away: f.away, seed: f.seed, opts: f.opts, label: cup.cfg.name + " · " + d.label,
-      cine: !!cup.cfg.cutscene, audio: !!(cup.cfg.cutscene && cup.cfg.cutAudio),
+      cine: !!cup.cfg.cutscene, post: !!cup.cfg.postCut, audio: !!(cup.cfg.cutAudio && (cup.cfg.cutscene || cup.cfg.postCut)),
       cupInfo: { name: cup.cfg.name, stageLabel: d.label, stage: f.stage, leg: f.leg || 0, agg: f.opts && f.opts.agg ? f.opts.agg : null, group: f.group, format: CUP_FORMATS[cup.cfg.format].name, teams: cup.teams.length, trophy: cup.cfg.trophy, logo: cup.cfg.logo },
       final: !!(d.stage === "ko" && cup.ko && cup.ko.rounds && cup.ko.rounds[cup.ko.r] && cup.ko.rounds[cup.ko.r].size === 2),
       back: function () { cupPlay(cup, id); save(); cupEl.hidden = false; $("setup").hidden = true; renderCup(); window.scrollTo(0, 0); }
