@@ -2,7 +2,7 @@
 <title>Touchline</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=DM+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400..600&display=swap">
 <script>try { var _th = localStorage.getItem("touchline-theme"); if (_th === "light" || _th === "dark") document.documentElement.setAttribute("data-theme", _th); } catch (e) {}</script>
 <style>
 /* Layout: one column of reading on the left (pitch, controls), commentary beside it on wide screens.
@@ -982,6 +982,124 @@ body.cr-dragging, body.cr-dragging * { cursor: grabbing !important; user-select:
 .cr-ib small { color: var(--muted, #6b6b60); }
 .cr-ibk { display: inline-flex; padding-top: 2px; } .cr-ibk svg { display: block; }
 .cr-ib-injury .cr-ibk { color: #B3261E; } .cr-ib-contract .cr-ibk { color: #8A5A00; }
+
+/* ---------- Tactics: sheets, formations, roles ---------- */
+.cx-sub { display: flex; gap: var(--s2); margin: 0 0 var(--s4); }
+.cx-sub .btn.on { background: var(--ink); color: var(--ground); }
+.cx-sheets { display: flex; flex-wrap: wrap; gap: var(--s2); margin-bottom: var(--s4); }
+.cx-sh { min-height: 2.25rem; padding: 0 var(--s3); border: 1.5px solid var(--ink); background: transparent; color: var(--ink); font: 600 var(--t-sm)/1 var(--ui); border-radius: 2px; cursor: pointer; transition: background 0.15s ease-out, color 0.15s ease-out, transform 0.1s ease-out; }
+.cx-sh:hover { background: rgba(0, 0, 0, 0.06); } .cx-sh:active { transform: scale(0.97); }
+.cx-sh.on { background: var(--ink); color: var(--ground); } .cx-sh.add { border-style: dashed; }
+.cx-star { color: #E2B600; }
+.cx-grid { display: grid; grid-template-columns: minmax(0, 28rem) minmax(0, 1fr); gap: var(--s6); align-items: start; }
+.cx-left { position: sticky; top: var(--s3); }
+.cx-ctl { display: flex; flex-wrap: wrap; gap: var(--s2); padding-top: var(--s3); align-items: center; }
+.cx-cap { min-height: 2.6em; }
+.cx-right { display: flex; flex-direction: column; gap: var(--s4); min-width: 0; }
+.cx-name { display: flex; flex-wrap: wrap; gap: var(--s3); align-items: end; justify-content: space-between; }
+.cx-h3 { margin-top: var(--s4); }
+.cx-forms { display: grid; grid-template-columns: repeat(auto-fill, minmax(8.2rem, 1fr)); gap: var(--s2); }
+.cx-fm { display: grid; justify-items: start; gap: 2px; padding: var(--s2) var(--s3); border: 1.5px solid var(--rule-strong, var(--ink)); background: transparent; color: var(--ink); text-align: left; cursor: pointer; border-radius: 2px; transition: background 0.15s ease-out, transform 0.12s ease-out, border-color 0.15s; }
+.cx-fm b { font: 700 var(--t-sm)/1.1 var(--ui); } .cx-fm small { font: 400 var(--t-xs)/1.3 var(--ui); opacity: 0.7; }
+.cx-fm:hover { transform: translateY(-2px); } .cx-fm:active { transform: scale(0.97); }
+.cx-fm.on { background: var(--ink); color: var(--ground); }
+.cx-fm svg { transition: transform 0.25s ease-out; } .cx-fm.on svg { transform: scale(1.06); }
+.cx-roles { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s2); }
+.cx-role { width: 100%; display: grid; gap: 2px; text-align: left; padding: var(--s2) var(--s3); border: 1.5px solid var(--rule-strong, var(--ink)); background: transparent; color: var(--ink); cursor: pointer; border-radius: 2px; transition: background 0.15s ease-out, transform 0.1s ease-out; animation: cxin 0.22s cubic-bezier(.23, 1, .32, 1) both; }
+.cx-role b { font: 700 var(--t-sm)/1.2 var(--ui); } .cx-role small { font: 400 var(--t-xs)/1.35 var(--ui); opacity: 0.75; }
+.cx-role:hover { background: rgba(0, 0, 0, 0.05); } .cx-role:active { transform: scale(0.985); } .cx-role.on { background: var(--ink); color: var(--ground); }
+.cx-roles li:nth-child(2) .cx-role { animation-delay: 30ms; } .cx-roles li:nth-child(3) .cx-role { animation-delay: 60ms; } .cx-roles li:nth-child(4) .cx-role { animation-delay: 90ms; } .cx-roles li:nth-child(5) .cx-role { animation-delay: 120ms; } .cx-roles li:nth-child(6) .cx-role { animation-delay: 150ms; }
+@keyframes cxin { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.cx-pitch .cx-tk { position: absolute; width: 5.4rem; transform: translate(-50%, -50%); display: grid; justify-items: center; gap: 1px; background: none; border: 0; padding: 0; cursor: pointer; color: #F6F8F1; transition: left 0.7s cubic-bezier(.23, 1, .32, 1), top 0.7s cubic-bezier(.23, 1, .32, 1); }
+.cx-dot { display: inline-flex; align-items: center; justify-content: center; width: 2.3rem; height: 2.3rem; border-radius: 50%; font: 700 var(--t-xs)/1 var(--mono); transition: transform 0.15s ease-out; }
+.cx-tk:hover .cx-dot { transform: scale(1.08); } .cx-tk:active .cx-dot { transform: scale(0.95); }
+.cx-tk.sel .cx-dot { outline: 3px solid #F6F8F1; outline-offset: 2px; } .cx-tk.ping .cx-dot { animation: cxping 0.5s ease-out; }
+@keyframes cxping { 0% { transform: scale(1); } 35% { transform: scale(1.22); } 100% { transform: scale(1); } }
+.cx-tn { font: 600 var(--t-xs)/1.1 var(--ui); text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6); max-width: 5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cx-tr { font: 500 0.62rem/1.1 var(--ui); background: rgba(20, 28, 22, 0.72); padding: 1px 5px; border-radius: 8px; max-width: 5.4rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; animation: cxin 0.22s ease-out both; }
+.cx-tr:empty { display: none; }
+.cr-pitch .cx-tk svg.cx-ar { position: absolute; inset: auto; left: 50%; top: 1.15rem; width: 3rem; height: 3rem; margin: -1.5rem 0 0 -1.5rem; overflow: visible; pointer-events: none; }
+.cx-ar line { stroke: #FFE680; stroke-width: 2.2; stroke-linecap: round; stroke-dasharray: 20; stroke-dashoffset: 20; animation: cxdraw 0.4s ease-out 0.1s forwards; transform: translate(0, 0); }
+@keyframes cxdraw { to { stroke-dashoffset: 0; } }
+.cx-ball { position: absolute; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 2px #1d2b20, 0 3px 6px rgba(0, 0, 0, 0.45); transition: left 0.5s cubic-bezier(.23, 1, .32, 1), top 0.5s cubic-bezier(.23, 1, .32, 1); pointer-events: none; }
+.cx-ball[hidden] { display: none; }
+.cx-ln { stroke: #fff; stroke-width: 0.7; stroke-linecap: round; opacity: 0.9; stroke-dasharray: 60; stroke-dashoffset: 60; animation: cxdraw 0.35s ease-out forwards; }
+.cx-ln.long, .cx-ln.through { stroke-dasharray: 3 2; stroke: #FFE680; animation: none; stroke-dashoffset: 0; } .cx-ln.shot { stroke: #FF8A6B; stroke-width: 1; }
+.cx-ln.cross { stroke: #9FD6FF; }
+@media (max-width: 860px) { .cx-grid { grid-template-columns: minmax(0, 1fr); } .cx-left { position: static; } .cx-pitch { max-width: 30rem; } }
+@media (max-width: 520px) { .cx-pitch .cx-tk { width: 4.1rem; } .cx-dot { width: 1.9rem; height: 1.9rem; } .cx-tn { max-width: 3.8rem; } }
+@media (prefers-reduced-motion: reduce) { .cx-pitch .cx-tk, .cx-ball, .cx-role, .cx-tr, .cx-fm, .cx-fm svg, .cx-ar line, .cx-ln { transition: none !important; animation: none !important; } .cx-ar line, .cx-ln { stroke-dashoffset: 0; } }
+
+/* ---------- Code editor ---------- */
+.cd { display: flex; flex-direction: column; gap: var(--s3); }
+.cd-bar { display: flex; flex-wrap: wrap; gap: var(--s3); align-items: end; }
+.cd-nm .inp { min-width: 11rem; }
+.cd-io { display: grid; gap: var(--s2); } .cd-io textarea { font: 400 var(--t-xs)/1.4 var(--mono); width: 100%; }
+.cd-schema { max-height: 12rem; overflow: auto; font: 400 var(--t-xs)/1.4 var(--mono); padding: var(--s3); border: 1px solid var(--rule); margin: 0; }
+.cd-main { display: grid; grid-template-columns: 15rem minmax(0, 1fr) 19rem; gap: var(--s3); align-items: stretch; height: min(46rem, 78vh); }
+.cd-pal, .cd-side { overflow-y: auto; border: 1px solid var(--rule); background: rgba(255, 255, 255, 0.35); padding: var(--s2); transition: box-shadow 0.15s ease-out, background 0.15s ease-out; }
+.cd-pal.trash { box-shadow: inset 0 0 0 3px #B3261E; background: rgba(179, 38, 30, 0.1); }
+.cd-cats { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: var(--s2); }
+.cd-cat { border: 0; padding: 4px 8px; font: 700 var(--t-xs)/1.2 var(--ui); background: transparent; border-left: 4px solid var(--c); color: var(--ink); cursor: pointer; transition: background 0.15s ease-out; }
+.cd-cat.on { background: var(--c); color: #fff; } .cd-cat:hover:not(.on) { background: rgba(0, 0, 0, 0.07); }
+.cd-plist { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; padding: var(--s1); }
+.cd-make { display: grid; gap: 4px; width: 100%; } .cd-vl { margin: 0; display: flex; flex-wrap: wrap; gap: 4px; } .cd-chip { background: #D4452F; color: #fff; padding: 2px 8px; border-radius: 10px; font: 600 var(--t-xs)/1.4 var(--ui); }
+.cd-p { cursor: grab; touch-action: none; user-select: none; max-width: 100%; transition: transform 0.12s ease-out; } .cd-p:hover { transform: translateX(2px); } .cd-p:active { cursor: grabbing; }
+.cd-canvas { position: relative; overflow: auto; border: 1.5px solid var(--ink); background: #F4F3EC radial-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px) 0 0 / 18px 18px; outline-offset: -3px; touch-action: none; cursor: default; }
+.cd-world { position: relative; width: 2600px; height: 1800px; transform: scale(var(--z, 1)); transform-origin: 0 0; }
+.cd-empty { position: absolute; left: 30px; top: 30px; margin: 0; font: 400 var(--t-sm)/1.4 var(--ui); opacity: 0.6; }
+.cd-sc { position: absolute; display: flex; flex-direction: column; align-items: flex-start; } .cd-sc.loose { opacity: 0.8; outline: 2px dashed #B3261E; outline-offset: 4px; }
+.cd-b { --c: #888; position: relative; width: max-content; max-width: 100%; margin-bottom: 0; color: #fff; user-select: none; touch-action: none; }
+.cd-row { display: flex; flex-wrap: nowrap; align-items: center; gap: 6px; min-height: 34px; padding: 4px 12px; background: var(--c); border-radius: 4px; font: 600 13px/1.2 var(--ui); white-space: nowrap; box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.18); cursor: grab; }
+.cd-b + .cd-b { margin-top: 0; } .cd-b:not(.cd-hat) > .cd-row { border-top-left-radius: 0; border-top-right-radius: 0; } .cd-b:not(.cd-hat):first-child > .cd-row { border-radius: 4px; }
+.cd-hat > .cd-row { border-radius: 22px 22px 4px 4px; padding-top: 10px; min-height: 40px; }
+.cd-c > .cd-row, .cd-c > .cd-row.cd-sub { border-radius: 4px 4px 0 0; } .cd-c > .cd-row.cd-sub { border-radius: 0; margin-top: 0; min-height: 28px; }
+.cd-mouth { min-height: 26px; margin-left: 18px; padding: 0; background: rgba(0, 0, 0, 0.06); border-left: 0; position: relative; }
+.cd-mouth:empty::after { content: ""; display: block; height: 22px; }
+.cd-mouth > .cd-b:first-child > .cd-row { border-top-left-radius: 0; }
+.cd-c { box-shadow: -18px 0 0 -0px var(--c) inset; } .cd-c > .cd-mouth { box-shadow: none; }
+.cd-foot { height: 14px; background: var(--c); border-radius: 0 0 4px 4px; display: flex; align-items: center; gap: 6px; padding: 0 10px; min-height: 14px; } .cd-foot:not(:empty) { height: auto; padding: 3px 10px; }
+.cd-mini { border: 0; background: rgba(255, 255, 255, 0.25); color: #fff; font: 700 11px/1 var(--ui); padding: 3px 7px; border-radius: 9px; cursor: pointer; } .cd-mini:hover { background: rgba(255, 255, 255, 0.4); }
+.cd-x { border: 0; background: rgba(0, 0, 0, 0.25); color: #fff; width: 18px; height: 18px; border-radius: 50%; font: 700 11px/1 var(--ui); cursor: pointer; margin-left: auto; }
+.cd-note > .cd-row { background: #F3E7A1; color: #4A4116; } .cd-note .cd-in { color: #4A4116; }
+.cd-t { color: inherit; }
+.cd-r { --c: #888; display: inline-flex; align-items: center; gap: 6px; padding: 2px 9px; background: var(--c); color: #fff; font: 600 13px/1.3 var(--ui); min-height: 24px; cursor: grab; box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.18); border: 1.5px solid rgba(255, 255, 255, 0.35); }
+.cd-r.cd-bool { clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 10px 100%, 0 50%); padding: 2px 16px; border: 0; }
+.cd-r.cd-num, .cd-r.cd-text, .cd-r.cd-any, .cd-r.cd-player { border-radius: 14px; }
+.cd-slot { display: inline-flex; align-items: center; min-width: 26px; min-height: 22px; background: #fff; border-radius: 12px; padding: 0 3px; color: #222; transition: box-shadow 0.12s ease-out, background 0.12s; }
+.cd-slot.cd-sb { clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0 50%); background: rgba(0, 0, 0, 0.3); min-width: 42px; border-radius: 0; box-shadow: none; }
+.cd-slot.cd-hot, .cd-slot.cd-sb.cd-hot { background: #FFE680; box-shadow: 0 0 0 3px #FFE680; outline: 0; }
+.cd-slot:has(> .cd-r) { background: transparent; padding: 0; } .cd-slot.cd-sb:has(> .cd-r) { clip-path: none; background: transparent; }
+.cd-in { font: 600 12px/1.2 var(--ui); color: #222; background: transparent; border: 0; padding: 2px 3px; min-width: 2ch; max-width: 11rem; outline: 0; } .cd-in:focus-visible { outline: 2px solid #1b66c9; border-radius: 6px; }
+.cd-sn .cd-in { width: 3.4ch; text-align: center; -moz-appearance: textfield; } .cd-sn .cd-in::-webkit-outer-spin-button, .cd-sn .cd-in::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+select.cd-in { cursor: pointer; }
+.cd-lab { background: rgba(255, 255, 255, 0.25); padding: 1px 8px; border-radius: 10px; }
+.cd-ghost { position: fixed; z-index: 90; pointer-events: none; opacity: 0.92; filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.35)); animation: cdlift 0.12s ease-out; }
+@keyframes cdlift { from { opacity: 0.6; filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0)); } }
+.cd-ins { position: fixed; z-index: 89; height: 5px; background: #FFE680; border-radius: 3px; box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.35); pointer-events: none; transition: left 0.08s ease-out, top 0.08s ease-out; } .cd-ins[hidden] { display: none; }
+body.cd-dragging { cursor: grabbing; user-select: none; }
+.cd-b.sel > .cd-row { outline: 2px solid #1b66c9; outline-offset: 1px; }
+.cd-b.pop, .cd-r.pop { animation: cdpop 0.22s cubic-bezier(.23, 1, .32, 1); } @keyframes cdpop { 0% { transform: scale(0.94); opacity: 0.4; } 100% { transform: none; opacity: 1; } }
+.fired > .cd-row, .cd-r.fired { animation: cdfire 1.4s ease-out; } @keyframes cdfire { 0% { box-shadow: 0 0 0 0 rgba(255, 230, 128, 0.95); filter: brightness(1.5); } 100% { box-shadow: 0 0 0 14px rgba(255, 230, 128, 0); filter: none; } }
+.ping > .cd-row, .cd-r.ping { animation: cdping 0.9s ease-out; } @keyframes cdping { 0%, 40% { outline: 4px solid #FFE680; } 100% { outline: 4px solid transparent; } }
+.cd-menu { position: fixed; z-index: 95; display: grid; min-width: 9rem; background: var(--ground); border: 1.5px solid var(--ink); box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3); animation: cxin 0.12s ease-out; }
+.cd-menu button { text-align: left; padding: 8px 12px; border: 0; background: transparent; font: 600 var(--t-sm)/1 var(--ui); cursor: pointer; color: var(--ink); } .cd-menu button:hover, .cd-menu button:focus-visible { background: rgba(0, 0, 0, 0.08); }
+.cd-card { border: 1px solid var(--rule); background: rgba(255, 255, 255, 0.5); padding: var(--s3); margin-bottom: var(--s3); display: grid; gap: var(--s2); } .cd-card h3 { margin: 0; }
+.cd-res { margin: 0; }
+.cd-log { list-style: none; margin: 0; padding: 0; max-height: 14rem; overflow: auto; display: grid; gap: 2px; font: 400 var(--t-xs)/1.35 var(--ui); }
+.cd-log li { padding: 4px 6px; border-left: 3px solid #7B4FCB; background: rgba(123, 79, 203, 0.07); cursor: pointer; animation: cxin 0.25s ease-out both; animation-delay: calc(var(--i, 0) * 25ms); }
+.cd-log li.hat { border-color: #C99300; background: rgba(201, 147, 0, 0.08); opacity: 0.85; } .cd-log li.error { border-color: #B3261E; background: rgba(179, 38, 30, 0.08); }
+.cd-iss { margin: 0; padding-left: 1.1rem; font: 400 var(--t-xs)/1.4 var(--ui); } .cd-iss li { cursor: pointer; }
+.cd-tl { width: 100%; height: auto; font: 500 9px var(--ui); color: var(--ink); } .cd-tl .g { stroke: currentColor; opacity: 0.15; } .cd-tl text { fill: currentColor; opacity: 0.6; }
+.cd-tl .ln { fill: none; stroke-width: 1.6; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: cddraw 0.9s cubic-bezier(.23, 1, .32, 1) forwards; }
+.cd-tl .l0, .cd-key .l0 { stroke: #2F7FCB; background: #2F7FCB; } .cd-tl .l1, .cd-key .l1 { stroke: #D9741F; background: #D9741F; } .cd-tl .l2, .cd-key .l2 { stroke: #2F9A5D; background: #2F9A5D; }
+.cd-tl .l1 { animation-delay: 0.1s; } .cd-tl .l2 { animation-delay: 0.2s; }
+@keyframes cddraw { to { stroke-dashoffset: 0; } }
+.cd-tl .goal circle { fill: #888; } .cd-tl .goal circle.me { fill: #2F9A5D; } .cd-tl .fire { fill: #7B4FCB; animation: cxin 0.4s ease-out 0.6s both; }
+.cd-key { margin: 0; font: 400 var(--t-xs)/1.4 var(--ui); display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; } .cd-key i { display: inline-block; width: 12px; height: 3px; border-radius: 2px; } .cd-key i.gk { height: 8px; width: 8px; border-radius: 50%; background: #2F9A5D; } .cd-key i.fk { height: 8px; width: 8px; background: #7B4FCB; transform: rotate(45deg); }
+.cd-help { transition: color 0.2s; } .cd-help.flash { color: #B3261E; font-weight: 700; }
+@media (max-width: 980px) { .cd-main { grid-template-columns: minmax(0, 1fr); height: auto; } .cd-pal { max-height: 14rem; } .cd-canvas { height: 28rem; } .cd-side { max-height: none; } .cd-plist { flex-direction: row; flex-wrap: wrap; } }
+@media (prefers-reduced-motion: reduce) { .cd-ghost, .cd-b.pop, .cd-r.pop, .fired > .cd-row, .cd-r.fired, .cd-log li, .cd-tl .ln, .cd-tl .fire, .cd-menu { animation: none !important; } .cd-tl .ln { stroke-dashoffset: 0; } }
 /* negotiations */
 .cr-ask { align-self: center; font: 500 var(--t-sm)/1 var(--mono); color: var(--ink-soft); }
 .ng-back { position: fixed; inset: 0; z-index: 70; display: flex; align-items: flex-start; justify-content: center; padding: var(--s4); overflow-y: auto; background: rgba(24, 28, 22, 0.62); animation: pkfade 0.16s ease-out; }
@@ -1031,6 +1149,259 @@ body.cr-dragging, body.cr-dragging * { cursor: grabbing !important; user-select:
   .ng-bub { max-width: 62%; font-size: var(--t-sm); padding: var(--s2) var(--s3); } .ng-bub.them { left: 34%; }
   .ng-cap { font-size: var(--t-base); }
 }
+
+/* glass generated */
+.wordmark,.btn,.intro h1,.dd-btn,.pk-title,.pk-ib,.pk-rn,.pk-rt,.dd-opt,.pick legend,.club-name,.fixture,.mu-tier,.mode,.cp-sec > h2,.cp-lab,.inp,.cp-pick.emb,.cp-prev .pv-name,.pill,.cp-club .nm,.cp-count span,.cp-step .lab,.sq,.cp-chosen li,.svd-n,.cup-head h1,.ctab,.day-head h2,.fx-t,.tbl th,.tbl td.nm,.grp h3,.br-col h3,.br-team,.br-team.win .n,.res-day h3,.res-day li,.champ h2,.route li,.champ h3,.beta,.cine-skip,.cine-mute,.opt-t,.shoot h3,.sh-n,.tname,.score,.ft h2,.ft .label,.feedhead h2,.line .head,.lower h2,.teams h3,.teams .sub,.bg-w,.bg-who b,.al-lh h2,.al-cn,.al-hd h2,.al-facts dd,.al-cols h3,.al-pn,.tcol h3,.tcol .tshift,.cr-hdt h2,.cr-card h3,.cr-link,.cr-fx,.cr-res li,.cr-lab,.cr-bud span:first-child,.cr-pn,.cr-tn,.cr-tb,.cr-bn h3,.cr-brc h4,.cr-bt.w,.wp-dlg h2,.wp-side,.wp-chip,.al-k,.cr-ib.unread p,.cx-fm b,.cx-role b,.ng-ht h2,.ng-skip,.ng-row label,.ng-row .ng-l,.ng-cost b,.ng-sum b{font-weight:600}
+.al-k{text-transform:none;letter-spacing:0}
+.btn,.dd-btn,.dd-list,.pk-dlg,.pk-ib,.pk-region,.mu-bar,.inp,.cp-pick,.pill,.cp-club .chk,.sq,.br-tie,.champ-art,.opt-ty,.pitchwrap,.teams li .fit,.al-bar,.xgkey .sw,.cr-f,.cr-pos,.cr-pitch,.cr-tk:focus-visible,.cr-tn,.cr-bg,.wp-dlg,.wp-chip,.cr-pg,.cx-sh,.cx-fm,.cx-role,.ng-dlg,.ng-bub{border-radius:var(--r-c)}
+.btn,.dd-btn,.dd-list,.pk-dlg,.pk-ib,.pk-region,.inp,.cp-pick,.pill,.sq,.tbl th,.br-tie,.opt-ty,.pk,.cr-pos,.wp-dlg,.cx-sh,.ng-dlg,.ng-pat i{border-width:1px;border-color:var(--hair)}
+/* ===== Liquid glass redesign ===== */
+:root {
+  --ui: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --serif: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --ground: #EDF0F3; --ground-2: #E3E8ED;
+  --ink: #12161B; --ink-soft: #5A6572; --rule: rgba(18, 22, 27, 0.10);
+  --accent: #0B7A4B; --accent-ink: #FFFFFF;
+  --stripe: rgba(18, 22, 27, 0.045); --sheen: rgba(255, 255, 255, 0.5);
+  --kit-edge: rgba(18, 22, 27, 0.35);
+  --hair: rgba(18, 22, 27, 0.12);
+  --glass: rgba(255, 255, 255, 0.52); --glass-hi: rgba(255, 255, 255, 0.72); --glass-lo: rgba(255, 255, 255, 0.30);
+  --edge: rgba(255, 255, 255, 0.85); --edge-lo: rgba(255, 255, 255, 0.35);
+  --glass-shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 12px 32px -14px rgba(16, 24, 40, 0.22);
+  --field: rgba(18, 22, 27, 0.15); --field-acc: rgba(11, 122, 75, 0.30);
+  --r-c: 12px; --r-p: 22px;
+  --ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --t-2xl: clamp(2.5rem, 6vw, 4.25rem);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #0A0D11; --ground-2: #0E1217; --ink: #EAEEF3; --ink-soft: #97A2AF; --rule: rgba(255, 255, 255, 0.10);
+    --accent: #5BD79E; --accent-ink: #05160D; --stripe: rgba(255, 255, 255, 0.05); --sheen: rgba(255, 255, 255, 0.04);
+    --kit-edge: rgba(234, 238, 243, 0.45); --hair: rgba(255, 255, 255, 0.13);
+    --glass: rgba(28, 34, 42, 0.50); --glass-hi: rgba(44, 52, 62, 0.62); --glass-lo: rgba(28, 34, 42, 0.30);
+    --edge: rgba(255, 255, 255, 0.16); --edge-lo: rgba(255, 255, 255, 0.06);
+    --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 16px 40px -16px rgba(0, 0, 0, 0.7);
+    --field: rgba(255, 255, 255, 0.15); --field-acc: rgba(91, 215, 158, 0.34);
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #0A0D11; --ground-2: #0E1217; --ink: #EAEEF3; --ink-soft: #97A2AF; --rule: rgba(255, 255, 255, 0.10);
+  --accent: #5BD79E; --accent-ink: #05160D; --stripe: rgba(255, 255, 255, 0.05); --sheen: rgba(255, 255, 255, 0.04);
+  --kit-edge: rgba(234, 238, 243, 0.45); --hair: rgba(255, 255, 255, 0.13);
+  --glass: rgba(28, 34, 42, 0.50); --glass-hi: rgba(44, 52, 62, 0.62); --glass-lo: rgba(28, 34, 42, 0.30);
+  --edge: rgba(255, 255, 255, 0.16); --edge-lo: rgba(255, 255, 255, 0.06);
+  --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 16px 40px -16px rgba(0, 0, 0, 0.7);
+  --field: rgba(255, 255, 255, 0.15); --field-acc: rgba(91, 215, 158, 0.34);
+}
+html { background: var(--ground); min-height: 100%; }
+html * { font-stretch: 100%; }
+body {
+  background: transparent; background-image: none;
+  font: 400 0.9375rem/1.55 var(--ui); letter-spacing: -0.006em; font-feature-settings: "ss01", "cv11"; font-optical-sizing: auto;
+  padding-inline: clamp(16px, 4vw, 32px); padding-block: 24px 72px;
+  position: relative; z-index: 0;
+}
+::selection { background: color-mix(in srgb, var(--accent) 30%, transparent); }
+:where(h1, h2, h3) { letter-spacing: -0.022em; line-height: 1.12; }
+.shell { max-width: 1160px; gap: 28px; position: relative; z-index: 1; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* the field: outlined football shapes, drifting */
+#field { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; contain: strict;
+  background:
+    linear-gradient(180deg, var(--ground) 0%, var(--ground-2) 100%); }
+#field svg { position: absolute; left: var(--x); top: var(--y); width: var(--s); height: var(--s); margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2); overflow: visible;
+  animation: drift var(--d) ease-in-out var(--o) infinite alternate; will-change: transform; }
+#field path, #field polygon, #field polyline, #field line, #field circle { fill: none; stroke: var(--field); stroke-width: 1.25; vector-effect: non-scaling-stroke; stroke-linejoin: round; stroke-linecap: round; }
+#field svg.acc path, #field svg.acc polygon, #field svg.acc polyline, #field svg.acc line, #field svg.acc circle { stroke: var(--field-acc); }
+@keyframes drift {
+  from { transform: translate3d(0, 0, 0) rotate(var(--r0)); }
+  to { transform: translate3d(var(--dx), var(--dy), 0) rotate(var(--r1)); }
+}
+@media (prefers-reduced-motion: reduce) { #field svg { animation: none; transform: rotate(var(--r0)); } }
+
+/* masthead and tabs */
+.mast { border-bottom: 0; padding: 8px 4px 0; align-items: center; }
+.wordmark { font: 600 1.25rem/1 var(--ui); letter-spacing: -0.03em; display: inline-flex; align-items: center; gap: 10px; }
+.wordmark::before { content: ""; width: 22px; height: 22px; flex: none; background: var(--ink);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linejoin='round'%3E%3Cpolygon points='12,2.5 20.5,8.7 17.3,18.8 6.7,18.8 3.5,8.7'/%3E%3Cpolygon points='12,8 15.8,10.8 14.3,15.2 9.7,15.2 8.2,10.8'/%3E%3Cpath d='M12 2.5V8M20.5 8.7L15.8 10.8M17.3 18.8L14.3 15.2M6.7 18.8L9.7 15.2M3.5 8.7L8.2 10.8'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linejoin='round'%3E%3Cpolygon points='12,2.5 20.5,8.7 17.3,18.8 6.7,18.8 3.5,8.7'/%3E%3Cpolygon points='12,8 15.8,10.8 14.3,15.2 9.7,15.2 8.2,10.8'/%3E%3Cpath d='M12 2.5V8M20.5 8.7L15.8 10.8M17.3 18.8L14.3 15.2M6.7 18.8L9.7 15.2M3.5 8.7L8.2 10.8'/%3E%3C/svg%3E") center / contain no-repeat; }
+.mast-note { font: 400 0.8125rem/1.4 var(--ui); max-width: 34rem; }
+.modes { display: flex; gap: 2px; width: max-content; max-width: 100%; overflow-x: auto; scrollbar-width: none; padding: 4px; margin-bottom: 8px; border: 0; border-radius: 999px;
+  background: var(--glass); -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%);
+  box-shadow: inset 0 1px 0 var(--edge), inset 0 0 0 1px var(--edge-lo), var(--glass-shadow); }
+.modes::-webkit-scrollbar { display: none; }
+.mode { padding: 9px 18px; border-radius: 999px; font: 500 0.9375rem/1 var(--ui); letter-spacing: -0.01em; color: var(--ink-soft); transition: color 0.18s var(--ease), transform 0.12s var(--ease); }
+.mode::after { inset: 0; left: 0; right: 0; bottom: 0; height: auto; z-index: -1; border-radius: 999px; background: var(--glass-hi); transform: scale(0.86); opacity: 0; transform-origin: center;
+  box-shadow: inset 0 1px 0 var(--edge), inset 0 0 0 1px var(--edge-lo), 0 2px 8px -2px rgba(16, 24, 40, 0.2); transition: transform 0.28s var(--ease), opacity 0.18s ease-out; }
+.mode[aria-selected="true"] { color: var(--ink); }
+.mode[aria-selected="true"]::after { transform: scale(1); opacity: 1; }
+.mode:hover { color: var(--ink); }
+.mode:active { transform: scale(0.97); }
+
+/* controls */
+.btn, .pill, .dd-btn, .pk-ib, .cx-sh, .inp, .cd-mini {
+  border: 1px solid var(--hair); border-radius: var(--r-c); background: var(--glass-lo); color: var(--ink);
+  -webkit-backdrop-filter: blur(14px) saturate(160%); backdrop-filter: blur(14px) saturate(160%);
+  box-shadow: inset 0 1px 0 var(--edge-lo);
+}
+.btn { min-height: 44px; padding: 0 22px; font: 500 0.9375rem/1 var(--ui); letter-spacing: -0.01em; transition: transform 0.14s var(--ease), background 0.18s ease-out, box-shadow 0.18s ease-out; }
+.btn::before { border-radius: inherit; }
+.btn.small { min-height: 36px; padding: 0 14px; font-size: 0.8125rem; border-radius: 10px; }
+.btn.primary { background: var(--accent); border-color: transparent; color: var(--accent-ink); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28), 0 6px 16px -8px var(--accent); -webkit-backdrop-filter: none; backdrop-filter: none; }
+.btn:hover:not([disabled]) { background: var(--glass-hi); }
+.btn.primary:hover:not([disabled]) { background: var(--accent); filter: brightness(1.06); }
+.btn:active:not([disabled]) { transform: scale(0.97); }
+.btn:focus-visible, .pill:focus-visible, .dd-btn:focus-visible { outline-offset: 2px; }
+.seg { gap: 2px; padding: 3px; border-radius: 14px; background: var(--glass-lo); border: 1px solid var(--hair); box-shadow: inset 0 1px 0 var(--edge-lo); }
+.seg .btn, .seg .btn:first-child, .seg .btn:last-child { margin: 0; border: 0; border-radius: 11px; background: transparent; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; min-height: 36px; }
+.seg .btn[aria-pressed="true"] { background: var(--glass-hi); color: var(--ink); box-shadow: inset 0 1px 0 var(--edge), inset 0 0 0 1px var(--edge-lo), 0 2px 8px -3px rgba(16, 24, 40, 0.25); }
+.pill { min-height: 34px; padding: 0 14px; border-radius: 999px; font: 500 0.8125rem/1 var(--ui); }
+.pill[aria-pressed="true"], .pill.on, .pill[aria-selected="true"] { background: var(--ink); color: var(--ground); border-color: transparent; }
+.inp { min-height: 44px; padding: 0 14px; font: 500 0.9375rem/1 var(--ui); background: var(--glass-lo); }
+.inp:focus-visible { outline: 0; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 28%, transparent); }
+.dd-btn { padding: 0 16px; border-radius: var(--r-c); font: 500 0.9375rem/1 var(--ui); }
+.dd-cur small { font: 400 0.75rem/1 var(--mono); }
+
+/* glass panels */
+.opts, .shoot, .matchup, .cr-card, .cp-sec, .cp-side, .cd-pal, .cd-side, .cd-canvas, .tbl-wrap, .stats, .line, .teams, .lower, .champ, .route,
+.pk-dlg, .ng-dlg, .wp-dlg, .al-bar, .dd-list, .cd-menu, .cx-fm, .cx-role, .cr-pitch, .cr-news, .cr-list {
+  border: 1px solid var(--hair);
+}
+.opts, .shoot, .matchup, .cr-card, .cp-sec, .cp-side, .cd-pal, .cd-side, .pk-dlg, .ng-dlg, .wp-dlg, .dd-list, .cd-menu, .al-bar {
+  border-radius: var(--r-p); background: var(--glass); background-image: none;
+  -webkit-backdrop-filter: blur(26px) saturate(180%); backdrop-filter: blur(26px) saturate(180%);
+  box-shadow: inset 0 1px 0 var(--edge), inset 0 0 0 1px var(--edge-lo), var(--glass-shadow);
+}
+.cr-card, .matchup, .shoot { padding: 20px; }
+.opts { padding: 4px 20px; max-width: 40rem; }
+.cr-list, .cr-news { border-top: 0; }
+.pk-back { background: rgba(10, 13, 17, 0.38); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.pk-dlg, .ng-dlg, .wp-dlg { overflow: hidden; box-shadow: inset 0 1px 0 var(--edge), inset 0 0 0 1px var(--edge-lo), 0 30px 80px -24px rgba(0, 0, 0, 0.55); }
+.pk-head { border-bottom: 1px solid var(--rule); }
+
+/* setup */
+.intro h1 { font: 600 var(--t-2xl)/1.02 var(--ui); letter-spacing: -0.045em; }
+.intro p { font: 400 1.0625rem/1.6 var(--ui); color: var(--ink-soft); max-width: 34rem; }
+.pick legend, .pick h2 { font: 600 0.9375rem/1.2 var(--ui); letter-spacing: -0.01em; }
+.club, .clubs > * { border-color: var(--rule); }
+.clubs { border: 1px solid var(--hair); border-radius: var(--r-p); overflow: clip; background: var(--glass-lo);
+  -webkit-backdrop-filter: blur(18px) saturate(160%); backdrop-filter: blur(18px) saturate(160%); }
+
+/* match */
+.board { border-bottom: 0; padding: 20px 4px; }
+.pitchwrap { border-radius: var(--r-p); box-shadow: 0 0 0 1px var(--hair), 0 30px 60px -30px rgba(0, 0, 0, 0.5); }
+.feedhead { border-bottom: 1px solid var(--rule); }
+.tname, .score { letter-spacing: -0.03em; }
+.score { font-variant-numeric: tabular-nums; }
+
+/* tables */
+table { font-variant-numeric: tabular-nums; }
+.tbl th, .cr-tbl th { font: 500 0.75rem/1.2 var(--ui); color: var(--ink-soft); text-transform: none; letter-spacing: 0; }
+.tbl td, .cr-tbl td { border-color: var(--rule); }
+.cr-tbl tr.me td, .tbl tr.me td { background: color-mix(in srgb, var(--accent) 10%, transparent); font-weight: 500; }
+
+/* progress and bars */
+.shoot { background-image: none; }
+.cr-pg { border-radius: 999px; overflow: hidden; }
+
+/* motion */
+@media (prefers-reduced-transparency: reduce) {
+  .modes, .opts, .shoot, .matchup, .cr-card, .cp-sec, .cp-side, .cd-pal, .cd-side, .pk-dlg, .ng-dlg, .wp-dlg, .dd-list, .cd-menu, .al-bar, .btn, .pill, .dd-btn, .inp, .clubs { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--ground); }
+}
+
+/* states and details */
+html *:not(svg *) { font-style: normal; }
+.club input:checked + .club-face, .pk-row[aria-pressed="true"], .cp-club[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--accent) 13%, var(--glass-hi)); color: var(--ink);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+.club-face, .pk-row, .cp-club { transition: background 0.18s ease-out, box-shadow 0.18s ease-out; }
+.club-style { opacity: 1; color: var(--ink-soft); }
+.tbl-wrap { border-radius: 16px; overflow: auto; background: var(--glass-lo); }
+.cr-tbl, .tbl { border-collapse: separate; border-spacing: 0; }
+.tbl-wrap .cr-tbl, .tbl-wrap .tbl { border: 0; }
+.mast-note { align-self: center; text-align: right; }
+.mono, .cr-eyebrow, .kicker { font-family: var(--mono); }
+
+/* sub navigation as a second glass rail */
+.cup-tabs, .cx-sub { display: flex; gap: 2px; width: max-content; max-width: 100%; overflow-x: auto; scrollbar-width: none; padding: 3px; border: 0; border-radius: 999px; background: var(--glass-lo);
+  box-shadow: inset 0 1px 0 var(--edge-lo), inset 0 0 0 1px var(--hair); -webkit-backdrop-filter: blur(16px) saturate(160%); backdrop-filter: blur(16px) saturate(160%); }
+.cup-tabs::-webkit-scrollbar, .cx-sub::-webkit-scrollbar { display: none; }
+.ctab { position: relative; isolation: isolate; padding: 8px 16px; border: 0; border-radius: 999px; background: transparent; color: var(--ink-soft); font: 500 0.875rem/1 var(--ui); letter-spacing: -0.01em; cursor: pointer; transition: color 0.18s ease-out, background 0.22s var(--ease), box-shadow 0.22s var(--ease), transform 0.12s var(--ease); }
+.ctab::after { display: none; }
+.ctab:hover { color: var(--ink); }
+.ctab:active { transform: scale(0.97); }
+.ctab[aria-selected="true"] { color: var(--ink); background: var(--glass-hi); box-shadow: inset 0 1px 0 var(--edge), inset 0 0 0 1px var(--edge-lo), 0 2px 8px -3px rgba(16, 24, 40, 0.25); }
+.cx-sub .btn { min-height: 32px; padding: 0 14px; border: 0; border-radius: 999px; background: transparent; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; color: var(--ink-soft); font-size: 0.8125rem; }
+.cx-sub .btn.on, .cx-sub .btn[aria-selected="true"] { background: var(--glass-hi); color: var(--ink); box-shadow: inset 0 1px 0 var(--edge), inset 0 0 0 1px var(--edge-lo), 0 2px 8px -3px rgba(16, 24, 40, 0.25); }
+.cx-sub .btn:not(.on):hover { color: var(--ink); background: transparent; }
+
+/* fields */
+select:not(.cd-in), textarea { font: 500 0.875rem/1.2 var(--ui); color: var(--ink); border: 1px solid var(--hair); border-radius: var(--r-c); background-color: var(--glass-lo); padding: 9px 12px; min-height: 40px; }
+select:not(.cd-in) { appearance: none; -webkit-appearance: none; padding-right: 34px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%238a94a0' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1.5 1.5L6 6l4.5-4.5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
+select:focus-visible, textarea:focus-visible { outline: 0; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 28%, transparent); }
+input[type="range"] { accent-color: var(--accent); }
+.cr-pitch { border-radius: 18px; overflow: hidden; border: 0; box-shadow: 0 0 0 1px var(--hair), 0 24px 48px -28px rgba(0, 0, 0, 0.5); }
+.cr-hd { border-bottom: 0; padding: 4px 4px 8px; }
+.cr-hd h2 { font: 600 1.75rem/1.1 var(--ui); letter-spacing: -0.035em; }
+.cr-kp dd { font: 500 1.125rem/1.1 var(--mono); letter-spacing: -0.02em; }
+.cr-kp dt { font: 400 0.75rem/1.2 var(--ui); color: var(--ink-soft); text-transform: none; letter-spacing: 0; }
+.cr-pls, .cr-bn, .cr-bench { border-radius: 18px; border: 1px solid var(--hair); background: var(--glass-lo); }
+[class*="cr-"][style*="dashed"], .cr-pls { border-style: solid; }
+.cd-canvas { background-color: var(--glass-lo); background-image: radial-gradient(var(--hair) 1px, transparent 1px); background-size: 20px 20px; border-radius: var(--r-p); overflow: auto; }
+.cd-pal, .cd-side { padding: 12px; }
+
+.cd-card { border: 1px solid var(--hair); border-radius: 14px; background: var(--glass-lo); }
+.cd-b select.cd-in, .cd-r select.cd-in { padding: 2px 3px; min-height: 0; border: 0; border-radius: 6px; background-color: transparent; background-image: none; }
+.cd-slot { color: #222; }
+.cr-bg { border: 1px solid var(--hair); border-radius: 16px; background: var(--glass-lo); }
+.bug .bs, .ng-bub { border-radius: 12px; }
+.cx-sh { border-radius: 10px; }
+.cx-sh[aria-pressed="true"], .cx-sh.on { background: var(--glass-hi); box-shadow: inset 0 1px 0 var(--edge), inset 0 0 0 1px color-mix(in srgb, var(--accent) 50%, transparent); }
+
+/* selected = a quiet glass step with an accent hairline, never an inverted slab */
+.cx-sh.on, .cx-fm.on, .cx-role.on, .cp-comp.on, .cp-pick.on, .opt-row .on, .seg .btn.on {
+  background: color-mix(in srgb, var(--accent) 13%, var(--glass-hi)); color: var(--ink);
+  box-shadow: inset 0 1px 0 var(--edge), inset 0 0 0 1px color-mix(in srgb, var(--accent) 48%, transparent);
+}
+.cx-sh.add { border-style: solid; color: var(--ink-soft); }
+.cx-fm, .cx-sh { border: 1px solid var(--hair); border-radius: 12px; background: var(--glass-lo); }
+.cx-fm:hover { transform: none; background: var(--glass-hi); }
+.cx-fm small { opacity: 1; color: var(--ink-soft); }
+@media (max-width: 640px) { .mast-note { display: none; } .mast { padding-top: 4px; } .modes { width: 100%; } }
+@media (hover: hover) { .cp-comp:hover, .cx-fm:hover { transform: none; } }
+
+/* match view panels */
+.lower { border: 0; gap: 20px; }
+.lower section, .ft { padding: 20px; border: 1px solid var(--hair); border-radius: var(--r-p); background: var(--glass); background-image: none;
+  -webkit-backdrop-filter: blur(26px) saturate(180%); backdrop-filter: blur(26px) saturate(180%);
+  box-shadow: inset 0 1px 0 var(--edge), inset 0 0 0 1px var(--edge-lo), var(--glass-shadow); }
+.lcol { gap: 20px; }
+.lower h2, .ft h2 { font: 600 1.0625rem/1.2 var(--ui); letter-spacing: -0.02em; margin-bottom: 12px; }
+.teams, .stats, #feed { border: 0; }
+.scorecol .controls { gap: 8px; }
+.timeline { height: 4px; border-radius: 999px; overflow: hidden; background: var(--rule); }
+.tfill { background: var(--accent); border-radius: 999px; }
+.now { font: 500 0.875rem/1.3 var(--ui); }
+@media (prefers-reduced-transparency: reduce) { .lower section, .ft { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--ground); } }
+
+.cp-sec, .cp-side { padding: 24px; }
+.st-sec { margin-bottom: 16px; max-width: 44rem; display: flex; flex-direction: column; gap: 12px; }
+.st-sec .seg { align-self: flex-start; }
+.opt-types > *, .opt-ty { border-radius: 14px; }
+.al-lh { border-bottom: 1px solid var(--hair); padding-bottom: 8px; }
+.st-sec { padding: 24px !important; }
+.cp-comp svg, .cp-comp .logo { flex: none; width: 44px; height: auto; max-height: 52px; } .cp-comp { border-radius: 14px; border-color: var(--hair); background: var(--glass-lo); } .cp-comp:hover { background: var(--glass-hi); border-color: color-mix(in srgb, var(--accent) 50%, transparent); }
+.cp-prev { border: 1px solid var(--hair); border-radius: var(--r-p); background: var(--glass); background-image: none; -webkit-backdrop-filter: blur(26px) saturate(180%); backdrop-filter: blur(26px) saturate(180%); box-shadow: inset 0 1px 0 var(--edge), var(--glass-shadow); }
+
+/* the field reacts */
+#field svg { translate: 0 calc(var(--sy, 0px) * var(--k, 0) * -1); rotate: calc(var(--sy, 0px) * var(--kr, 0) * 0.04deg); transition: opacity 0.7s ease; }
+#field .px { transform-box: fill-box; transform-origin: center; transition: transform 1.6s var(--ease); }
+#field path, #field polygon, #field polyline, #field line, #field circle { transition: stroke 0.9s ease, stroke-width 0.9s ease; }
+#field svg.hot path, #field svg.hot polygon, #field svg.hot polyline, #field svg.hot line, #field svg.hot circle { stroke: var(--accent); stroke-width: 1.75; }
 </style>
 
 <div class="shell">
@@ -1419,7 +1790,10 @@ const TEAM_ORDER = Object.keys(TEAMS);
 const FORMS = {
   f433: [[.05, .5], [.24, .15], [.21, .38], [.21, .62], [.24, .85], [.38, .5], [.47, .29], [.47, .71], [.64, .14], [.70, .5], [.64, .86]],
   f4231: [[.05, .5], [.25, .13], [.21, .38], [.21, .62], [.25, .87], [.37, .38], [.37, .62], [.56, .5], [.62, .14], [.71, .5], [.62, .86]],
-  f433i: [[.05, .5], [.30, .32], [.21, .40], [.21, .60], [.30, .68], [.36, .5], [.50, .27], [.50, .73], [.66, .10], [.72, .5], [.66, .90]]
+  f433i: [[.05, .5], [.30, .32], [.21, .40], [.21, .60], [.30, .68], [.36, .5], [.50, .27], [.50, .73], [.66, .10], [.72, .5], [.66, .90]],
+  f4123: [[.05, .5], [.24, .15], [.21, .38], [.21, .62], [.24, .85], [.32, .5], [.50, .31], [.50, .69], [.64, .14], [.71, .5], [.64, .86]],
+  f433a: [[.05, .5], [.31, .12], [.23, .38], [.23, .62], [.31, .88], [.42, .5], [.53, .28], [.53, .72], [.70, .10], [.77, .5], [.70, .90]],
+  f433d: [[.05, .5], [.19, .16], [.17, .38], [.17, .62], [.19, .84], [.29, .5], [.38, .30], [.38, .70], [.55, .16], [.60, .5], [.55, .84]]
 };
 /* Where each of a team's 11 slots stands, in the team's own attacking frame, given where the ball is (also in that frame). */
 function shapeTeam(form, tx, bx, by, inPoss) {
@@ -1979,7 +2353,7 @@ function simulate(homeId, awayId, seed, opts) {
   function doCorner(e) {
     const A = ball.s, D = opp(A);
     const takers = outfield(A).filter(o => o.p.pos !== "DF" || o.p.tags.indexOf("setpiece") > -1);
-    const taker = wpick(takers, o => Math.pow(o.p.a.cre / 78, 4) * (o.p.tags.indexOf("setpiece") > -1 ? 2.4 : 1));
+    const taker = setTaker(A, "corner") || wpick(takers, o => Math.pow(o.p.a.cre / 78, 4) * (o.p.tags.indexOf("setpiece") > -1 ? 2.4 : 1));
     S[A].st.corners++;
     const rec = wpick(outfield(A).filter(o => o.i !== taker.i), o => Math.pow(o.p.a.phy / 76, 4) * (o.p.pos === "DF" ? 1.1 : o.p.pos === "FW" ? 1.0 : 0.45));
     const d = pickDef(D, 0.92, 0.5);
@@ -2008,7 +2382,8 @@ function simulate(homeId, awayId, seed, opts) {
   function doFreeKick2(e, i0, wall, dGoal) {
     const A = ball.s, D = opp(A);
     const takers = outfield(A);
-    const taker = wpick(takers, o => Math.pow(o.p.a.cre / 78, 4) * (o.p.tags.indexOf("setpiece") > -1 ? 2.6 : 1));
+    const taker = setTaker(A, "fk") || wpick(takers, o => Math.pow(o.p.a.cre / 78, 4) * (o.p.tags.indexOf("setpiece") > -1 ? 2.6 : 1));
+    S[A].st.fks = (S[A].st.fks || 0) + 1;
     ball.dead = null;
     const near = ball.ax > 0.72, central = Math.abs(ball.ay - 0.5) < 0.24;
     if (near && central && R() < 0.38) {
@@ -2034,7 +2409,8 @@ function simulate(homeId, awayId, seed, opts) {
   }
   function doPenalty(e, victim, defender, kind) {
     const A = ball.s, D = opp(A);
-    const taker = wpick(outfield(A), o => ({ FW: 4, MF: 2, DF: 0.05 }[o.p.pos] || 0.05) * Math.pow(cmpSho(o.p.a.sho) / 80, 4));
+    const taker = setTaker(A, "pen") || wpick(outfield(A), o => ({ FW: 4, MF: 2, DF: 0.05 }[o.p.pos] || 0.05) * Math.pow(cmpSho(o.p.a.sho) / 80, 4));
+    S[A].st.pens = (S[A].st.pens || 0) + 1;
     const ctx = ctxFor(A, taker.p, victim, defender);
     const at = pushAct(e, { s: A, k: "set", p: victim.name, q: null, d: defender.name, ok: false, ax: ball.ax, ay: ball.ay, ax2: 0.87, ay2: 0.5, w: 1.2, cap: `Penalty to ${T[A].name}` });
     /* how much contact there really was decides everything that follows: a dive, a tough call for VAR, or a plain penalty */
@@ -2598,6 +2974,96 @@ function simulate(homeId, awayId, seed, opts) {
     }
   }
 
+  /* ----- coach hook (added by Touchline Career): a manager's script can change tactics, make subs and name set-piece takers during the match.
+     opts.coachFor(homeId, awayId) says which side ("h"/"a") is managed, and opts.coach(ctx) is called with the match state at the start of
+     minute 1, at the end of every minute and at half time. ctx.apply(actions) applies them and says whether each one was allowed. ----- */
+  const coachSide = opts.coach && opts.coachFor ? opts.coachFor(homeId, awayId) : null;
+  const T0 = { h: { ...T.h.tactics }, a: { ...T.a.tactics } }, MODC = { h: { ment: "balanced", set: {} }, a: { ment: "balanced", set: {} } };
+  const MENT = { defensive: { line: -.12, press: -.10, tempo: -.06, risk: -.12, compact: .10, counter: .06 }, balanced: {}, attacking: { line: .08, press: .06, tempo: .06, risk: .10, compact: -.06 }, allout: { line: .18, press: .14, tempo: .12, risk: .26, compact: -.16, direct: .06 } };
+  const LVL = { press: { low: .3, medium: .6, high: .85 }, line: { low: .3, mid: .55, high: .8 }, tempo: { slow: .35, normal: .55, fast: .78 }, direct: { short: .15, mixed: .4, direct: .7 } };
+  const CSP = { h: { sc: 0, cards: 0, inj: 0, fouls: 0, corners: 0, pens: 0, fks: 0 }, a: { sc: 0, cards: 0, inj: 0, fouls: 0, corners: 0, pens: 0, fks: 0 } };
+  function retune(s) {
+    const t = { ...T0[s] }, m = MENT[MODC[s].ment] || {};
+    for (const k in m) t[k] = clamp(t[k] + m[k], 0.05, 0.98);
+    for (const k in MODC[s].set) t[k] = MODC[s].set[k];
+    T[s].tactics = t;
+  }
+  function setTaker(A, kind) { const nm = S[A].takers && S[A].takers[kind]; return nm ? outfield(A).find(o => o.p.name === nm) || null : null; }
+  function coachPlayers(s) {
+    return S[s].slots.map((p, i) => p ? { name: p.name, short: p.short, pos: p.pos, slot: i, stam: Math.round(p.stam), rating: p.r, yc: p.st.yc || 0, red: !!p.st.red, inj: !!p.inj } : null).filter(Boolean);
+  }
+  function coachSnap(s, o, phase, c) {
+    const cnt = x => ({ sc: score[x], cards: S[x].st.yc + S[x].st.rc, inj: S[x].slots.filter(p => p && p.inj).length, fouls: S[x].st.fouls, corners: S[x].st.corners, pens: S[x].st.pens || 0, fks: S[x].st.fks || 0 });
+    const now = { h: cnt("h"), a: cnt("a") }, pv = CSP;
+    const dd = k => (now.h[k] - pv.h[k]) + (now.a[k] - pv.a[k]);
+    const tot = S.h.st.acts + S.a.st.acts || 1, zx = ball.s === s ? ball.ax : 1 - ball.ax;
+    const ev = phase === "start" ? { start: true } : phase === "ht" ? { halftime: true } : {
+      score: now[s].sc > pv[s].sc, concede: now[o].sc > pv[o].sc, injury: now[s].inj > pv[s].inj, card: dd("cards") > 0, cardMine: now[s].cards > pv[s].cards,
+      foul: dd("fouls") > 0, corner: dd("corners") > 0, penalty: dd("pens") > 0, freeKick: dd("fks") > 0
+    };
+    if (phase !== "start") { CSP.h = now.h; CSP.a = now.a; }
+    return {
+      minute: c.base, extra: c.extra || 0, half: c.half || 0, phase, events: ev,
+      my: { name: T[s].name, score: score[s], formation: T[s].form, mentality: MODC[s].ment, tactics: { ...T[s].tactics }, possession: Math.round(100 * S[s].st.acts / tot), shots: S[s].st.shots, xg: +S[s].st.xg.toFixed(2), subs: S[s].subs, subsMax: S[s].cap, players: coachPlayers(s), bench: S[s].bench.map(p => ({ name: p.name, short: p.short, pos: p.pos, stam: Math.round(p.stam), rating: p.r })), gone: S[s].gone.map(p => p.name), men: S[s].men },
+      opp: { name: T[o].name, score: score[o], formation: T[o].form, players: coachPlayers(o), shots: S[o].st.shots, xg: +S[o].st.xg.toFixed(2) },
+      ball: { zone: zx < 0.34 ? "defensive third" : zx < 0.67 ? "middle third" : "attacking third" }
+    };
+  }
+  function applyCoach(e, s, acts) {
+    const res = [];
+    for (const a of acts) {
+      let ok = true, msg = "";
+      if (a.type === "sub") {
+        const i = S[s].slots.findIndex(p => p && p.name === a.out), bi = S[s].bench.findIndex(p => p.name === a["in"]);
+        if (S[s].subs >= S[s].cap) { ok = false; msg = "No substitutions left."; }
+        else if (i < 0) { ok = false; msg = `${a.out} is not on the pitch.`; }
+        else if (bi < 0) { ok = false; msg = `${a["in"]} is not available on the bench.`; }
+        else if ((S[s].slots[i].pos === "GK") !== (S[s].bench[bi].pos === "GK")) { ok = false; msg = "A goalkeeper can only be replaced by a goalkeeper."; }
+        else {
+          const out = S[s].slots[i], inn = S[s].bench[bi];
+          S[s].bench.splice(bi, 1); inn.st.played = true; S[s].gone.push(out); S[s].slots[i] = inn; S[s].subs++; inn.lt = 0;
+          L(e, 0, "sub", `${T[s].name} make a change: ${inn.short} comes on for ${out.short}.`, { head: "Substitution" });
+          e.events.push({ k: "sub", s, out: out.name, in: inn.name, slot: i, at: 0 });
+          msg = `Substituted ${out.short} for ${inn.short}.`;
+        }
+      } else if (a.type === "formation") {
+        if (!FORMS[a.value]) { ok = false; msg = "Unknown formation."; } else { T[s].form = a.value; msg = "Formation changed."; L(e, 0, "phase", `${T[s].name} change shape.`, { head: "Tactical change" }); }
+      } else if (a.type === "mentality") { MODC[s].ment = a.value; retune(s); msg = "Mentality set."; L(e, 0, "phase", `${T[s].name} switch to a ${a.value === "allout" ? "all-out attacking" : a.value} mentality.`, { head: "Tactical change" }); }
+      else if (a.type === "level") { MODC[s].set[a.field] = LVL[a.field][a.value]; retune(s); msg = "Instruction given."; }
+      else if (a.type === "sheet") {
+        T0[s] = { ...a.tactics }; MODC[s] = { ment: "balanced", set: {} }; T[s].form = a.form; retune(s);
+        for (const q of a.attr || []) { const p = S[s].slots[q.slot]; if (p) for (const k in q.d) p.a0[k] = clamp(p.a0[k] + q.d[k], 30, 99); }
+        msg = "Team sheet changed."; L(e, 0, "phase", `${T[s].name} switch to a different game plan.`, { head: "Tactical change" });
+      } else if (a.type === "taker") { S[s].takers = { ...(S[s].takers || {}), [a.kind]: a.player }; msg = "Taker set."; }
+      else if (a.type === "mark") {
+        const mk0 = S[s].slots.find(p => p && p.name === a.player), tg = S[opp(s)].slots.find(p => p && p.name === a.target);
+        if (!mk0 || !tg) { ok = false; msg = "Both players must be on the pitch."; } else { (S[s].marks = S[s].marks || []).push({ m: a.player, o: a.target }); msg = `${mk0.short} will man-mark ${tg.short}.`; }
+      } else if (a.type === "attr") {
+        const p = S[s].slots.find(q => q && q.name === a.player);
+        if (!p) { ok = false; msg = "That player is not on the pitch."; } else { for (const k in a.d) p.a0[k] = clamp(p.a0[k] + a.d[k], 30, 99); msg = "Instruction given."; }
+      } else { ok = false; msg = "Unknown action."; }
+      res.push({ ok, msg });
+    }
+    return res;
+  }
+  function coachMarks(s) {
+    const o = opp(s);
+    S[s].marks = (S[s].marks || []).filter(mk0 => {
+      const m = S[s].slots.find(p => p && p.name === mk0.m), t = S[o].slots.find(p => p && p.name === mk0.o);
+      if (!m || !t) { if (t && t.markedBy === mk0.m) { for (const k of ["dri", "sho", "cre"]) t.a0[k] += 3; t.markedBy = null; } return false; }
+      m.stam = Math.max(8, m.stam - 0.1);
+      if (!t.markedBy) { t.markedBy = m.name; for (const k of ["dri", "sho", "cre"]) t.a0[k] -= 3; }
+      return true;
+    });
+  }
+  function coachTick(e, c, phase) {
+    if (!coachSide) return;
+    const s = coachSide, o = opp(s);
+    if (phase !== "start") coachMarks(s);
+    const state = coachSnap(s, o, phase, c);
+    opts.coach({ minute: c.base, extra: c.extra || 0, phase, state, my: s, apply: acts => applyCoach(e, s, acts) });
+  }
+
   let spell = null;
   const M = [], goals = [];
   const snapshot = (e, minuteIdx) => {
@@ -2706,10 +3172,12 @@ function simulate(homeId, awayId, seed, opts) {
       else L(e, 0, "phase", `${scoreText()}. ${score.h === score.a ? "Honours even." : (score.h > score.a ? T.h.name : T.a.name) + " take the three points."} The expected goals finished ${S.h.st.xg.toFixed(1)} to ${S.a.st.xg.toFixed(1)}.`, { key: true, head: "Full time" });
       if (c.type === "ht") for (const q of ["h", "a"]) S[q].slots.forEach(p => { if (p) p.stam = Math.min(100, p.stam + 5); });
       if (c.type === "ht") { ball.s = opp(ball.s); ball.ax = 0.5; ball.ay = 0.5; ball.car = 6; ball.mode = "build"; ball.dead = null; }
+      if (c.type === "ht" && coachSide) coachTick(e, c, "ht");
       snapshot(e); M.push(e); continue;
     }
     minuteNow = c.base; updWave(c.base); tickFitness(e); mom.h *= 0.93; mom.a *= 0.93;
     refreshTactics(e, "h", c.base); refreshTactics(e, "a", c.base);
+    if (coachSide && c.base === 1 && !c.extra && c.half === 1) coachTick(e, c, "start");
     if (c.base > 3 && (c.base < 88 || c.base > 90) && !c.extra) {
       const lr = Math.log(cur.h / cur.a), who = lr > 0 ? "h" : "a";
       if (spell === null && Math.abs(lr) > 0.4) { spell = who; L(e, 0, "phase", fmt(pick(["{t} have taken control of the game now.", "{t} are on top here, pinning {o} back.", "The momentum has swung to {t}. {o} cannot get out."]), { t: T[who].name, o: T[opp(who)].name }), { head: "Momentum" }); }
@@ -2738,6 +3206,7 @@ function simulate(homeId, awayId, seed, opts) {
       e.acts.push({ s: A, k: "hold", p: (S[A].slots[ball.car] || {}).name || null, ok: true, ax: ball.ax, ay: ball.ay, ax2: ball.ax, ay2: ball.ay, w: 1, cap: "Ball in play" });
     }
     if (tieMode === "golden" && c.half >= 3 && score.h + aggH !== score.a + aggA) { ended = true; how = "golden"; }
+    if (coachSide) coachTick(e, c, "play");
     snapshot(e); M.push(e);
   }
 
@@ -7511,7 +7980,7 @@ if (false && typeof module !== "undefined") module.exports = { stageDays, swissR
     if (e === "crown") return '<path d="M27 72L30 40L43 55L50 35L57 55L70 40L73 72Z" fill="' + c2 + '"/><rect x="27" y="75" width="46" height="7" rx="1.5" fill="' + c2 + '"/>';
     if (e === "bolt") return '<path d="M57 26L33 62H48L42 88L69 50H53Z" fill="' + c2 + '"/>';
     var t = initials(name), fs = t.length === 1 ? 44 : t.length === 2 ? 38 : 28;
-    return '<text x="50" y="57" text-anchor="middle" dominant-baseline="central" font-family="Archivo, Helvetica Neue, sans-serif" font-weight="800" font-size="' + fs + '" fill="' + c2 + '">' + esc(t) + "</text>";
+    return '<text x="50" y="57" text-anchor="middle" dominant-baseline="central" font-family="Geist, system-ui, sans-serif" font-weight="600" font-size="' + fs + '" fill="' + c2 + '">' + esc(t) + "</text>";
   }
   function logoSVG(L, name, cls) {
     var d = SHAPES[L.shape] || SHAPES.shield;
@@ -8250,8 +8719,8 @@ if (false && typeof module !== "undefined") module.exports = { stageDays, swissR
   var POSN = { GK: "Goalkeeper", DF: "Defender", MF: "Midfielder", FW: "Forward" };
   var MINPOS = { GK: 2, DF: 5, MF: 4, FW: 3 }, MAXSQ = 26, MINSQ = 15;
   var TACT = [["press", "Press"], ["line", "Defensive line"], ["tempo", "Tempo"], ["direct", "Directness"], ["width", "Width"], ["risk", "Risk"]];
-  var FLAB = { f433: ["GK", "RB", "CB", "CB", "LB", "DM", "CM", "CM", "RW", "ST", "LW"], f4231: ["GK", "RB", "CB", "CB", "LB", "DM", "DM", "AM", "RW", "ST", "LW"], f433i: ["GK", "RB", "CB", "CB", "LB", "DM", "CM", "CM", "RW", "ST", "LW"] };
-  var FORMN = { f433: "4-3-3", f4231: "4-2-3-1", f433i: "4-3-3 narrow" };
+  var FLAB = { f433: ["GK", "RB", "CB", "CB", "LB", "DM", "CM", "CM", "RW", "ST", "LW"], f4231: ["GK", "RB", "CB", "CB", "LB", "DM", "DM", "AM", "RW", "ST", "LW"], f433i: ["GK", "RB", "CB", "CB", "LB", "DM", "CM", "CM", "RW", "ST", "LW"], f4123: ["GK", "RB", "CB", "CB", "LB", "DM", "CM", "CM", "RW", "ST", "LW"], f433a: ["GK", "RB", "CB", "CB", "LB", "DM", "CM", "CM", "RW", "ST", "LW"], f433d: ["GK", "RB", "CB", "CB", "LB", "DM", "CM", "CM", "RW", "ST", "LW"] };
+  var FORMN = { f433: "4-3-3", f4231: "4-2-3-1", f433i: "4-3-3 narrow", f4123: "4-1-2-3", f433a: "4-3-3 attack", f433d: "4-3-3 deep" };
 
   /* ---------- helpers ---------- */
   function hash(s) { var h = 2166136261; s = String(s); for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
@@ -8369,11 +8838,7 @@ if (false && typeof module !== "undefined") module.exports = { stageDays, swissR
   function keysOf(tid) { return (st && st.squads[tid]) || baseKeys(tid); }
   var HC = {};
   function lineup(tid, keys) {
-    return keys.map(function (k, i) {
-      var p = POOL[k]; if (tid !== st.team || i >= 11 || !isInj(k) || !BASE[k]) return p;
-      var c = HC[k]; if (!c || c.src !== p) { c = HC[k] = mk([[p.name, p.pos, Math.max(40, p.r - 12), p.short, p.tags]])[0]; c.src = p; c.age = p.age; }
-      return c;
-    });
+    return keys.map(function (k, i) { var p = POOL[k]; return tid !== st.team || i >= 11 ? p : cxPlayer(p, k, i); });
   }
   function put(tid, keys) {
     st.squads[tid] = keys; TEAMS[tid].players = lineup(tid, keys);
@@ -8391,7 +8856,7 @@ if (false && typeof module !== "undefined") module.exports = { stageDays, swissR
     buildWorld(); rehydrate();
     TEAM_ORDER.forEach(function (tid) { TEAMS[tid].players = lineup(tid, keysOf(tid)); });
     Object.keys(st.squads).forEach(function (tid) { st.squads[tid].forEach(function (k) { HOME[k] = tid; }); }); Object.keys(st.free).forEach(function (k) { HOME[k] = ""; }); ensureContracts();
-    var t = TEAMS[st.team]; t.form = st.form; Object.keys(st.tact).forEach(function (k) { t.tactics[k] = st.tact[k]; });
+    cxEnsure(); applySheet(st.pickSheet || st.main);
   }
   function restoreAll() {
     if (!active) return; active = false;
@@ -8509,7 +8974,7 @@ if (false && typeof module !== "undefined") module.exports = { stageDays, swissR
     d.fx.forEach(function (id) {
       var f = c.fx[id], mineF = f.home === st.team || f.away === st.team, rt = null;
       if (!f.res) {
-        if (mineF) { var sim = simulate(f.home, f.away, f.seed, f.opts); f.peek = packResult(sim); rt = sim.ratings; }
+        if (mineF) { var sim = simulate(f.home, f.away, f.seed, cdWrap(f.opts)); f.peek = packResult(sim); rt = sim.ratings; }
         cupPlay(c, id);
       }
       if (mineF) afterMine(r, f, d, rt, wk);
@@ -8549,7 +9014,7 @@ if (false && typeof module !== "undefined") module.exports = { stageDays, swissR
     return h;
   }
   function advanceMid() {
-    var r = dueMine()[0]; if (!r) return; var f = myFx(r); S.busy = true; S.msg = ""; relink(); render();
+    var r = dueMine()[0]; if (!r) return; applySheet(st.pickSheet || st.main); var f = myFx(r); S.busy = true; S.msg = ""; relink(); render();
     var fin = function () {
       var wk = Math.max(0, st.week - 1), dd = r.cup.days[r.cup.dayIdx], ids = dd.fx.slice(); playDay(r, wk);
       var l = r.log[r.log.length - 1];
@@ -8559,7 +9024,7 @@ if (false && typeof module !== "undefined") module.exports = { stageDays, swissR
     };
     if (st.watch && window.TL) {
       var b1 = $("cupback"), b2 = $("cupleave"), l1 = b1.textContent, l2 = b2.textContent; b1.textContent = "Back to career"; b2.textContent = "Back to career";
-      TL.watch({ home: f.home, away: f.away, seed: f.seed, opts: f.opts, label: r.name + " \u00b7 " + (r.cup.days[r.cup.dayIdx].label), cine: false, post: false, audio: false,
+      TL.watch({ home: f.home, away: f.away, seed: f.seed, opts: cdWrap(f.opts), label: r.name + " \u00b7 " + (r.cup.days[r.cup.dayIdx].label), cine: false, post: false, audio: false,
         back: function () { b1.textContent = l1; b2.textContent = l2; $("setup").hidden = false; window.scrollTo(0, 0); fin(); } });
     } else fin();
   }
@@ -9052,6 +9517,786 @@ function homeInbox() {
   return '<section class="cr-card"><h3>Inbox</h3><p class="cr-sub">' + (n ? "<b>" + n + " unread</b>" : "All caught up") + ". Injuries, contracts, income and club news land here.</p><ul class=\"cr-news\">" + top.map(function (x) { return "<li>" + esc(x.t) + "</li>"; }).join("") + '</ul><div class="actions"><button class="btn small" type="button" data-act="sub" data-v="inbox">Open Inbox</button></div></section>';
 }
 
+/* ================= tactics: team sheets, formations, player roles and the pitch preview =================
+   A sheet = formation + style sliders + a role for each of the 11 slots. One sheet is the main sheet (used at kick-off unless you pick another
+   one on Home before the game). Roles change a player's attributes a little; sliders change the team's tactics. The "live" sheet is applied to
+   TEAMS[st.team] by applyLive(), which is what the match engine reads. The Code tab (code.part.js) can swap sheets during a match. */
+var CXF = ["f433", "f4231", "f433i", "f4123", "f433a", "f433d"];
+var CXN = { f433: "4-3-3", f4231: "4-2-3-1", f433i: "4-3-3 narrow", f4123: "4-1-2-3", f433a: "4-3-3 attack", f433d: "4-3-3 deep" };
+var CXD = { f433: "Balanced and wide", f4231: "Two holders, a creator", f433i: "Compact, narrow front three", f4123: "One anchor, two eights", f433a: "High full-backs and line", f433d: "Low block, quick outlets" };
+var SLOTTYPE = ["GK", "FB", "CB", "CB", "FB", "MF", "MF", "MF", "W", "ST", "W"];
+/* Roles per slot type. d = attribute changes (attributes sit around 78), t = small nudges to the team's tactics, mv = [forward, inward] drawn as an arrow on the pitch.
+   To add a role: add a row here. The id is what is saved in a sheet. */
+var PROLES = {
+  GK: [["", "Shot-stopper", "Plays it simple and stays on his line.", {}, {}, [0, 0]], ["sweep", "Sweeper keeper", "Starts attacks with his feet and sweeps up behind the line.", { pas: 3, pac: 2, gk: -1 }, { line: 0.03 }, [0.5, 0], "sweepkeeper"]],
+  FB: [["", "Full-back", "Covers his flank and joins in when it is safe.", {}, {}, [0.2, 0]], ["wb", "Attacking wing-back", "Bombs forward on the overlap and crosses.", { cre: 3, pas: 1, pac: 1, def: -3 }, { width: 0.02 }, [1, -0.2]], ["def", "Defensive full-back", "Stays home and marks his winger.", { def: 4, cre: -3, pac: -1 }, { compact: 0.01 }, [-0.2, 0]], ["inv", "Inverted full-back", "Tucks into midfield to help circulate the ball.", { pas: 3, cre: 1, def: -1 }, { width: -0.02 }, [0.4, 1]]],
+  CB: [["", "Centre-back", "Defends the box.", {}, {}, [0, 0]], ["aer", "Aerial defender", "Wins headers. Strong in the air, slower on the ground.", { phy: 4, def: 2, pac: -2, pas: -2 }, {}, [0, 0]], ["bpd", "Ball-playing defender", "Breaks lines with passes from the back.", { pas: 4, def: -2, phy: -1 }, { direct: -0.02 }, [0.3, 0]], ["cover", "Cover defender", "Sweeps up space behind his partner.", { def: 3, pac: 2, phy: -2 }, { line: -0.02 }, [-0.3, 0]]],
+  MF: [["", "Central midfielder", "A bit of everything.", {}, {}, [0, 0]], ["b2b", "Box-to-box", "Covers every blade of grass and arrives late in the box.", { phy: 1, def: 1, sho: 2 }, { tempo: 0.01 }, [0.7, 0]], ["pm", "Playmaker", "Dictates play and looks for the killer pass.", { cre: 4, pas: 3, def: -3, phy: -1 }, { tempo: 0.01 }, [0.2, 0]], ["anchor", "Anchor", "Sits in front of the back four and shields it.", { def: 4, pas: 1, sho: -3, cre: -2 }, { compact: 0.02 }, [-0.6, 0]], ["shadow", "Shadow striker", "Gets beyond the striker and attacks the box.", { sho: 3, cre: 1, def: -4 }, { risk: 0.01 }, [1, 0.3]], ["winner", "Ball winner", "Harasses opponents and wins it back.", { def: 3, phy: 2, cre: -3 }, { press: 0.02 }, [0.3, 0]]],
+  W: [["", "Winger", "Hugs the touchline and delivers.", {}, {}, [0.4, -0.3]], ["if", "Inside forward", "Cuts in on his stronger foot to shoot.", { sho: 4, dri: 1, cre: -2, pas: -1 }, { width: -0.02 }, [0.5, 1]], ["pw", "Playmaking winger", "Drifts into pockets and creates.", { cre: 4, pas: 2, sho: -3 }, {}, [0.2, 0.8]], ["tw", "Tracking winger", "Works back and doubles up on the full-back.", { def: 3, phy: 2, dri: -2, sho: -2 }, { compact: 0.02 }, [-0.4, -0.3]]],
+  ST: [["", "Striker", "Leads the line.", {}, {}, [0.3, 0]], ["poach", "Poacher", "Lives in the box and waits for chances.", { sho: 4, phy: -1, cre: -3, pas: -2 }, {}, [0.8, 0]], ["tm", "Target man", "Holds the ball up and wins headers.", { phy: 4, sho: 1, dri: -2, pac: -2 }, { direct: 0.04 }, [0.1, 0]], ["f9", "False 9", "Drops deep to link play and drag defenders out. Helps the tempo.", { cre: 4, pas: 3, sho: -3, dri: 1 }, { tempo: 0.03, direct: -0.03 }, [-0.9, 0]], ["pf", "Pressing forward", "Harries defenders from the front.", { def: 2, phy: 1, sho: -1 }, { press: 0.04 }, [0.2, 0]]]
+};
+var ROLEIDX = {}; Object.keys(PROLES).forEach(function (t) { PROLES[t].forEach(function (r) { ROLEIDX[t + ":" + r[0]] = { id: r[0], name: r[1], desc: r[2], d: r[3], t: r[4], mv: r[5], sty: r[6] }; }); });
+function roleFor(slot, id) { return ROLEIDX[SLOTTYPE[slot] + ":" + (id || "")] || ROLEIDX[SLOTTYPE[slot] + ":"]; }
+/* player instructions used by the Code block "Give player instruction" */
+var INSTR = { stayback: ["Stay back", { def: 3, cre: -2, pac: -1 }], forward: ["Get forward", { cre: 2, sho: 2, def: -3 }], hold: ["Hold position", { def: 2, pas: 1, sho: -1 }], press: ["Press more", { def: 2, phy: 1 }], tight: ["Mark tightly", { def: 3, pac: 1, cre: -2 }], shoot: ["Shoot more", { sho: 3, pas: -2 }], cross: ["Cross more", { cre: 2, dri: 1, sho: -1 }], dribble: ["Dribble more", { dri: 3, pas: -2 }], simple: ["Play simple passes", { pas: 3, dri: -2, cre: -1 }] };
+var CXST = [["press", "Press", "How hard they close the ball down."], ["line", "Defensive line", "How high the back line stands."], ["tempo", "Tempo", "How fast they move the ball."], ["direct", "Directness", "Long and forward passing, or patient build-up."], ["width", "Width", "How much of the pitch they use."], ["risk", "Risk", "How often they try the ambitious pass or shot."]];
+var CXCOMP = [["cre", "Creativity", "More invention: through balls, dribbles and risk. Less predictable."], ["plan", "Planning", "More structure: compact shape, set pieces and discipline."]];
+
+function cxClamp(x, a, b) { return Math.max(a, Math.min(b, x)); }
+function cxBase() { var o = Object.assign({}, ORIG[st.team].tactics); Object.keys(st.tact || {}).forEach(function (k) { o[k] = st.tact[k]; }); o.cre = 0.5; o.plan = 0.5; return o; }
+function cxNew(name, form, tact) { return { id: "sh" + (++st.shn), name: name, form: form, tact: Object.assign(cxBase(), tact || {}), roles: ["", "", "", "", "", "", "", "", "", "", ""] }; }
+function cxEnsure() {
+  if (!st.sheets || !st.sheets.length) { st.shn = st.shn || 0; var s = cxNew("Main plan", st.form || TEAMS[st.team].form || "f433", st.tact); st.sheets = [s]; st.main = s.id; }
+  st.shn = st.shn || st.sheets.length; if (!st.main || !cxGet(st.main)) st.main = st.sheets[0].id;
+  if (!st.programs) st.programs = []; if (!st.rtest) st.rtest = null;
+}
+function cxGet(id) { for (var i = 0; i < st.sheets.length; i++) if (st.sheets[i].id === id) return st.sheets[i]; return null; }
+/* what a sheet really does: its sliders + complementary stats + role nudges, and per-slot attribute changes */
+function cxEff(sh) {
+  var t = Object.assign({}, sh.tact), cr = ((t.cre == null ? 0.5 : t.cre) - 0.5) * 2, pl = ((t.plan == null ? 0.5 : t.plan) - 0.5) * 2; delete t.cre; delete t.plan;
+  t.risk += 0.12 * cr - 0.06 * pl; t.direct -= 0.1 * cr; t.width += 0.06 * cr; t.compact += 0.1 * pl; t.setPiece += 0.12 * pl; t.press += 0.03 * pl; t.tempo -= 0.03 * pl;
+  var attr = [], sty = [];
+  for (var i = 0; i < 11; i++) {
+    var r = roleFor(i, sh.roles[i]), d = {}; Object.keys(r.d).forEach(function (k) { d[k] = r.d[k]; });
+    Object.keys(r.t).forEach(function (k) { t[k] = (t[k] || 0) + r.t[k]; });
+    var add = function (k, v) { d[k] = (d[k] || 0) + v; };
+    if (i >= 5) { add("cre", 3 * cr); add("dri", 2 * cr); }
+    if (i >= 1) { add("def", 2 * pl); add("pas", 1 * pl); }
+    Object.keys(d).forEach(function (k) { d[k] = Math.round(d[k] * 10) / 10; if (!d[k]) delete d[k]; });
+    attr.push(d); sty.push(r.sty || null);
+  }
+  Object.keys(t).forEach(function (k) { t[k] = cxClamp(t[k], 0.05, 0.98); });
+  return { form: sh.form, tactics: t, attr: attr, sty: sty };
+}
+var LIVE = { attr: null, sty: null, id: null };
+function applySheet(id) {
+  cxEnsure(); var sh = cxGet(id) || cxGet(st.main), e = cxEff(sh);
+  st.form = sh.form; st.tact = Object.assign({}, sh.tact); LIVE.attr = e.attr; LIVE.sty = e.sty; LIVE.id = sh.id;
+  var t = TEAMS[st.team]; t.form = sh.form; Object.keys(e.tactics).forEach(function (k) { t.tactics[k] = e.tactics[k]; });
+  if (active) relink();
+}
+var HC2 = {};
+function cxPlayer(p, k, i) {
+  var ra = LIVE.attr ? LIVE.attr[i] : null, sty = LIVE.sty ? LIVE.sty[i] : null, inj = isInj(k) && BASE[k];
+  var has = ra && Object.keys(ra).length; if (!has && !sty && !inj) return p;
+  var key = k + "|" + (inj ? 1 : 0) + "|" + JSON.stringify(ra || 0) + (sty || ""), c = HC2[key];
+  if (!c || c.src !== p) {
+    c = mk([[p.name, p.pos, inj ? Math.max(40, p.r - 12) : p.r, p.short, p.tags]])[0]; c.src = p; c.age = p.age;
+    if (!inj) c.a = Object.assign({}, p.a); else c.a = Object.assign({}, c.a);
+    if (ra) Object.keys(ra).forEach(function (a) { if (c.a[a] != null) c.a[a] = cxClamp(c.a[a] + ra[a], 20, 99); });
+    if (sty && p.pos === "GK") { c.sty = sty; c.arch = STYX[sty].label; }
+    HC2[key] = c;
+  }
+  return c;
+}
+
+/* ---------- the Tactics tab ---------- */
+S.tx = { sub: "sheets", sheet: null, slot: null, phase: "poss", play: null };
+function cxCur() { cxEnsure(); var sh = cxGet(S.tx.sheet); if (!sh) { S.tx.sheet = st.main; sh = cxGet(st.main); } return sh; }
+function cxMini(f) {
+  var F = FORMS[f], h = '<svg viewBox="0 0 40 52" width="40" height="52" aria-hidden="true"><rect x=".5" y=".5" width="39" height="51" rx="2" fill="none" stroke="currentColor" opacity=".35"/>';
+  for (var i = 0; i < 11; i++) h += '<circle cx="' + (4 + (1 - F[i][1]) * 32).toFixed(1) + '" cy="' + (4 + (1 - F[i][0] / 0.78) * 44).toFixed(1) + '" r="2.3" fill="currentColor"/>';
+  return h + "</svg>";
+}
+function cxLabels(f) { return FLAB[f] || FLAB.f433; }
+function cxPos(sh, phase, bx, by) {
+  var e = cxEff(sh), pos = shapeTeam(sh.form, e.tactics, bx == null ? 0.5 : bx, by == null ? 0.5 : by, phase === "poss");
+  return pos.map(function (p, i) { var r = roleFor(i, sh.roles[i]); return { x: cxClamp(p.x + 0.035 * r.mv[0], 0.03, 0.97), y: cxClamp(p.y + (p.y < 0.5 ? 1 : -1) * 0.03 * r.mv[1] * (i ? 1 : 0), 0.04, 0.96) }; });
+}
+function cxPct(p) { return "left:" + (((1 - p.y) * 78) + 11).toFixed(2) + "%;top:" + (4 + (1 - p.x) * 90).toFixed(2) + "%"; }
+function cxPitch(sh) {
+  var L = mine(), lab = cxLabels(sh.form), pos = cxPos(sh, S.tx.phase, S.tx.bx, S.tx.by), h = '<div class="cr-pitch cx-pitch" id="cx-pitch"><svg viewBox="0 0 68 90" preserveAspectRatio="none" aria-hidden="true"><g fill="none" stroke="rgba(244,246,239,.7)" stroke-width=".35"><rect x="2" y="2" width="64" height="86"/><line x1="2" y1="45" x2="66" y2="45"/><circle cx="34" cy="45" r="7.5"/><rect x="14" y="2" width="40" height="14"/><rect x="25" y="2" width="18" height="5"/><rect x="14" y="74" width="40" height="14"/><rect x="25" y="83" width="18" height="5"/></g><g id="cx-lines"></g></svg>';
+  for (var i = 0; i < 11; i++) {
+    var r = roleFor(i, sh.roles[i]), p = L[i] ? L[i].p : null, c = TEAMS[st.team].kit.home, sel = S.tx.slot === i;
+    h += '<button type="button" class="cx-tk' + (sel ? " sel" : "") + (sh.roles[i] ? " has" : "") + '" data-act="txslot" data-i="' + i + '" id="cx-t' + i + '" style="' + cxPct(pos[i]) + '" aria-label="' + lab[i] + ", " + esc(r.name) + (p ? ", " + esc(p.name) : "") + '"><span class="cx-dot" style="background:' + c[0] + ";color:" + tokenInk(c[0]) + ";box-shadow:inset 0 0 0 2.5px " + c[1] + '">' + lab[i] + '</span><span class="cx-tn">' + (p ? esc(p.short) : "") + '</span><span class="cx-tr">' + (sh.roles[i] ? esc(r.name) : "") + "</span>" +
+      ((r.mv[0] || r.mv[1]) && sh.roles[i] ? '<svg class="cx-ar" viewBox="-12 -12 24 24" aria-hidden="true" style="--ax:' + (r.mv[1] * 9).toFixed(1) + "px;--ay:" + (-r.mv[0] * 9).toFixed(1) + 'px"><line x1="0" y1="0" x2="' + (r.mv[1] * 9).toFixed(1) + '" y2="' + (-r.mv[0] * 9).toFixed(1) + '"/></svg>' : "") + "</button>";
+  }
+  return h + '<span class="cx-ball" id="cx-ball" hidden></span></div>';
+}
+function cxSlider(k, lab, tip, v) { var n = Math.round(v * 100); return '<label class="cr-sl2" title="' + esc(tip) + '"><span>' + lab + '</span><input type="range" min="0" max="100" value="' + n + '" data-cx="' + k + '" aria-label="' + lab + '"><b>' + n + "</b></label>"; }
+function cxEffects(sh) {
+  var e = cxEff(sh), b = sh.tact, rows = [];
+  ["press", "line", "tempo", "direct", "width", "risk", "compact", "setPiece"].forEach(function (k) { var d = e.tactics[k] - (b[k] || 0); if (Math.abs(d) >= 0.005) rows.push((k === "setPiece" ? "Set pieces" : k === "compact" ? "Compactness" : (CXST.filter(function (x) { return x[0] === k; })[0] || [k, k])[1]) + " " + (d > 0 ? "+" : "") + Math.round(d * 100)); });
+  return rows.length ? "Roles and complementary stats shift: " + rows.join(", ") + "." : "No role or complementary effect yet.";
+}
+function cxSheetBar() {
+  var h = '<div class="cx-sheets" role="tablist" aria-label="Team sheets">';
+  st.sheets.forEach(function (s) { h += '<button class="cx-sh' + (S.tx.sheet === s.id ? " on" : "") + '" type="button" role="tab" aria-selected="' + (S.tx.sheet === s.id) + '" data-act="txsheet" data-v="' + s.id + '">' + (st.main === s.id ? '<span class="cx-star" aria-label="Main sheet">★</span> ' : "") + esc(s.name) + "</button>"; });
+  return h + '<button class="cx-sh add" type="button" data-act="txnew" aria-label="New sheet">+ New sheet</button></div>';
+}
+function sheetsView() {
+  var sh = cxCur(), h = cxSheetBar(), role = S.tx.slot != null ? roleFor(S.tx.slot, sh.roles[S.tx.slot]) : null;
+  h += '<div class="cx-grid"><div class="cx-left">' + cxPitch(sh) + '<div class="cx-ctl"><span class="seg" role="group" aria-label="Shape preview"><button class="btn small" type="button" data-act="txphase" data-v="poss" aria-pressed="' + (S.tx.phase === "poss") + '">With the ball</button><button class="btn small" type="button" data-act="txphase" data-v="out" aria-pressed="' + (S.tx.phase === "out") + '">Without the ball</button></span><button class="btn small primary" type="button" data-act="txplay" id="cx-play">' + (S.tx.play ? "Stop" : "Play build-up") + '</button></div><p class="cr-sub cx-cap" id="cx-cap" aria-live="polite">Tap a player to give him a role. The arrows show where each role moves.</p></div>';
+  h += '<div class="cx-right"><section class="cr-card"><div class="cx-name"><label class="cr-lab">Sheet name<input class="inp" id="cx-nm" value="' + esc(sh.name) + '" maxlength="24"></label><div class="actions">' + (st.main === sh.id ? '<span class="cr-sub">Main sheet</span>' : '<button class="btn small" type="button" data-act="txmain">Make main</button>') + '<button class="btn small ghost" type="button" data-act="txdup">Duplicate</button>' + (st.sheets.length > 1 ? '<button class="btn small ghost" type="button" data-act="txdel">Delete</button>' : "") + "</div></div></section>";
+  h += '<section class="cr-card"><h3>Formation</h3><div class="cx-forms" role="group" aria-label="Formation">' + CXF.map(function (f) { return '<button type="button" class="cx-fm' + (sh.form === f ? " on" : "") + '" data-act="txform" data-v="' + f + '" aria-pressed="' + (sh.form === f) + '">' + cxMini(f) + "<b>" + CXN[f] + "</b><small>" + CXD[f] + "</small></button>"; }).join("") + "</div></section>";
+  h += '<section class="cr-card"><h3>Style <span class="cr-arch" id="cx-arch">' + esc(archOf(cxEff(sh).tactics).name) + '</span></h3><div class="cr-tac">' + CXST.map(function (r) { return cxSlider(r[0], r[1], r[2], sh.tact[r[0]]); }).join("") + '</div><h3 class="cx-h3">Complementary</h3><div class="cr-tac">' + CXCOMP.map(function (r) { return cxSlider(r[0], r[1], r[2], sh.tact[r[0]] == null ? 0.5 : sh.tact[r[0]]); }).join("") + '</div><p class="cr-sub" id="cx-fx">' + cxEffects(sh) + "</p></section>";
+  h += '<section class="cr-card"><h3>' + (S.tx.slot != null ? "Role: " + cxLabels(sh.form)[S.tx.slot] + (mine()[S.tx.slot] ? ", " + esc(mine()[S.tx.slot].p.name) : "") : "Player roles") + "</h3>";
+  if (S.tx.slot == null) h += '<p class="cr-sub">Pick a player on the pitch to choose what he is told to do.</p>';
+  else h += '<ul class="cx-roles" role="radiogroup" aria-label="Role">' + PROLES[SLOTTYPE[S.tx.slot]].map(function (r) { var on = (sh.roles[S.tx.slot] || "") === r[0]; return '<li><button type="button" class="cx-role' + (on ? " on" : "") + '" role="radio" aria-checked="' + on + '" data-act="txrole" data-v="' + r[0] + '"><b>' + r[1] + "</b><small>" + r[2] + "</small></button></li>"; }).join("") + "</ul>";
+  return h + "</section></div></div>";
+}
+function tacticsView() {
+  cxEnsure(); S.tx.sheet = cxGet(S.tx.sheet) ? S.tx.sheet : st.main;
+  var h = '<div class="cx-sub" role="tablist" aria-label="Tactics views">' + [["sheets", "Team sheets"], ["code", "Code"]].map(function (t) { return '<button class="btn small' + (S.tx.sub === t[0] ? " on" : "") + '" type="button" role="tab" aria-selected="' + (S.tx.sub === t[0]) + '" data-act="txsub" data-v="' + t[0] + '">' + t[1] + "</button>"; }).join("") + "</div>";
+  return h + (S.tx.sub === "code" ? codeView() : sheetsView());
+}
+/* ---------- the build-up animation: one passage of play in this sheet's style ---------- */
+function cxStopPlay() { if (S.tx.play) { S.tx.play.timers.forEach(clearTimeout); S.tx.play = null; } var b = $("cx-ball"); if (b) b.hidden = true; var l = $("cx-lines"); if (l) l.innerHTML = ""; var bt = $("cx-play"); if (bt) bt.textContent = "Play build-up"; }
+function cxSeq(sh) {
+  var e = cxEff(sh), t = e.tactics, cr = sh.tact.cre == null ? 0.5 : sh.tact.cre, f9 = sh.roles[9] === "f9", wide = t.width > 0.55, right = hash(sh.id + sh.name) % 2 === 0, w = right ? 8 : 10, fb = right ? 1 : 4, cm = right ? 7 : 6;
+  var q = [[0, "pass"], [2 + (right ? 0 : 1), "pass"]];
+  if (t.direct > 0.55) q.push([9, "long"]); else { q.push([5, "pass"]); if (wide) { q.push([fb, "pass"]); q.push([w, "pass"]); } else { q.push([cm, "pass"]); } if (cr > 0.6 || f9) q.push([f9 ? 6 : 9, "through"]); else q.push([w, "pass"]); }
+  q.push([9, wide && t.direct <= 0.55 ? "cross" : "pass"]); q.push([9, "shot"]);
+  return q.filter(function (x, i, a) { return i === 0 || x[0] !== a[i - 1][0] || x[1] === "shot"; });
+}
+function cxPlay() {
+  var sh = cxCur(); cxStopPlay(); if (REDUCE_M) { $("cx-cap").textContent = "Reduced motion is on, so the animation is skipped."; return; }
+  var seq = cxSeq(sh), e = cxEff(sh), step = Math.round(1100 - 650 * e.tactics.tempo), pl = { timers: [] }; S.tx.play = pl; $("cx-play").textContent = "Stop";
+  var ball = $("cx-ball"), lines = $("cx-lines"), cap = $("cx-cap"), prev = null; ball.hidden = false;
+  var CAP = { pass: "Short pass.", long: "Long ball forward: this sheet goes direct.", through: "Through ball: creativity opens the defence.", cross: "Wide play ends in a cross.", shot: "Shot." };
+  seq.forEach(function (s, n) {
+    pl.timers.push(setTimeout(function () {
+      var tk = $("cx-t" + s[0]); if (!tk) return; var pos = cxPos(sh, "poss", 0.2 + 0.6 * (n / seq.length), 0.5);
+      for (var i = 0; i < 11; i++) { var el = $("cx-t" + i); if (el) el.style.cssText = cxPct(pos[i]); }
+      var xy = pos[s[0]], gx = ((1 - xy.y) * 78 + 11), gy = 4 + (1 - xy.x) * 90;
+      if (s[1] === "shot") { gx = 50; gy = 3; }
+      ball.style.cssText = "left:" + gx.toFixed(2) + "%;top:" + gy.toFixed(2) + "%;transition-duration:" + Math.round(step * 0.8) + "ms";
+      if (prev) { var ln = document.createElementNS("http://www.w3.org/2000/svg", "line"); ln.setAttribute("x1", prev[0] * 0.68); ln.setAttribute("y1", prev[1] * 0.9); ln.setAttribute("x2", gx * 0.68); ln.setAttribute("y2", gy * 0.9); ln.setAttribute("class", "cx-ln " + s[1]); lines.appendChild(ln); }
+      prev = [gx, gy]; cap.textContent = CAP[s[1]] || ""; tk.classList.add("ping"); setTimeout(function () { tk.classList.remove("ping"); }, 500);
+    }, n * step));
+  });
+  pl.timers.push(setTimeout(function () { cxStopPlay(); S.tx.phase = "poss"; render(); }, seq.length * step + 900));
+}
+var REDUCE_M = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+/* ---------- click and input handling for the tab ---------- */
+function cxAct(a, b) {
+  var sh = S.tx.sheet ? cxGet(S.tx.sheet) : null, v = b.getAttribute("data-v");
+  if (a === "txsub") { cxStopPlay(); S.tx.sub = v; return true; }
+  if (a === "txsheet") { cxStopPlay(); S.tx.sheet = v; S.tx.slot = null; applySheet(v); return true; }
+  if (a === "txnew") { var n = cxNew("Sheet " + (st.sheets.length + 1), sh.form, sh.tact); n.roles = sh.roles.slice(); st.sheets.push(n); S.tx.sheet = n.id; saveNow(); return true; }
+  if (a === "txdup") { var d = cxNew(sh.name + " copy", sh.form, sh.tact); d.roles = sh.roles.slice(); st.sheets.push(d); S.tx.sheet = d.id; saveNow(); return true; }
+  if (a === "txdel") { if (st.sheets.length < 2) return true; st.sheets = st.sheets.filter(function (x) { return x.id !== sh.id; }); if (st.main === sh.id) st.main = st.sheets[0].id; if (st.pickSheet === sh.id) st.pickSheet = null; S.tx.sheet = st.main; S.tx.slot = null; applySheet(st.main); saveNow(); return true; }
+  if (a === "txmain") { st.main = sh.id; saveNow(); return true; }
+  if (a === "txform") { sh.form = v; applySheet(sh.id); saveNow(); return true; }
+  if (a === "txslot") { S.tx.slot = S.tx.slot === +b.getAttribute("data-i") ? null : +b.getAttribute("data-i"); return true; }
+  if (a === "txrole") { sh.roles[S.tx.slot] = v; applySheet(sh.id); saveNow(); return true; }
+  if (a === "txphase") { cxStopPlay(); S.tx.phase = v; return true; }
+  if (a === "txplay") { if (S.tx.play) { cxStopPlay(); render(); } else cxPlay(); return "keep"; }
+  return false;
+}
+root.addEventListener("input", function (ev) {
+  var el = ev.target; if (!st || !el.getAttribute) return;
+  if (el.hasAttribute("data-cx")) { var sh = cxCur(), k = el.getAttribute("data-cx"); sh.tact[k] = +el.value / 100; el.nextElementSibling.textContent = el.value; applySheet(sh.id); var a = $("cx-arch"); if (a) a.textContent = archOf(cxEff(sh).tactics).name; var f = $("cx-fx"); if (f) f.textContent = cxEffects(sh); }
+  else if (el.id === "cx-nm") { cxCur().name = el.value || "Sheet"; }
+});
+root.addEventListener("change", function (ev) {
+  var el = ev.target; if (!st || !el.getAttribute) return;
+  if (el.hasAttribute("data-cx") || el.id === "cx-nm") { saveNow(); if (el.id === "cx-nm") render(); }
+  else if (el.id === "cx-pick") { st.pickSheet = el.value === st.main ? null : el.value; saveNow(); render(); }
+});
+function homeSheet() {
+  cxEnsure(); var cur = st.pickSheet && cxGet(st.pickSheet) ? st.pickSheet : st.main, sh = cxGet(cur);
+  return '<section class="cr-card"><h3>Team sheet for this game</h3><label class="cr-lab">Sheet<select class="inp" id="cx-pick" aria-label="Team sheet for the next game">' + st.sheets.map(function (s) { return '<option value="' + s.id + '"' + (s.id === cur ? " selected" : "") + ">" + esc(s.name) + (s.id === st.main ? " (main)" : "") + "</option>"; }).join("") + '</select></label><p class="cr-sub">' + CXN[sh.form] + ", " + esc(archOf(cxEff(sh).tactics).name) + ". " + (cur === st.main ? "The main sheet starts every match." : "Used for the next game only, then back to the main sheet.") + '</p><div class="actions"><button class="btn small" type="button" data-act="sub" data-v="tactics">Open Tactics</button></div></section>';
+}
+
+/* ================= Code: a block-based tactics editor (Scratch for football) =================
+   1. CATALOG  - every block is one cdDef() row. To add a block: add a row here, then add a case in cdEval (reporters) or cdAct (actions).
+   2. INTERPRETER - runTacticsProgram(program, matchState) is called once per simulated minute (and at kick-off and half time).
+      Scripts are generators, so "wait until" and "repeat every" simply pause between minutes. It returns {actions, log, errors, warnings, fired}.
+   3. EDITOR - palette, canvas (drag, snap, zoom, undo/redo, right-click), test match and the minute timeline.
+   Saved programs look like PROGRAM_SCHEMA below. */
+var PROGRAM_SCHEMA = {
+  $schema: "http://json-schema.org/draft-07/schema#", title: "Touchline tactics program", type: "object", required: ["schema", "name", "scripts"],
+  properties: {
+    schema: { const: "touchline.tactics-program/1" }, name: { type: "string" },
+    vars: { type: "array", items: { type: "string" }, description: "names of user variables" },
+    defs: { type: "array", items: { type: "object", required: ["id", "name"], properties: { id: { type: "string" }, name: { type: "string" } } }, description: "My Blocks: custom blocks; the body is the script that starts with a 'define' hat for that id" },
+    scripts: { type: "array", items: { type: "object", required: ["id", "x", "y", "blocks"], properties: { id: { type: "string" }, x: { type: "number" }, y: { type: "number" }, blocks: { type: "array", items: { $ref: "#/definitions/block" } } } } }
+  },
+  definitions: {
+    block: { type: "object", required: ["id", "t"], properties: { id: { type: "string" }, t: { type: "string", description: "block type, a key of the catalog" }, "in": { type: "object", additionalProperties: { $ref: "#/definitions/value" }, description: "one entry per input slot" }, body: { type: "array", items: { $ref: "#/definitions/block" }, description: "C-blocks: the blocks inside" }, elifs: { type: "array", items: { type: "object", properties: { c: { $ref: "#/definitions/value" }, body: { type: "array", items: { $ref: "#/definitions/block" } } } } }, "else": { type: "array", items: { $ref: "#/definitions/block" } } } },
+    value: { oneOf: [{ type: "object", required: ["lit"], properties: { lit: { type: ["number", "string"] } } }, { type: "object", required: ["b"], properties: { b: { $ref: "#/definitions/block" } } }] }
+  }
+};
+var CD_COL = { events: "#C99300", control: "#D9741F", logic: "#2F9A5D", values: "#2F7FCB", vars: "#D4452F", actions: "#7B4FCB", my: "#C7478B" };
+var CD_CATS = [["events", "Events"], ["control", "Control"], ["logic", "Logic"], ["values", "Values"], ["vars", "Variables"], ["actions", "Actions"], ["my", "My Blocks"]];
+var CDB = {}, CD_CAP = 5, CD_STEPS = 700, CD_STOP = { stop: 1 }, CD_ABORT = { abort: 1 };
+function cdSl(k, t, d, o) { return { k: k, t: t, d: d, o: o }; }
+/* cdDef(id, category, shape, label[], extras). shape: hat | stack | c | bool | num | text | player | any. label: strings and slots (cdSl). */
+function cdDef(id, cat, shape, label, extra) { CDB[id] = Object.assign({ id: id, cat: cat, shape: shape, label: label }, extra || {}); }
+/* events (hat blocks: nothing snaps above them) */
+cdDef("evStart", "events", "hat", ["When match starts"]);
+cdDef("evMin", "events", "hat", ["When minute =", cdSl("min", "num", 75)]);
+cdDef("evScore", "events", "hat", ["When I score"]);
+cdDef("evConcede", "events", "hat", ["When I concede"]);
+cdDef("evInjury", "events", "hat", ["When injury happens"]);
+cdDef("evCard", "events", "hat", ["When card is shown"]);
+cdDef("evHT", "events", "hat", ["When half-time"]);
+cdDef("define", "my", "hat", ["Define", cdSl("name", "label", "")], { hidden: true });
+/* control */
+cdDef("if", "control", "c", ["if", cdSl("c", "bool")]);
+cdDef("repEvery", "control", "c", ["Repeat every", cdSl("x", "num", 5), "minutes"]);
+cdDef("repUntil", "control", "c", ["Repeat until", cdSl("c", "bool")]);
+cdDef("waitUntil", "control", "stack", ["Wait until", cdSl("c", "bool")]);
+cdDef("stop", "control", "stack", ["Stop script"], { cap: true });
+cdDef("note", "control", "stack", ["// note", cdSl("text", "text", "write a note")], { note: true });
+/* logic and operators */
+cdDef("and", "logic", "bool", [cdSl("a", "bool"), "and", cdSl("b", "bool")]);
+cdDef("or", "logic", "bool", [cdSl("a", "bool"), "or", cdSl("b", "bool")]);
+cdDef("not", "logic", "bool", ["not", cdSl("a", "bool")]);
+cdDef("add", "logic", "num", [cdSl("a", "num", 0), "+", cdSl("b", "num", 0)]);
+cdDef("sub", "logic", "num", [cdSl("a", "num", 0), "-", cdSl("b", "num", 0)]);
+cdDef("mul", "logic", "num", [cdSl("a", "num", 0), "*", cdSl("b", "num", 0)]);
+cdDef("div", "logic", "num", [cdSl("a", "num", 0), ":", cdSl("b", "num", 1)]);
+cdDef("gt", "logic", "bool", [cdSl("a", "num", 0), ">", cdSl("b", "num", 0)]);
+cdDef("lt", "logic", "bool", [cdSl("a", "num", 0), "<", cdSl("b", "num", 0)]);
+cdDef("eq", "logic", "bool", [cdSl("a", "any", 0), "=", cdSl("b", "any", 0)]);
+cdDef("bInjury", "logic", "bool", ["Injury?"]);
+cdDef("bFK", "logic", "bool", ["Free kick?"]);
+cdDef("bCorner", "logic", "bool", ["Corner?"]);
+cdDef("bPen", "logic", "bool", ["Penalty?"]);
+cdDef("bFoul", "logic", "bool", ["Foul?"]);
+cdDef("bSentOff", "logic", "bool", ["A player of mine is sent off?"]);
+/* values (round reporters that plug into slots) */
+cdDef("minute", "values", "num", ["Minute"]);
+cdDef("myScore", "values", "num", ["My score"]);
+cdDef("oppScore", "values", "num", ["Opponent score"]);
+cdDef("goalDiff", "values", "num", ["Goal difference"]);
+cdDef("poss", "values", "num", ["Possession %"]);
+cdDef("subsLeft", "values", "num", ["Subs left"]);
+cdDef("playerName", "values", "player", [cdSl("p", "dd", "", "squad")]);
+cdDef("slotPlayer", "values", "player", ["My player in slot", cdSl("slot", "dd", "9", "slot")]);
+cdDef("bestSub", "values", "player", ["Best sub", cdSl("pos", "dd", "FW", "pos")]);
+cdDef("oppPlayer", "values", "player", ["Opponent", cdSl("w", "dd", "fw", "opp")]);
+cdDef("stamina", "values", "num", ["Stamina of", cdSl("p", "player")]);
+cdDef("rating", "values", "num", ["Rating of", cdSl("p", "player")]);
+cdDef("hasYellow", "values", "bool", [cdSl("p", "player"), "has yellow card"]);
+cdDef("hasRed", "values", "bool", [cdSl("p", "player"), "has red card"]);
+cdDef("zone", "values", "text", ["Ball zone"]);
+cdDef("curForm", "values", "text", ["Current formation"]);
+cdDef("numLit", "values", "num", [cdSl("n", "num", 0)], { lit: true });
+cdDef("textLit", "values", "text", [cdSl("t", "text", "text")], { lit: true });
+/* variables */
+cdDef("setVar", "vars", "stack", ["Set", cdSl("v", "dd", "", "var"), "to", cdSl("val", "any", 0)]);
+cdDef("chgVar", "vars", "stack", ["Change", cdSl("v", "dd", "", "var"), "by", cdSl("val", "num", 1)]);
+cdDef("varRep", "vars", "any", [cdSl("v", "dd", "", "var")]);
+/* actions (stack blocks that change how the team plays) */
+cdDef("substitute", "actions", "stack", ["Substitute", cdSl("who", "player"), "with", cdSl("inn", "player")]);
+cdDef("chSheet", "actions", "stack", ["Change sheet", cdSl("s", "dd", "", "sheet")]);
+cdDef("setForm", "actions", "stack", ["Set formation", cdSl("f", "dd", "f433", "formation")]);
+cdDef("setMent", "actions", "stack", ["Set mentality", cdSl("m", "dd", "balanced", "mentality")]);
+cdDef("setPress", "actions", "stack", ["Set pressing", cdSl("v", "dd", "medium", "press")]);
+cdDef("setLine", "actions", "stack", ["Set defensive line", cdSl("v", "dd", "mid", "line")]);
+cdDef("setTempo", "actions", "stack", ["Set tempo", cdSl("v", "dd", "normal", "tempo")]);
+cdDef("setPass", "actions", "stack", ["Set passing style", cdSl("v", "dd", "mixed", "passing")]);
+cdDef("setFK", "actions", "stack", ["Set free-kick taker", cdSl("p", "player")]);
+cdDef("setCorner", "actions", "stack", ["Set corner taker", cdSl("p", "player")]);
+cdDef("setPen", "actions", "stack", ["Set penalty taker", cdSl("p", "player")]);
+cdDef("mark", "actions", "stack", ["Man-mark", cdSl("p", "player"), "on", cdSl("t", "player")]);
+cdDef("instr", "actions", "stack", ["Give", cdSl("p", "player"), "instruction", cdSl("i", "dd", "hold", "instr")]);
+cdDef("call", "my", "stack", [cdSl("name", "label", "")], { hidden: true });
+
+function cdUid() { return "b" + (++cdUid.n).toString(36); } cdUid.n = Math.floor(Math.random() * 1e6);
+/* option lists for dropdown slots; some depend on the program being edited or the squad */
+function cdOpts(key, prog) {
+  var o = {
+    formation: CXF.map(function (f) { return [f, CXN[f]]; }), mentality: [["defensive", "Defensive"], ["balanced", "Balanced"], ["attacking", "Attacking"], ["allout", "All-out"]],
+    press: [["low", "Low"], ["medium", "Medium"], ["high", "High"]], line: [["low", "Low"], ["mid", "Mid"], ["high", "High"]], tempo: [["slow", "Slow"], ["normal", "Normal"], ["fast", "Fast"]],
+    passing: [["short", "Short"], ["mixed", "Mixed"], ["direct", "Direct"]], pos: [["GK", "GK"], ["DF", "Defender"], ["MF", "Midfielder"], ["FW", "Forward"]],
+    opp: [["fw", "best forward"], ["mf", "best midfielder"], ["df", "best defender"], ["best", "highest rated"]], instr: Object.keys(INSTR).map(function (k) { return [k, INSTR[k][0]]; }),
+    slot: FLAB.f433.map(function (l, i) { return [String(i), l]; })
+  };
+  if (key === "sheet") return (st.sheets || []).map(function (s) { return [s.id, s.name]; });
+  if (key === "var") return ((prog && prog.vars) || []).map(function (v) { return [v, v]; });
+  if (key === "squad") return mine().map(function (x) { return [x.p.name, x.p.name]; });
+  return o[key] || [];
+}
+function cdPlug(slotT, shape) {
+  if (slotT === "bool") return shape === "bool";
+  if (slotT === "num") return shape === "num" || shape === "any";
+  if (slotT === "text") return shape === "text" || shape === "num" || shape === "any" || shape === "player";
+  if (slotT === "player") return shape === "player" || shape === "text" || shape === "any";
+  if (slotT === "any") return shape === "num" || shape === "text" || shape === "any" || shape === "player";
+  return false;
+}
+function cdNew(t, prog) {
+  var d = CDB[t], b = { id: cdUid(), t: t, "in": {} };
+  d.label.forEach(function (x) { if (typeof x === "string" || x.t === "bool" || x.t === "label") return; var v = x.d; if (x.t === "dd") { var op = cdOpts(x.o, prog); if (x.d === "" || !op.some(function (p) { return p[0] === x.d; })) v = op.length ? op[0][0] : ""; } b["in"][x.k] = x.t === "player" ? { lit: (mine()[9] || mine()[0]).p.name } : { lit: v }; });
+  if (d.shape === "c") b.body = [];
+  return b;
+}
+function cdNewProg(name) { return { schema: "touchline.tactics-program/1", name: name || "My program", vars: [], defs: [], scripts: [] }; }
+function cdBlk(t, inn, body, extra) { var b = { id: cdUid(), t: t, "in": inn || {} }; if (CDB[t].shape === "c") b.body = body || []; if (extra) Object.assign(b, extra); return b; }
+function cdL(v) { return { lit: v }; }
+function cdR(t, inn) { return { b: cdBlk(t, inn) }; }
+
+/* ---------- interpreter ---------- */
+function cdNum(x) { var n = typeof x === "number" ? x : parseFloat(x); return isFinite(n) ? n : 0; }
+function cdBool(x) { return x === true || (typeof x === "number" && x !== 0) || x === "true"; }
+function cdTxt(x) { return x == null ? "" : String(x); }
+function cdRT(prog) { var rt = { vars: {}, tasks: [], steps: 0, acts: 0, minFired: {}, cur: {}, instr: {}, S: null, led: null, out: null, capWarned: false, depth: 0 }; Object.defineProperty(prog, "__rt", { value: rt, writable: true, enumerable: false, configurable: true }); return rt; }
+function cdLabel(b) {
+  var d = CDB[b.t]; if (!d) return b.t; if (b.t === "call") return "My block";
+  return d.label.map(function (x) { if (typeof x === "string") return x; var v = b["in"] && b["in"][x.k]; if (!v) return "?"; if (v.b) return "(" + cdLabel(v.b) + ")"; if (x.t === "dd") { var op = cdOpts(x.o, cdLabel.prog).filter(function (p) { return p[0] === v.lit; })[0]; return op ? op[1] : cdTxt(v.lit); } return cdTxt(v.lit); }).join(" ");
+}
+function cdMy(rt, name) { var S = rt.S; return S.my.players.filter(function (p) { return p.name === name; })[0] || S.my.bench.filter(function (p) { return p.name === name; })[0] || null; }
+function cdEv(v, rt) { if (!v) return null; if (v.lit !== undefined) return v.lit; if (v.b) return cdEval(v.b, rt); return null; }
+/* evaluate a reporter block */
+function cdEval(b, rt) {
+  if (++rt.steps > CD_STEPS) throw CD_ABORT;
+  var S = rt.S, I = b["in"] || {}, g = function (k) { return cdEv(I[k], rt); };
+  switch (b.t) {
+    case "minute": return S.minute; case "myScore": return S.my.score; case "oppScore": return S.opp.score; case "goalDiff": return S.my.score - S.opp.score;
+    case "poss": return S.my.possession; case "subsLeft": return Math.max(0, rt.led.max - rt.led.used);
+    case "playerName": return cdTxt(g("p")); case "numLit": return cdNum(g("n")); case "textLit": return cdTxt(g("t"));
+    case "slotPlayer": return rt.led.bySlot[cdNum(g("slot"))] || "";
+    case "bestSub": { var pos = cdTxt(g("pos")), c = rt.led.bench.filter(function (p) { return p.pos === pos; }).sort(function (a, c2) { return c2.rating - a.rating; }); return c.length ? c[0].name : ""; }
+    case "oppPlayer": { var w = cdTxt(g("w")), pl = S.opp.players.filter(function (p) { return p.pos !== "GK" && (w === "best" || p.pos === { fw: "FW", mf: "MF", df: "DF" }[w]); }).sort(function (a, c2) { return c2.rating - a.rating; }); return pl.length ? pl[0].name : ""; }
+    case "stamina": { var p = cdMy(rt, cdTxt(g("p"))); return p ? p.stam : 0; }
+    case "rating": { var p2 = cdMy(rt, cdTxt(g("p"))); return p2 ? p2.rating : 0; }
+    case "hasYellow": { var p3 = cdMy(rt, cdTxt(g("p"))); return !!p3 && p3.yc > 0; }
+    case "hasRed": { var p4 = cdMy(rt, cdTxt(g("p"))); return !!p4 && !!p4.red; }
+    case "zone": return S.ball.zone; case "curForm": return CXN[rt.led.form] || rt.led.form;
+    case "and": return cdBool(g("a")) && cdBool(g("b")); case "or": return cdBool(g("a")) || cdBool(g("b")); case "not": return !cdBool(g("a"));
+    case "add": return cdNum(g("a")) + cdNum(g("b")); case "sub": return cdNum(g("a")) - cdNum(g("b")); case "mul": return cdNum(g("a")) * cdNum(g("b"));
+    case "div": { var dv = cdNum(g("b")); if (!dv) { rt.out.warnings.push({ minute: S.minute, msg: "Division by zero gives 0.", block: b.id }); return 0; } return cdNum(g("a")) / dv; }
+    case "gt": return cdNum(g("a")) > cdNum(g("b")); case "lt": return cdNum(g("a")) < cdNum(g("b"));
+    case "eq": { var x = g("a"), y = g("b"); return typeof x === "number" && typeof y === "number" ? x === y : cdTxt(x).toLowerCase() === cdTxt(y).toLowerCase(); }
+    case "bInjury": return !!S.events.injury || S.my.players.some(function (p) { return p.inj; });
+    case "bFK": return !!S.events.freeKick; case "bCorner": return !!S.events.corner; case "bPen": return !!S.events.penalty; case "bFoul": return !!S.events.foul;
+    case "bSentOff": return S.my.players.length < 11;
+    case "varRep": { var v = rt.vars[cdTxt(g("v"))]; return v == null ? 0 : v; }
+  }
+  return null;
+}
+/* run one action block: validates it, then pushes to out.actions */
+function* cdAct(b, rt) {
+  var S = rt.S, I = b["in"] || {}, g = function (k) { return cdEv(I[k], rt); }, out = rt.out, led = rt.led;
+  while (rt.acts >= CD_CAP) { if (!rt.capWarned) { rt.capWarned = true; out.warnings.push({ minute: S.minute, msg: "Action cap reached: at most " + CD_CAP + " actions per minute. The rest wait for the next minute.", block: b.id }); } yield "wait"; }
+  var err = function (m) { out.errors.push({ minute: S.minute, msg: m, block: b.id }); }, did = function (type, extra, text) { rt.acts++; out.actions.push(Object.assign({ type: type, block: b.id }, extra)); out.log.push({ minute: S.minute, text: text, block: b.id, kind: "action" }); out.fired.push(b.id); };
+  var onPitch = function (n) { return led.names.indexOf(n) > -1; }, short = function (n) { var p = cdMy(rt, n); return p ? (p.short || n) : n; };
+  switch (b.t) {
+    case "substitute": {
+      var who = cdTxt(g("who")), inn = cdTxt(g("inn")), bp = led.bench.filter(function (p) { return p.name === inn; })[0];
+      if (led.used >= led.max) return err("Substitution refused: no changes left (" + led.used + " of " + led.max + " used).");
+      if (led.off.indexOf(who) > -1) return err("Substitution refused: " + who + " has already been substituted off.");
+      if (!onPitch(who)) return err("Substitution refused: " + (who || "nobody") + " is not on the pitch.");
+      if (!bp) return err("Substitution refused: " + (inn || "nobody") + " is not available on the bench.");
+      var wp = cdMy(rt, who); if ((wp.pos === "GK") !== (bp.pos === "GK")) return err("Substitution refused: a goalkeeper can only be replaced by a goalkeeper.");
+      led.used++; led.off.push(who); led.names[led.names.indexOf(who)] = inn; Object.keys(led.bySlot).forEach(function (s) { if (led.bySlot[s] === who) led.bySlot[s] = inn; });
+      led.bench = led.bench.filter(function (p) { return p.name !== inn; }); led.benchUsed.push(inn);
+      return did("sub", { out: who, "in": inn }, "Substituted " + short(who) + " for " + bp.short + ".");
+    }
+    case "chSheet": { var sid = cdTxt(g("s")); if (!S.sheets.some(function (s) { return s.id === sid; })) return err("Change sheet refused: that sheet no longer exists."); if (rt.cur.sheet === sid) return; rt.cur.sheet = sid; ["press", "line", "tempo", "direct"].forEach(function (k) { delete rt.cur[k]; }); led.ment = "balanced"; var shx = S.sheets.filter(function (s) { return s.id === sid; })[0]; if (shx.form) led.form = shx.form; return did("sheet", { sheet: sid }, "Changed sheet to " + S.sheets.filter(function (s) { return s.id === sid; })[0].name + "."); }
+    case "setForm": { var f = cdTxt(g("f")); if (!FORMS[f] || FORMS[f].length !== 11) return err("Formation refused: " + f + " does not have 11 players."); if (led.form === f) return; led.form = f; return did("formation", { value: f }, "Set formation " + CXN[f] + "."); }
+    case "setMent": { var m = cdTxt(g("m")); if (led.ment === m) return; led.ment = m; return did("mentality", { value: m }, "Set mentality " + (m === "allout" ? "all-out" : m) + "."); }
+    case "setPress": case "setLine": case "setTempo": case "setPass": {
+      var fld = { setPress: "press", setLine: "line", setTempo: "tempo", setPass: "direct" }[b.t], v = cdTxt(g("v")); if (rt.cur[fld] === v) return; rt.cur[fld] = v;
+      return did("level", { field: fld, value: v }, "Set " + { press: "pressing", line: "defensive line", tempo: "tempo", direct: "passing style" }[fld] + " " + v + ".");
+    }
+    case "setFK": case "setCorner": case "setPen": {
+      var tp = cdTxt(g("p")), kind = { setFK: "fk", setCorner: "corner", setPen: "pen" }[b.t], gk = cdMy(rt, tp);
+      if (!onPitch(tp)) return err("Taker refused: " + (tp || "nobody") + " is not on the pitch."); if (gk && gk.pos === "GK") return err("Taker refused: the goalkeeper cannot take it.");
+      if (rt.cur["t" + kind] === tp) return; rt.cur["t" + kind] = tp; return did("taker", { kind: kind, player: tp }, "Set " + { fk: "free-kick", corner: "corner", pen: "penalty" }[kind] + " taker " + short(tp) + ".");
+    }
+    case "mark": {
+      var mp = cdTxt(g("p")), mt = cdTxt(g("t")); if (!onPitch(mp)) return err("Man-mark refused: " + (mp || "nobody") + " is not on the pitch.");
+      if (!S.opp.players.some(function (p) { return p.name === mt; })) return err("Man-mark refused: " + (mt || "that opponent") + " is not on the pitch.");
+      if (rt.cur["mark" + mp] === mt) return; rt.cur["mark" + mp] = mt; return did("mark", { player: mp, target: mt }, short(mp) + " will man-mark " + mt + ".");
+    }
+    case "instr": {
+      var ip = cdTxt(g("p")), ik = cdTxt(g("i")); if (!onPitch(ip)) return err("Instruction refused: " + (ip || "nobody") + " is not on the pitch."); if (!INSTR[ik]) return err("Unknown instruction.");
+      if (rt.instr[ip] === ik) return; var prev = rt.instr[ip]; rt.instr[ip] = ik; return did("instr", { player: ip, instr: ik, prev: prev || null }, short(ip) + ": " + INSTR[ik][0].toLowerCase() + ".");
+    }
+  }
+}
+function* cdRun(list, rt, prog) { for (var i = 0; i < list.length; i++) yield* cdBlockRun(list[i], rt, prog); }
+function* cdBlockRun(b, rt, prog) {
+  if (++rt.steps > CD_STEPS) throw CD_ABORT;
+  var I = b["in"] || {};
+  switch (b.t) {
+    case "note": return;
+    case "stop": throw CD_STOP;
+    case "if": {
+      if (cdBool(cdEv(I.c, rt))) { yield* cdRun(b.body || [], rt, prog); return; }
+      var el = b.elifs || []; for (var i = 0; i < el.length; i++) if (cdBool(cdEv(el[i].c, rt))) { yield* cdRun(el[i].body || [], rt, prog); return; }
+      if (b["else"]) yield* cdRun(b["else"], rt, prog); return;
+    }
+    case "repEvery": { var x = Math.max(1, Math.round(cdNum(cdEv(I.x, rt)))), n = 0; for (;;) { yield* cdRun(b.body || [], rt, prog); var next = rt.S.minute + x; if (++n > 400) throw CD_ABORT; do { yield "wait"; } while (rt.S.minute < next); } }
+    case "repUntil": { var k = 0; while (!cdBool(cdEv(I.c, rt))) { yield* cdRun(b.body || [], rt, prog); yield "wait"; if (++k > 400) return; } return; }
+    case "waitUntil": while (!cdBool(cdEv(I.c, rt))) yield "wait"; return;
+    case "setVar": rt.vars[cdTxt(cdEv(I.v, rt))] = cdEv(I.val, rt); return;
+    case "chgVar": { var nm = cdTxt(cdEv(I.v, rt)); rt.vars[nm] = cdNum(rt.vars[nm]) + cdNum(cdEv(I.val, rt)); return; }
+    case "call": {
+      var sc = (prog.scripts || []).filter(function (s) { return s.blocks[0] && s.blocks[0].t === "define" && s.blocks[0]["in"] && s.blocks[0]["in"].name && s.blocks[0]["in"].name.lit === b["in"].name.lit; })[0];
+      if (!sc || rt.depth > 6) return; rt.depth++; try { yield* cdRun(sc.blocks.slice(1), rt, prog); } finally { rt.depth--; } return;
+    }
+    default: if (CDB[b.t] && CDB[b.t].cat === "actions") { yield* cdAct(b, rt); }
+  }
+}
+function cdTriggered(h, S, rt, sid) {
+  var e = S.events;
+  switch (h.t) {
+    case "evStart": return !!e.start; case "evScore": return !!e.score; case "evConcede": return !!e.concede; case "evInjury": return !!e.injury; case "evCard": return !!e.card; case "evHT": return !!e.halftime;
+    case "evMin": { if (S.phase !== "play" || S.extra) return false; var mn = cdNum(cdEv((h["in"] || {}).min, rt)); if (S.minute === mn && rt.minFired[sid] !== S.minute) { rt.minFired[sid] = S.minute; return true; } return false; }
+  }
+  return false;
+}
+/* THE HOOK. Call once per simulated minute (and at kick-off and half-time) with the match state described in the README below.
+   matchState = { minute, extra, phase: "start"|"play"|"ht", events: {start,score,concede,injury,card,halftime,freeKick,corner,penalty,foul},
+     my:  { name, score, formation, mentality, possession, shots, xg, subs, subsMax, men, players:[{name,short,pos,slot,stam,rating,yc,red,inj}], bench:[...], gone:[names] },
+     opp: { name, score, formation, players:[...] }, ball: { zone }, sheets: [{id,name}] }
+   Returns { actions, log, errors, warnings, fired }. actions are things like {type:"sub",out,in} or {type:"formation",value}; the caller applies them. */
+function runTacticsProgram(prog, S) {
+  var rt = prog.__rt; if (!rt || S.events.start) rt = cdRT(prog);
+  var out = { actions: [], log: [], errors: [], warnings: [], fired: [] }; rt.out = out; rt.S = S; rt.steps = 0; rt.acts = 0; rt.capWarned = false;
+  rt.led = { used: S.my.subs, max: S.my.subsMax, form: S.my.formation, ment: S.my.mentality, off: S.my.gone.slice(), names: S.my.players.map(function (p) { return p.name; }), bySlot: {}, bench: S.my.bench.slice(), benchUsed: [] };
+  S.my.players.forEach(function (p) { rt.led.bySlot[p.slot] = p.name; });
+  if (rt.cur.sheet === undefined) rt.cur.sheet = S.sheetNow || null;
+  (prog.scripts || []).forEach(function (sc) {
+    var h = sc.blocks[0]; if (!h || CDB[h.t] == null || CDB[h.t].shape !== "hat" || h.t === "define") return;
+    if (!cdTriggered(h, S, rt, sc.id)) return;
+    if (rt.tasks.some(function (t) { return t.sid === sc.id && !t.done; })) return;
+    cdLabel.prog = prog; out.log.push({ minute: S.minute, text: cdLabel(h), block: h.id, kind: "hat" }); out.fired.push(h.id);
+    rt.tasks.push({ sid: sc.id, done: false, gen: cdRun(sc.blocks.slice(1), rt, prog) });
+  });
+  rt.tasks.forEach(function (t) {
+    if (t.done) return;
+    try { var r = t.gen.next(); if (r.done) t.done = true; }
+    catch (e) { t.done = true; if (e === CD_ABORT) out.errors.push({ minute: S.minute, msg: "A script ran too many steps in one minute and was stopped (possible endless loop).", block: null }); else if (e !== CD_STOP) out.errors.push({ minute: S.minute, msg: "Script error: " + (e && e.message), block: null }); }
+  });
+  rt.tasks = rt.tasks.filter(function (t) { return !t.done; });
+  return out;
+}
+/* editor-side checks: things that can never run */
+function cdValidate(prog) {
+  var out = [], walk = function (list, ctx) {
+    list.forEach(function (b) {
+      var d = CDB[b.t]; if (!d) { out.push([b.id, "Unknown block " + b.t]); return; }
+      d.label.forEach(function (x) { if (typeof x !== "string" && x.t === "bool" && !(b["in"] && b["in"][x.k])) out.push([b.id, "'" + cdLabel(b) .slice(0, 40) + "' has an empty condition."]); });
+      if (b.t === "chSheet" && !(st.sheets || []).some(function (s) { return s.id === (b["in"].s || {}).lit; })) out.push([b.id, "This sheet does not exist any more."]);
+      if (b.body) walk(b.body, ctx); (b.elifs || []).forEach(function (e) { if (!e.c) out.push([b.id, "An else-if has an empty condition."]); walk(e.body || [], ctx); }); if (b["else"]) walk(b["else"], ctx);
+    });
+  };
+  cdLabel.prog = prog;
+  prog.scripts.forEach(function (sc) {
+    var h = sc.blocks[0]; if (!h) return; if (CDB[h.t].shape !== "hat") out.push([h.id, "This stack has no event on top, so it never runs. Snap it under a hat block."]);
+    walk(sc.blocks, {});
+  });
+  return out;
+}
+
+/* ---------- templates ---------- */
+function cdSlotP(n) { return cdR("slotPlayer", { slot: cdL(String(n)) }); }
+var CD_TEMPLATES = [
+  ["Park the bus", "At 75', if you are ahead, drop deep and defend.", function () { var p = cdNewProg("Park the bus"); p.scripts.push({ id: cdUid(), x: 30, y: 30, blocks: [cdBlk("evMin", { min: cdL(75) }), cdBlk("if", { c: cdR("gt", { a: cdR("myScore"), b: cdR("oppScore") }) }, [cdBlk("setMent", { m: cdL("defensive") }), cdBlk("setLine", { v: cdL("low") })])] }); return p; }],
+  ["Never lose to a red card", "After a red card, go to a deep shape and defend.", function () { var p = cdNewProg("Never lose to a red card"); p.scripts.push({ id: cdUid(), x: 30, y: 30, blocks: [cdBlk("evCard"), cdBlk("if", { c: cdR("bSentOff") }, [cdBlk("setForm", { f: cdL("f433d") }), cdBlk("setMent", { m: cdL("defensive") })])] }); return p; }],
+  ["Tired legs", "Every 5 minutes, swap the striker if his stamina is under 40.", function () { var p = cdNewProg("Tired legs"); p.scripts.push({ id: cdUid(), x: 30, y: 30, blocks: [cdBlk("evStart"), cdBlk("repEvery", { x: cdL(5) }, [cdBlk("if", { c: cdR("lt", { a: cdR("stamina", { p: cdSlotP(9) }), b: cdR("numLit", { n: cdL(40) }) }) }, [cdBlk("substitute", { who: cdSlotP(9), inn: cdR("bestSub", { pos: cdL("FW") }) })])])] }); return p; }],
+  ["Chase the game", "After 70', if behind, throw everything forward.", function () { var p = cdNewProg("Chase the game"); p.scripts.push({ id: cdUid(), x: 30, y: 30, blocks: [cdBlk("evStart"), cdBlk("repEvery", { x: cdL(1) }, [cdBlk("if", { c: cdR("and", { a: cdR("gt", { a: cdR("minute"), b: cdR("numLit", { n: cdL(70) }) }), b: cdR("lt", { a: cdR("goalDiff"), b: cdR("numLit", { n: cdL(0) }) }) }) }, [cdBlk("setMent", { m: cdL("allout") }), cdBlk("setPress", { v: cdL("high") })])])] }); return p; }],
+  ["Fresh legs at 60", "Two planned changes and a man on their best forward.", function () { var p = cdNewProg("Fresh legs at 60"); p.vars = ["changes"]; p.scripts.push({ id: cdUid(), x: 30, y: 30, blocks: [cdBlk("evMin", { min: cdL(60) }), cdBlk("note", { text: cdL("Swap the two least rested outfielders for the best subs") }), cdBlk("substitute", { who: cdSlotP(9), inn: cdR("bestSub", { pos: cdL("FW") }) }), cdBlk("substitute", { who: cdSlotP(6), inn: cdR("bestSub", { pos: cdL("MF") }) }), cdBlk("mark", { p: cdSlotP(5), t: cdR("oppPlayer", { w: cdL("best") }) }), cdBlk("chgVar", { v: cdL("changes"), val: cdL(2) })] }); return p; }]
+];
+
+/* ---------- editor: rendering ---------- */
+S.cd = { prog: null, cat: "events", zoom: 1, sel: null, h: [], hi: -1, drag: null, test: null, ver: 0, io: false, opp: "", msg: "", mk: "" };
+function cdProg() {
+  if (!S.cd.prog) { S.cd.prog = st.cdraft ? JSON.parse(JSON.stringify(st.cdraft)) : cdNewProg("My program"); if (!S.cd.prog.scripts) S.cd.prog = cdNewProg(); S.cd.h = [JSON.stringify(S.cd.prog)]; S.cd.hi = 0; }
+  return S.cd.prog;
+}
+function cdSlotHTML(b, x, prog, inPal) {
+  var v = b["in"] && b["in"][x.k], id = b.id + ":" + x.k;
+  if (x.t === "label") return '<span class="cd-lab">' + esc(b["in"] && b["in"].name ? b["in"].name.lit : "") + "</span>";
+  if (v && v.b) return cdRepHTML(v.b, prog, inPal);
+  if (x.t === "bool") return '<span class="cd-slot cd-sb" data-slot="' + id + '" data-ty="bool"></span>';
+  if (x.t === "dd" || x.t === "player") {
+    var op = x.t === "player" ? cdOpts("squad", prog) : cdOpts(x.o, prog), cur = v ? v.lit : "";
+    return '<span class="cd-slot' + (x.t === "player" ? " cd-sp" : " cd-sd") + '" data-slot="' + id + '" data-ty="' + (x.t === "player" ? "player" : "dd") + '"><select class="cd-in" data-bi="' + b.id + '" data-k="' + x.k + '"' + (inPal ? " tabindex=\"-1\"" : "") + ">" + (op.length ? "" : "<option value=\"\">(none)</option>") + op.map(function (o) { return '<option value="' + esc(o[0]) + '"' + (String(o[0]) === String(cur) ? " selected" : "") + ">" + esc(o[1]) + "</option>"; }).join("") + "</select></span>";
+  }
+  var num = x.t === "num";
+  return '<span class="cd-slot' + (num ? " cd-sn" : " cd-st") + '" data-slot="' + id + '" data-ty="' + x.t + '"><input class="cd-in" data-bi="' + b.id + '" data-k="' + x.k + '" ' + (num ? 'type="number" step="1"' : 'type="text"') + ' value="' + esc(v ? v.lit : "") + '" size="' + (num ? 3 : Math.max(4, String(v ? v.lit : "").length + 1)) + '"' + (inPal ? " tabindex=\"-1\"" : "") + ' aria-label="' + esc(x.k) + '"></span>';
+}
+function cdLabelHTML(b, prog, inPal) {
+  var d = CDB[b.t]; if (b.t === "call") return '<span class="cd-t">' + esc(b["in"].name.lit) + "</span>";
+  return d.label.map(function (x) { return typeof x === "string" ? '<span class="cd-t">' + esc(x) + "</span>" : cdSlotHTML(b, x, prog, inPal); }).join("");
+}
+function cdRepHTML(b, prog, inPal) { var d = CDB[b.t]; return '<span class="cd-r cd-' + d.shape + '" data-id="' + b.id + '" data-t="' + b.t + '" style="--c:' + CD_COL[d.cat] + '">' + cdLabelHTML(b, prog, inPal) + "</span>"; }
+function cdListHTML(list, prog) { return list.map(function (b) { return cdStackHTML(b, prog); }).join(""); }
+function cdStackHTML(b, prog) {
+  var d = CDB[b.t], h = '<div class="cd-b cd-' + d.shape + (b.t === "note" ? " cd-note" : "") + (S.cd.sel === b.id ? " sel" : "") + '" data-id="' + b.id + '" data-t="' + b.t + '" style="--c:' + CD_COL[d.cat] + '"><div class="cd-row">' + cdLabelHTML(b, prog) + "</div>";
+  if (d.shape === "c") {
+    h += '<div class="cd-mouth" data-into="' + b.id + '" data-key="body">' + cdListHTML(b.body || [], prog) + "</div>";
+    (b.elifs || []).forEach(function (e, i) { h += '<div class="cd-row cd-sub"><span class="cd-t">else if</span><span class="cd-slot cd-sb" data-slot="' + b.id + ":elif" + i + '" data-ty="bool">' + (e.c ? cdRepHTML(e.c.b, prog) : "") + '</span><button class="cd-x" type="button" data-cd="rmelif" data-id="' + b.id + '" data-n="' + i + '" aria-label="Remove else if">x</button></div><div class="cd-mouth" data-into="' + b.id + '" data-key="elif' + i + '">' + cdListHTML(e.body || [], prog) + "</div>"; });
+    if (b["else"]) h += '<div class="cd-row cd-sub"><span class="cd-t">else</span><button class="cd-x" type="button" data-cd="rmelse" data-id="' + b.id + '" aria-label="Remove else">x</button></div><div class="cd-mouth" data-into="' + b.id + '" data-key="else">' + cdListHTML(b["else"], prog) + "</div>";
+    h += '<div class="cd-foot">' + (b.t === "if" ? '<button class="cd-mini" type="button" data-cd="addelif" data-id="' + b.id + '">+ else if</button>' + (b["else"] ? "" : '<button class="cd-mini" type="button" data-cd="addelse" data-id="' + b.id + '">+ else</button>') : "") + "</div>";
+  }
+  return h + "</div>";
+}
+function cdScriptsHTML(prog) {
+  return prog.scripts.map(function (sc) { return '<div class="cd-sc' + (sc.blocks[0] && CDB[sc.blocks[0].t].shape !== "hat" ? " loose" : "") + '" data-sid="' + sc.id + '" style="left:' + Math.round(sc.x) + "px;top:" + Math.round(sc.y) + 'px">' + cdListHTML(sc.blocks, prog) + "</div>"; }).join("");
+}
+function cdPaletteHTML(prog) {
+  var h = '<div class="cd-cats" role="tablist" aria-label="Block categories">' + CD_CATS.map(function (c) { return '<button type="button" role="tab" class="cd-cat' + (S.cd.cat === c[0] ? " on" : "") + '" data-cd="cat" data-v="' + c[0] + '" aria-selected="' + (S.cd.cat === c[0]) + '" style="--c:' + CD_COL[c[0]] + '">' + c[1] + "</button>"; }).join("") + '</div><div class="cd-plist" id="cd-plist">';
+  var cat = S.cd.cat;
+  if (cat === "vars") h += '<div class="cd-make"><input class="inp" id="cd-mkv" placeholder="Variable name" maxlength="16" value="' + esc(S.cd.mk) + '"><button class="btn small" type="button" data-cd="mkvar">Make a variable</button></div>' + (prog.vars.length ? '<p class="cd-vl">' + prog.vars.map(function (v) { return '<span class="cd-chip">' + esc(v) + "</span>"; }).join("") + "</p>" : '<p class="cr-sub">No variables yet.</p>');
+  if (cat === "my") h += '<div class="cd-make"><input class="inp" id="cd-mkb" placeholder="Block name" maxlength="20" value="' + esc(S.cd.mk) + '"><button class="btn small" type="button" data-cd="mkblock">Make a block</button></div>' + (prog.defs.length ? "" : '<p class="cr-sub">Make a block, build its script under the Define hat, then use it anywhere.</p>');
+  var items = [];
+  Object.keys(CDB).forEach(function (k) { var d = CDB[k]; if (d.cat === cat && !d.hidden) items.push(cdNew(k, prog)); });
+  if (cat === "my") prog.defs.forEach(function (df) { var b = cdNew("call", prog); b["in"].name = { lit: df.name }; items.push(b); });
+  items.forEach(function (b) { var d = CDB[b.t]; h += '<div class="cd-p" data-pal="' + b.t + '"' + (b.t === "call" ? ' data-name="' + esc(b["in"].name.lit) + '"' : "") + ">" + (d.shape === "c" || d.shape === "stack" || d.shape === "hat" ? '<div class="cd-b cd-' + d.shape + '" style="--c:' + CD_COL[d.cat] + '"><div class="cd-row">' + cdLabelHTML(b, prog, true) + "</div>" + (d.shape === "c" ? '<div class="cd-mouth"></div><div class="cd-foot"></div>' : "") + "</div>" : cdRepHTML(b, prog, true)) + "</div>"; });
+  return h + "</div>";
+}
+function cdToolbar() {
+  var p = cdProg(), saved = st.programs.filter(function (x) { return x.id === S.cd.pid; })[0], on = st.progOn && st.progOn === S.cd.pid;
+  return '<div class="cd-bar"><label class="cr-lab cd-nm">Program<input class="inp" id="cd-name" value="' + esc(p.name) + '" maxlength="30"></label>' +
+    '<span class="seg" role="group" aria-label="Edit"><button class="btn small" type="button" data-cd="undo"' + (S.cd.hi > 0 ? "" : " disabled") + '>Undo</button><button class="btn small" type="button" data-cd="redo"' + (S.cd.hi < S.cd.h.length - 1 ? "" : " disabled") + '>Redo</button><button class="btn small" type="button" data-cd="clear">Clear</button></span>' +
+    '<label class="cr-lab">Templates<select class="inp" id="cd-tpl"><option value="">Load a template...</option>' + CD_TEMPLATES.map(function (t, i) { return '<option value="' + i + '">' + esc(t[0]) + "</option>"; }).join("") + "</select></label>" +
+    '<button class="btn small primary" type="button" data-cd="save">Save</button><label class="cr-lab">Load<select class="inp" id="cd-load"><option value="">Saved programs' + (st.programs.length ? "" : " (none)") + "</option>" + st.programs.map(function (x) { return '<option value="' + x.id + '"' + (x.id === S.cd.pid ? " selected" : "") + ">" + esc(x.data.name) + (st.progOn === x.id ? " (in use)" : "") + "</option>"; }).join("") + "</select></label>" +
+    '<button class="btn small' + (on ? " primary" : "") + '" type="button" data-cd="use" aria-pressed="' + !!on + '"' + (saved ? "" : " disabled") + ">" + (on ? "In use in matches" : "Use in matches") + '</button><button class="btn small ghost" type="button" data-cd="json">JSON</button><span class="seg" role="group" aria-label="Zoom"><button class="btn small" type="button" data-cd="zout" aria-label="Zoom out">-</button><button class="btn small" type="button" data-cd="zreset">' + Math.round(S.cd.zoom * 100) + '%</button><button class="btn small" type="button" data-cd="zin" aria-label="Zoom in">+</button></span></div>' +
+    (S.cd.io ? '<div class="cd-io"><textarea class="inp" id="cd-json" rows="6" spellcheck="false" aria-label="Program JSON">' + esc(JSON.stringify(p, null, 1)) + '</textarea><div class="actions"><button class="btn small primary" type="button" data-cd="import">Import this JSON</button><button class="btn small ghost" type="button" data-cd="schema">Show schema</button></div><pre class="cd-schema" id="cd-schema" hidden>' + esc(JSON.stringify(PROGRAM_SCHEMA, null, 1)) + "</pre></div>" : "");
+}
+function cdSideHTML() {
+  var t = S.cd.test, p = cdProg(), iss = cdValidate(p), h = '<section class="cd-card"><h3>Test match</h3><label class="cr-lab">Opponent<select class="inp" id="cd-opp">' + lgOf(st.team).ids.filter(function (i) { return i !== st.team; }).map(function (i) { return '<option value="' + i + '"' + ((S.cd.opp || "") === i ? " selected" : "") + ">" + esc(TEAMS[i].name) + "</option>"; }).join("") + '</select></label><div class="actions"><button class="btn small primary" type="button" data-cd="test">Run test match</button></div>';
+  if (t) {
+    h += '<p class="cd-res"><b>' + esc(TEAMS[t.h].name) + " " + t.score[0] + "-" + t.score[1] + " " + esc(TEAMS[t.a].name) + '</b><span class="cr-sub"> with this program, ' + t.log.filter(function (x) { return x.kind === "action"; }).length + " actions</span></p>" + cdTimeline(t) + '<ol class="cd-log" aria-label="Match log">' + (t.log.length ? t.log.map(function (x, i) { return '<li class="' + x.kind + '" style="--i:' + Math.min(i, 14) + '"' + (x.block ? ' data-cd="focus" data-id="' + x.block + '"' : "") + ">" + (x.kind === "hat" ? "Minute " + x.minute + ": " + esc(x.text) + " started" : x.kind === "error" ? "Minute " + x.minute + ": " + esc(x.text) : "Minute " + x.minute + ": Rule triggered, " + esc(x.text)) + "</li>"; }).join("") : "<li>Nothing fired. Add an event block at the top of a script.</li>") + "</ol>";
+  }
+  h += "</section>";
+  h += '<section class="cd-card"><h3>Editor checks</h3>' + (iss.length ? '<ul class="cd-iss">' + iss.slice(0, 8).map(function (x) { return '<li data-cd="focus" data-id="' + x[0] + '">' + esc(x[1]) + "</li>"; }).join("") + "</ul>" : '<p class="cr-sub">No problems found. Runtime refusals (no subs left, player not on the pitch) show in the test log.</p>') + "</section>";
+  return h;
+}
+/* the minute timeline: tactics lines, goals, subs and the rules that fired */
+function cdTimeline(t) {
+  var W = 300, H = 110, x = function (m) { return 8 + (m / 95) * (W - 16); }, y = function (v) { return 14 + (1 - v) * (H - 40); }, g = '<svg class="cd-tl" viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Minute by minute timeline of tactics, goals and rules">';
+  [0, 45, 90].forEach(function (m) { g += '<line x1="' + x(m) + '" x2="' + x(m) + '" y1="10" y2="' + (H - 18) + '" class="g"/><text x="' + x(m) + '" y="' + (H - 6) + '" text-anchor="middle">' + m + "'</text>"; });
+  [["line", "Line"], ["press", "Press"], ["tempo", "Tempo"]].forEach(function (k, ki) { var pts = t.tl.map(function (e) { return x(e.m).toFixed(1) + "," + y(e[k[0]]).toFixed(1); }).join(" "); g += '<polyline class="ln l' + ki + '" points="' + pts + '" pathLength="1"/>'; });
+  t.goals.forEach(function (gl) { g += '<g class="goal"><circle cx="' + x(gl.m) + '" cy="8" r="4"' + (gl.mine ? ' class="me"' : "") + "/><title>" + (gl.mine ? "Goal for you" : "Goal against") + " " + gl.m + "'</title></g>"; });
+  t.log.forEach(function (l) { if (l.kind === "action") g += '<path class="fire" d="M' + x(l.minute) + " " + (H - 26) + "l3.5 4.5l-3.5 4.5l-3.5 -4.5z\"><title>" + esc(l.minute + "': " + l.text) + "</title></path>"; });
+  return g + '</svg><p class="cd-key"><i class="l0"></i>Line <i class="l1"></i>Press <i class="l2"></i>Tempo <i class="gk"></i>Goal <i class="fk"></i>Rule fired</p>';
+}
+function codeView() {
+  var p = cdProg();
+  return '<div class="cd">' + '<div id="cd-tb">' + cdToolbar() + '</div><div class="cd-main"><aside class="cd-pal" id="cd-pal" aria-label="Block palette">' + cdPaletteHTML(p) + '</aside><div class="cd-canvas" id="cd-canvas" tabindex="0" aria-label="Script canvas"><div class="cd-world" id="cd-world" style="--z:' + S.cd.zoom + '">' + cdScriptsHTML(p) + (p.scripts.length ? "" : '<p class="cd-empty">Drag an Event block here to start a script, or load a template above.</p>') + '</div></div><aside class="cd-side" id="cd-side">' + cdSideHTML() + "</aside></div><p class=\"cr-sub cd-help\">Drag blocks from the left. Snap under a hat block. Right-click a block to duplicate or delete. Drag a block back onto the palette to trash it. Round and hexagon blocks plug into matching slots only.</p></div>";
+}
+
+/* ---------- editor: the program model (find, take out, put in) ---------- */
+function cdEach(prog, fn) {
+  var vals = function (b) { Object.keys(b["in"] || {}).forEach(function (k) { var v = b["in"][k]; if (v && v.b) { fn(v.b, { kind: "rep", owner: b, key: k }); vals(v.b); } }); };
+  var list = function (l, sc) {
+    l.forEach(function (b, i) {
+      fn(b, { kind: "stack", list: l, i: i, sc: sc }); vals(b);
+      if (b.body) list(b.body, sc);
+      (b.elifs || []).forEach(function (e, n) { if (e.c && e.c.b) { fn(e.c.b, { kind: "rep", owner: b, key: "elif" + n }); vals(e.c.b); } list(e.body || [], sc); });
+      if (b["else"]) list(b["else"], sc);
+    });
+  };
+  prog.scripts.forEach(function (sc) { list(sc.blocks, sc); });
+}
+function cdFind(prog, id) { var f = null; cdEach(prog, function (b, c) { if (!f && b.id === id) f = Object.assign({ b: b }, c); }); return f; }
+function cdSlotDef(owner, key) { var r = null; (CDB[owner.t].label || []).forEach(function (x) { if (typeof x !== "string" && x.k === key) r = x; }); return r; }
+function cdSetSlot(owner, key, rep) { if (key.indexOf("elif") === 0) owner.elifs[+key.slice(4)].c = rep ? { b: rep } : null; else if (rep) owner["in"][key] = { b: rep }; else { var x = cdSlotDef(owner, key); if (x.t === "bool") delete owner["in"][key]; else { var tmp = cdNew(owner.t, S.cd.prog); owner["in"][key] = tmp["in"][key]; } } }
+function cdTakeStack(prog, id) {
+  var c = cdFind(prog, id); if (!c || c.kind !== "stack") return null; var chain = c.list.splice(c.i);
+  if (c.list === c.sc.blocks && !c.list.length) prog.scripts.splice(prog.scripts.indexOf(c.sc), 1);
+  return chain;
+}
+function cdTakeRep(prog, id) { var c = cdFind(prog, id); if (!c || c.kind !== "rep") return null; var b = c.b; cdSetSlot(c.owner, c.key, null); return b; }
+function cdMouthList(owner, key) { return key === "body" ? owner.body : key === "else" ? owner["else"] : owner.elifs[+key.slice(4)].body; }
+function cdCommit(keepFocus) {
+  var p = S.cd.prog, j = JSON.stringify(p); if (S.cd.h[S.cd.hi] !== j) { S.cd.h = S.cd.h.slice(0, S.cd.hi + 1); S.cd.h.push(j); if (S.cd.h.length > 100) S.cd.h.shift(); S.cd.hi = S.cd.h.length - 1; }
+  st.cdraft = p; clearTimeout(cdCommit.t); cdCommit.t = setTimeout(function () { if (st) saveNow(); }, 500);
+  cdRedraw(keepFocus ? ["canvas", "bar", "side"] : ["canvas", "bar", "side"]);
+}
+function cdRedraw(parts) {
+  var p = S.cd.prog; if (!$("cd-world")) return;
+  parts.forEach(function (w) {
+    if (w === "canvas") { $("cd-world").innerHTML = cdScriptsHTML(p) + (p.scripts.length ? "" : '<p class="cd-empty">Drag an Event block here to start a script, or load a template above.</p>'); if (S.cd.pop) { var el = $("cd-world").querySelector('[data-id="' + S.cd.pop + '"]'); if (el) { el.classList.add("pop"); } S.cd.pop = null; } }
+    if (w === "pal") $("cd-pal").innerHTML = cdPaletteHTML(p);
+    if (w === "bar") $("cd-tb").innerHTML = cdToolbar();
+    if (w === "side") $("cd-side").innerHTML = cdSideHTML();
+  });
+}
+function cdRestore(json) { S.cd.prog = JSON.parse(json); cdRedraw(["canvas", "pal", "bar", "side"]); }
+function cdToast(m) { S.cd.msg = m; var h = $("cd-help"); if (h) { h.textContent = m; h.classList.add("flash"); setTimeout(function () { h.classList.remove("flash"); }, 900); } }
+
+/* ---------- editor: drag and drop ---------- */
+function cdCands(chain, rep) {
+  var out = [], pr = S.cd.prog;
+  if (chain) {
+    var hat = CDB[chain[0].t].shape === "hat";
+    if (hat) return out;
+    $("cd-world").querySelectorAll(".cd-b").forEach(function (el) { var t = el.getAttribute("data-t"); if (CDB[t] && CDB[t].cap) return; var r = el.getBoundingClientRect(); out.push({ kind: "after", id: el.getAttribute("data-id"), x: r.left, y: r.bottom, w: r.width }); });
+    $("cd-world").querySelectorAll(".cd-mouth").forEach(function (el) { var r = el.getBoundingClientRect(); out.push({ kind: "into", id: el.getAttribute("data-into"), key: el.getAttribute("data-key"), x: r.left + 12 * S.cd.zoom, y: r.top + 2, w: Math.max(40, r.width - 12) }); });
+  }
+  return out;
+}
+function cdDragStart(src, ev) {
+  var pr = S.cd.prog, d = { src: src, chain: null, rep: null, pre: JSON.stringify(pr), off: { x: 8, y: 8 }, cand: null, mode: "", ghost: null };
+  var ghost = document.createElement("div"); ghost.className = "cd-ghost"; ghost.setAttribute("aria-hidden", "true");
+  if (src.pal) {
+    var b = cdNew(src.pal, pr); if (src.pal === "call") b["in"].name = { lit: src.name };
+    if (CDB[b.t].shape === "bool" || CDB[b.t].shape === "num" || CDB[b.t].shape === "text" || CDB[b.t].shape === "player" || CDB[b.t].shape === "any") d.rep = b; else d.chain = [b];
+    ghost.innerHTML = d.rep ? cdRepHTML(b, pr) : cdStackHTML(b, pr);
+    var pe = src.el.getBoundingClientRect(); d.off = { x: ev.clientX - pe.left, y: ev.clientY - pe.top }; d.scale = 1;
+  } else {
+    var el = src.el, r = el.getBoundingClientRect(); d.off = { x: ev.clientX - r.left, y: ev.clientY - r.top }; d.scale = S.cd.zoom;
+    if (src.kind === "rep") { ghost.innerHTML = el.outerHTML; d.rep = cdTakeRep(pr, src.id); }
+    else { var sib = [el], n = el.nextElementSibling; while (n && n.classList.contains("cd-b")) { sib.push(n); n = n.nextElementSibling; } ghost.innerHTML = sib.map(function (x) { return x.outerHTML; }).join(""); d.chain = cdTakeStack(pr, src.id); }
+    cdRedraw(["canvas"]);
+  }
+  if (d.scale !== 1) ghost.style.transform = "scale(" + d.scale + ")"; ghost.style.transformOrigin = "0 0";
+  document.body.appendChild(ghost); d.ghost = ghost; document.body.classList.add("cd-dragging"); S.cd.drag = d; cdDragMove(ev);
+}
+function cdDragMove(ev) {
+  var d = S.cd.drag; if (!d) return; var gx = ev.clientX - d.off.x, gy = ev.clientY - d.off.y; d.ghost.style.left = gx + "px"; d.ghost.style.top = gy + "px";
+  var pal = $("cd-pal").getBoundingClientRect(), cv = $("cd-canvas").getBoundingClientRect(), inPal = ev.clientX >= pal.left && ev.clientX <= pal.right && ev.clientY >= pal.top && ev.clientY <= pal.bottom, inCv = ev.clientX >= cv.left && ev.clientX <= cv.right && ev.clientY >= cv.top && ev.clientY <= cv.bottom;
+  $("cd-pal").classList.toggle("trash", inPal && !d.src.pal); var old = $("cd-world").querySelector(".cd-hot"); if (old) old.classList.remove("cd-hot"); var ins = $("cd-ins"); if (ins) ins.hidden = true;
+  d.cand = null; d.mode = inPal ? "trash" : inCv ? "free" : "none";
+  if (!inCv) return;
+  if (d.rep) {
+    var best = null, ba = 1e9, shape = CDB[d.rep.t].shape;
+    $("cd-world").querySelectorAll(".cd-slot").forEach(function (el) { var ty = el.getAttribute("data-ty"); if (ty === "dd" || !cdPlug(ty, shape)) return; var r = el.getBoundingClientRect(); if (ev.clientX >= r.left - 6 && ev.clientX <= r.right + 6 && ev.clientY >= r.top - 6 && ev.clientY <= r.bottom + 6) { var a = r.width * r.height; if (a < ba) { ba = a; best = el; } } });
+    if (best) { best.classList.add("cd-hot"); d.cand = { kind: "slot", key: best.getAttribute("data-slot") }; d.mode = "slot"; }
+  } else if (d.chain) {
+    var cs = cdCands(d.chain), bd = 48, bc = null; cs.forEach(function (c) { var dist = Math.hypot((c.x - gx) * 0.4, c.y - gy); if (dist < bd) { bd = dist; bc = c; } });
+    if (bc) { d.cand = bc; d.mode = "snap"; if (!ins) { ins = document.createElement("div"); ins.id = "cd-ins"; ins.className = "cd-ins"; document.body.appendChild(ins); } ins.hidden = false; ins.style.left = bc.x + "px"; ins.style.top = (bc.y - 2) + "px"; ins.style.width = Math.min(220, bc.w) + "px"; }
+  }
+}
+function cdDragEnd(ev, cancel) {
+  var d = S.cd.drag; if (!d) return; S.cd.drag = null; d.ghost.remove(); document.body.classList.remove("cd-dragging"); var ins = $("cd-ins"); if (ins) ins.remove(); $("cd-pal").classList.remove("trash");
+  var pr = S.cd.prog, placed = null, cv = $("cd-canvas").getBoundingClientRect();
+  if (cancel) { cdRestore(d.pre); return; }
+  if (d.mode === "trash") { if (!d.src.pal) cdToast("Block deleted."); cdCommit(); return; }
+  if (d.rep) {
+    if (d.cand && d.cand.kind === "slot") { var k = d.cand.key.split(":"), o = cdFind(pr, k[0]); if (o) { cdSetSlot(o.b, k[1], d.rep); placed = d.rep.id; } }
+    if (!placed) { if (!d.src.pal) { cdRestore(d.pre); cdToast("Round and hexagon blocks only go into a matching slot."); } return; }
+  } else if (d.chain) {
+    if (d.cand && d.cand.kind === "after") { var c = cdFind(pr, d.cand.id); if (c) { c.list.splice.apply(c.list, [c.i + 1, 0].concat(d.chain)); placed = d.chain[0].id; } }
+    else if (d.cand && d.cand.kind === "into") { var ow = cdFind(pr, d.cand.id); if (ow) { var l = cdMouthList(ow.b, d.cand.key); l.splice.apply(l, [0, 0].concat(d.chain)); placed = d.chain[0].id; } }
+    else if (d.mode === "free") { var w = $("cd-world").getBoundingClientRect(), z = S.cd.zoom; pr.scripts.push({ id: cdUid(), x: Math.max(4, (ev.clientX - d.off.x - w.left) / z), y: Math.max(4, (ev.clientY - d.off.y - w.top) / z), blocks: d.chain }); placed = d.chain[0].id; if (CDB[d.chain[0].t].shape !== "hat") cdToast("This stack has no event on top, so it will not run until you snap it under a hat block."); }
+    else { if (!d.src.pal) cdRestore(d.pre); return; }
+  }
+  S.cd.pop = placed; cdFixDefs(); cdCommit();
+}
+/* My Blocks: drop definitions whose Define hat was deleted */
+function cdFixDefs() { var pr = S.cd.prog, have = {}; pr.scripts.forEach(function (sc) { var h = sc.blocks[0]; if (h && h.t === "define") have[h["in"].name.lit] = 1; }); pr.defs = pr.defs.filter(function (d) { return have[d.name]; }); }
+function cdDup(id) {
+  var pr = S.cd.prog, c = cdFind(pr, id); if (!c) return; var clone = JSON.parse(JSON.stringify(c.b)), reid = function (b) { b.id = cdUid(); Object.keys(b["in"] || {}).forEach(function (k) { var v = b["in"][k]; if (v && v.b) reid(v.b); }); (b.body || []).forEach(reid); (b.elifs || []).forEach(function (e) { if (e.c) reid(e.c.b); (e.body || []).forEach(reid); }); (b["else"] || []).forEach(reid); };
+  reid(clone); if (c.kind !== "stack") return cdToast("Drag a round block out of the palette to add another."); if (CDB[clone.t].shape === "hat") { pr.scripts.push({ id: cdUid(), x: c.sc.x + 30, y: c.sc.y + 40, blocks: [clone] }); } else c.list.splice(c.i + 1, 0, clone); S.cd.pop = clone.id; cdCommit();
+}
+function cdDel(id) { var pr = S.cd.prog, c = cdFind(pr, id); if (!c) return; if (c.kind === "rep") cdSetSlot(c.owner, c.key, null); else { c.list.splice(c.i, 1); if (c.list === c.sc.blocks && !c.list.length) pr.scripts.splice(pr.scripts.indexOf(c.sc), 1); } cdFixDefs(); S.cd.sel = null; cdCommit(); }
+function cdMenu(ev, id) {
+  var old = $("cd-menu"); if (old) old.remove(); var m = document.createElement("div"); m.id = "cd-menu"; m.className = "cd-menu"; m.setAttribute("role", "menu");
+  m.innerHTML = '<button type="button" role="menuitem" data-m="dup">Duplicate</button><button type="button" role="menuitem" data-m="del">Delete</button>'; m.style.left = ev.clientX + "px"; m.style.top = ev.clientY + "px"; document.body.appendChild(m);
+  var close = function () { m.remove(); document.removeEventListener("pointerdown", away, true); }, away = function (e) { if (!m.contains(e.target)) close(); };
+  m.addEventListener("click", function (e) { var a = e.target.getAttribute("data-m"); close(); if (a === "dup") cdDup(id); if (a === "del") cdDel(id); }); setTimeout(function () { document.addEventListener("pointerdown", away, true); }, 0); m.querySelector("button").focus();
+}
+var cdPend = null;
+root.addEventListener("pointerdown", function (ev) {
+  if (S.sub !== "tactics" || S.tx.sub !== "code" || ev.button > 0) return; var t = ev.target;
+  if (t.closest("input,select,button,textarea,a,label")) return;
+  var pal = t.closest(".cd-p"), el = t.closest(".cd-r, .cd-b");
+  if (pal && !t.closest(".cd-make")) { cdPend = { x: ev.clientX, y: ev.clientY, src: { pal: pal.getAttribute("data-pal"), name: pal.getAttribute("data-name"), el: pal.firstElementChild }, id: ev.pointerId }; }
+  else if (el && el.closest("#cd-world")) { cdPend = { x: ev.clientX, y: ev.clientY, src: { id: el.getAttribute("data-id"), kind: el.classList.contains("cd-r") ? "rep" : "stack", el: el }, id: ev.pointerId }; }
+  else if (t.closest("#cd-canvas")) { var cvs = $("cd-canvas"); cdPend = { x: ev.clientX, y: ev.clientY, pan: { l: cvs.scrollLeft, t: cvs.scrollTop }, id: ev.pointerId }; S.cd.sel = null; }
+  else return;
+  ev.preventDefault && t.closest(".cd-p, .cd-b, .cd-r") && ev.preventDefault();
+});
+window.addEventListener("pointermove", function (ev) {
+  if (S.cd.drag) { cdDragMove(ev); return; } if (!cdPend) return;
+  var dx = ev.clientX - cdPend.x, dy = ev.clientY - cdPend.y;
+  if (cdPend.pan) { var c = $("cd-canvas"); if (c) { c.scrollLeft = cdPend.pan.l - dx; c.scrollTop = cdPend.pan.t - dy; } return; }
+  if (Math.hypot(dx, dy) > 5) { var p = cdPend; cdPend = null; cdDragStart(p.src, ev); }
+});
+window.addEventListener("pointerup", function (ev) {
+  if (S.cd.drag) { cdDragEnd(ev, false); return; }
+  if (cdPend && cdPend.src && cdPend.src.id) { S.cd.sel = cdPend.src.id; var w = $("cd-world"); if (w) { w.querySelectorAll(".sel").forEach(function (e) { e.classList.remove("sel"); }); var e2 = w.querySelector('.cd-b[data-id="' + cdPend.src.id + '"]'); if (e2) e2.classList.add("sel"); } $("cd-canvas").focus({ preventScroll: true }); }
+  cdPend = null;
+});
+window.addEventListener("pointercancel", function (ev) { if (S.cd.drag) cdDragEnd(ev, true); cdPend = null; });
+root.addEventListener("contextmenu", function (ev) { if (S.sub !== "tactics" || S.tx.sub !== "code") return; var el = ev.target.closest("#cd-world .cd-b, #cd-world .cd-r"); if (!el) return; ev.preventDefault(); cdMenu(ev, el.getAttribute("data-id")); });
+root.addEventListener("keydown", function (ev) {
+  if (S.sub !== "tactics" || S.tx.sub !== "code" || ev.target.closest("input,select,textarea")) return;
+  if ((ev.key === "Delete" || ev.key === "Backspace") && S.cd.sel) { ev.preventDefault(); cdDel(S.cd.sel); }
+  else if ((ev.ctrlKey || ev.metaKey) && ev.key.toLowerCase() === "z") { ev.preventDefault(); ev.shiftKey ? cdStep(1) : cdStep(-1); }
+  else if ((ev.ctrlKey || ev.metaKey) && ev.key.toLowerCase() === "y") { ev.preventDefault(); cdStep(1); }
+  else if (ev.key === "Escape" && S.cd.drag) cdDragEnd(ev, true);
+});
+function cdStep(n) { var i = S.cd.hi + n; if (i < 0 || i >= S.cd.h.length) return; S.cd.hi = i; S.cd.prog = JSON.parse(S.cd.h[i]); st.cdraft = S.cd.prog; cdRedraw(["canvas", "pal", "bar", "side"]); }
+
+/* ---------- editor: inputs, buttons ---------- */
+root.addEventListener("change", function (ev) {
+  var el = ev.target; if (S.sub !== "tactics" || S.tx.sub !== "code" || !el.getAttribute) return;
+  if (el.hasAttribute("data-bi")) { var c = cdFind(S.cd.prog, el.getAttribute("data-bi")); if (!c) return; var k = el.getAttribute("data-k"), x = cdSlotDef(c.b, k); c.b["in"][k] = { lit: x && x.t === "num" ? cdNum(el.value) : el.value }; cdCommit(true); return; }
+  if (el.id === "cd-tpl" && el.value !== "") { S.cd.prog = CD_TEMPLATES[+el.value][2](); S.cd.pid = null; S.cd.test = null; cdCommit(); cdToast("Loaded the template. Press Run test match to see it fire."); }
+  else if (el.id === "cd-load" && el.value) { var sv = st.programs.filter(function (p) { return p.id === el.value; })[0]; if (sv) { S.cd.prog = JSON.parse(JSON.stringify(sv.data)); S.cd.pid = sv.id; S.cd.h = [JSON.stringify(S.cd.prog)]; S.cd.hi = 0; S.cd.test = null; st.cdraft = S.cd.prog; cdRedraw(["canvas", "pal", "bar", "side"]); } }
+  else if (el.id === "cd-opp") S.cd.opp = el.value;
+  else if (el.id === "cd-name") { S.cd.prog.name = el.value || "My program"; cdCommit(); }
+});
+root.addEventListener("input", function (ev) { var el = ev.target; if (S.sub === "tactics" && el.id === "cd-mkv" || el.id === "cd-mkb") S.cd.mk = el.value; });
+function cdNameOk(n, list) { n = (n || "").trim(); return n && list.indexOf(n) < 0 ? n : ""; }
+function cdAction(a, b) {
+  var pr = S.cd.prog, v = b.getAttribute("data-v"), id = b.getAttribute("data-id");
+  if (a === "cat") { S.cd.cat = v; S.cd.mk = ""; cdRedraw(["pal"]); }
+  else if (a === "mkvar") { var n = cdNameOk(S.cd.mk, pr.vars); if (!n) return cdToast("Give the variable a new name."); pr.vars.push(n); S.cd.mk = ""; cdCommit(); cdRedraw(["pal"]); }
+  else if (a === "mkblock") { var nb = cdNameOk(S.cd.mk, pr.defs.map(function (d) { return d.name; })); if (!nb) return cdToast("Give the block a new name."); pr.defs.push({ id: cdUid(), name: nb }); var h = cdNew("define", pr); h["in"].name = { lit: nb }; pr.scripts.push({ id: cdUid(), x: 30 + (pr.scripts.length % 5) * 24, y: 30 + pr.scripts.length * 90, blocks: [h] }); S.cd.mk = ""; S.cd.pop = h.id; cdCommit(); cdRedraw(["pal"]); cdToast("Build its script under the Define hat. Then use it from My Blocks."); }
+  else if (a === "undo") cdStep(-1); else if (a === "redo") cdStep(1);
+  else if (a === "clear") { if (!pr.scripts.length) return; pr.scripts = []; pr.defs = []; cdCommit(); cdRedraw(["pal"]); cdToast("Cleared. Undo brings it back."); }
+  else if (a === "save") { var cp = JSON.parse(JSON.stringify(pr)); if (S.cd.pid) { var ex = st.programs.filter(function (x) { return x.id === S.cd.pid; })[0]; if (ex) ex.data = cp; } if (!S.cd.pid || !st.programs.some(function (x) { return x.id === S.cd.pid; })) { S.cd.pid = "p" + Date.now().toString(36); st.programs.push({ id: S.cd.pid, data: cp }); } saveNow(); cdRedraw(["bar"]); cdToast("Saved \"" + pr.name + "\"."); }
+  else if (a === "use") { st.progOn = st.progOn === S.cd.pid ? null : S.cd.pid; saveNow(); cdRedraw(["bar"]); cdToast(st.progOn ? "This program now runs in every match you play. Save again after edits." : "Matches go back to your sheet only."); }
+  else if (a === "json") { S.cd.io = !S.cd.io; cdRedraw(["bar"]); }
+  else if (a === "schema") { var sp = $("cd-schema"); if (sp) sp.hidden = !sp.hidden; }
+  else if (a === "import") {
+    try { var o = JSON.parse($("cd-json").value); if (!o || !Array.isArray(o.scripts)) throw new Error("It needs a scripts list."); o.vars = o.vars || []; o.defs = o.defs || []; o.name = o.name || "Imported"; o.schema = "touchline.tactics-program/1";
+      var bad = null; o.scripts.forEach(function (sc) { if (!Array.isArray(sc.blocks)) bad = "A script has no blocks list."; }); S.cd.prog = o; cdEach(o, function (bl) { if (!CDB[bl.t]) bad = "Unknown block type " + bl.t + "."; }); if (bad) throw new Error(bad);
+      S.cd.pid = null; S.cd.io = false; cdCommit(); cdRedraw(["pal"]); cdToast("Imported.");
+    } catch (e) { S.cd.prog = JSON.parse(S.cd.h[S.cd.hi]); cdToast("Could not import: " + e.message); }
+  }
+  else if (a === "zin") { S.cd.zoom = Math.min(1.6, Math.round((S.cd.zoom + 0.1) * 10) / 10); cdZoom(); } else if (a === "zout") { S.cd.zoom = Math.max(0.5, Math.round((S.cd.zoom - 0.1) * 10) / 10); cdZoom(); } else if (a === "zreset") { S.cd.zoom = 1; cdZoom(); }
+  else if (a === "addelif") { var c1 = cdFind(pr, id); c1.b.elifs = c1.b.elifs || []; c1.b.elifs.push({ c: null, body: [] }); cdCommit(); }
+  else if (a === "addelse") { var c2 = cdFind(pr, id); c2.b["else"] = []; cdCommit(); }
+  else if (a === "rmelif") { var c3 = cdFind(pr, id); c3.b.elifs.splice(+b.getAttribute("data-n"), 1); cdCommit(); }
+  else if (a === "rmelse") { var c4 = cdFind(pr, id); delete c4.b["else"]; cdCommit(); }
+  else if (a === "test") cdTest();
+  else if (a === "focus") { var e = $("cd-world").querySelector('[data-id="' + id + '"]'); if (e) { e.scrollIntoView({ block: "center", inline: "center", behavior: REDUCE_M ? "auto" : "smooth" }); e.classList.remove("ping"); void e.offsetWidth; e.classList.add("ping"); } }
+}
+function cdZoom() { var w = $("cd-world"); if (w) w.style.setProperty("--z", S.cd.zoom); cdRedraw(["bar"]); }
+
+/* ---------- running programs: the glue between runTacticsProgram and the match engine ---------- */
+function cdActive() { var p = (st.programs || []).filter(function (x) { return x.id === st.progOn; })[0]; return p ? p.data : null; }
+function cdToEngine(a, cur) {
+  if (a.type === "sheet") {
+    var ns = cxGet(a.sheet), os = cxGet(cur.sheet) || cxGet(st.main), ne = cxEff(ns), oe = cxEff(os), attr = [];
+    for (var i = 0; i < 11; i++) { var d = {}, keys = Object.keys(ne.attr[i]).concat(Object.keys(oe.attr[i])); keys.forEach(function (k) { var v = Math.round(((ne.attr[i][k] || 0) - (oe.attr[i][k] || 0)) * 10) / 10; if (v) d[k] = v; }); attr.push({ slot: i, d: d }); }
+    cur.sheet = ns.id; return { type: "sheet", form: ns.form, tactics: ne.tactics, attr: attr };
+  }
+  if (a.type === "instr") { var nw = INSTR[a.instr][1], od = a.prev ? INSTR[a.prev][1] : {}, dd = {}; Object.keys(nw).concat(Object.keys(od)).forEach(function (k) { dd[k] = (nw[k] || 0) - (od[k] || 0); }); return { type: "attr", player: a.player, d: dd }; }
+  return a;
+}
+/* one coach per match. sink(entry) receives the log lines. */
+function cdCoach(getProg, sink) {
+  var cur = { sheet: null };
+  return function (ctx) {
+    var prog = getProg(); if (!prog) return; var S0 = ctx.state;
+    S0.sheets = st.sheets.map(function (s) { return { id: s.id, name: s.name, form: s.form }; });
+    if (S0.events.start) cur.sheet = LIVE.id; S0.sheetNow = cur.sheet;
+    var r = runTacticsProgram(prog, S0);
+    r.log.forEach(function (x) { sink(x); }); r.errors.concat(r.warnings).forEach(function (x) { sink({ minute: x.minute, text: x.msg, block: x.block, kind: "error" }); });
+    if (r.actions.length) { var res = ctx.apply(r.actions.map(function (a) { return cdToEngine(a, cur); })); res.forEach(function (x, i) { if (!x.ok) sink({ minute: S0.minute, text: x.msg, block: r.actions[i].block, kind: "error" }); }); }
+  };
+}
+var CODE = { log: [] };
+OPTS.coachFor = function (h, a) { return st && cdActive() ? (h === st.team ? "h" : a === st.team ? "a" : null) : null; };
+OPTS.coach = function (ctx) { if (ctx.state.events.start) { CODE.log = []; CODE.fn = cdCoach(cdActive, function (x) { CODE.log.push(x); }); } if (CODE.fn) CODE.fn(ctx); };
+function cdWrap(o) { return Object.assign({}, o, { coach: OPTS.coach, coachFor: OPTS.coachFor }); }
+function cdTest() {
+  var pr = S.cd.prog, opp = S.cd.opp || lgOf(st.team).ids.filter(function (i) { return i !== st.team; })[0], log = [], seed = (Date.now() >>> 0) % 4294967295;
+  applySheet(st.main); var fn = cdCoach(function () { return pr; }, function (x) { log.push(x); }), started = false;
+  var sim = simulate(st.team, opp, seed, { homeAdv: true, tie: "none", coachFor: function () { return "h"; }, coach: function (ctx) { if (ctx.state.events.start) started = true; fn(ctx); } });
+  var tl = [], goals = []; sim.M.forEach(function (e) { if (!e.tact) return; var m = parseInt(e.label, 10) || (e.type === "ht" ? 45 : 90); tl.push({ m: m, line: e.tact.h.line, press: e.tact.h.press, tempo: e.tact.h.tempo }); (e.events || []).forEach(function (ev) { if (ev.k === "goal") goals.push({ m: m, mine: ev.s === "h" }); }); });
+  var fin = sim.M[sim.M.length - 1].score || [0, 0]; S.cd.test = { h: st.team, a: opp, score: fin, log: log, tl: tl, goals: goals };
+  cdRedraw(["side"]); var lg = $("cd-side").querySelector(".cd-log"); if (lg) lg.scrollTop = 0;
+  var fired = {}; log.forEach(function (x) { if (x.block) fired[x.block] = 1; }); Object.keys(fired).forEach(function (id) { var e = $("cd-world").querySelector('[data-id="' + id + '"]'); if (e) e.classList.add("fired"); });
+}
+root.addEventListener("click", function (ev) { var b = ev.target.closest("[data-cd]"); if (!b || !st || S.sub !== "tactics") return; ev.preventDefault(); cdAction(b.getAttribute("data-cd"), b); });
+
   function scale() { var P = squadPower(st.team).all; return Math.max(0.5, Math.min(3, (P - 55) / 10)); }
 
   /* ---------- new career ---------- */
@@ -9164,7 +10409,7 @@ function homeInbox() {
     for (var z = 0; z < 1; z++) { mine().forEach(function (x) { x.p.fm = formMult(x.k, x.p.r); }); }
     st.week++; S.wk = { w: wk, rs: rs, mine: mr }; if (st.week < st.cal.length) titleCheck(); if (st.week === st.cal.length - 8) contractAlert("soon");
     if (st.week >= st.cal.length) endSeason();
-    S.midRes = null; settle(); relink(); saveNow(); S.busy = false; render(); popWeek(rs, mr, S.pos0); setTimeout(runCele, 600);
+    S.midRes = null; st.pickSheet = null; settle(); relink(); saveNow(); S.busy = false; render(); popWeek(rs, mr, S.pos0); setTimeout(runCele, 600);
   }
   function midReview() {
     mine().slice().forEach(function (x) {
@@ -9192,6 +10437,7 @@ function homeInbox() {
     if (S.busy || !st) return;
     if (dueMine().length) { advanceMid(); return; }
     if (st.done) return;
+    applySheet(st.pickSheet || st.main);
     var fx = st.cal[st.week], mf = null, others = [];
     fx.forEach(function (f) { if (f[0] === st.team || f[1] === st.team) mf = f; else others.push(f); });
     S.pos0 = myRow(table()).pos; relink(); S.busy = true; S.msg = ""; render();
@@ -9220,7 +10466,7 @@ function homeInbox() {
   }
   function subtabs() {
     var h = '<div class="cup-tabs" role="tablist" aria-label="Career views">';
-    [["home", "Home"], ["inbox", "Inbox"], ["team", "Team"], ["transfers", "Transfers"], ["standings", "Standings"]].concat(st.cont && st.cont.list.length ? [["cups", "Cups"]] : []).forEach(function (t) { h += '<button class="ctab" type="button" role="tab" aria-selected="' + (S.sub === t[0]) + '" data-act="sub" data-v="' + t[0] + '">' + t[1] + (t[0] === "inbox" && unreadN() ? " (" + unreadN() + ")" : "") + (t[0] === "team" && !st.done && hurtXI().length ? " (" + hurtXI().length + ")" : "") + "</button>"; });
+    [["home", "Home"], ["inbox", "Inbox"], ["team", "Team"], ["tactics", "Tactics"], ["transfers", "Transfers"], ["standings", "Standings"]].concat(st.cont && st.cont.list.length ? [["cups", "Cups"]] : []).forEach(function (t) { h += '<button class="ctab" type="button" role="tab" aria-selected="' + (S.sub === t[0]) + '" data-act="sub" data-v="' + t[0] + '">' + t[1] + (t[0] === "inbox" && unreadN() ? " (" + unreadN() + ")" : "") + (t[0] === "team" && !st.done && hurtXI().length ? " (" + hurtXI().length + ")" : "") + "</button>"; });
     return h + '<button class="ctab cr-menu" type="button" data-act="menu">Saves</button></div>';
   }
   function chips(f) { return f.slice(-5).map(function (x) { return '<i class="cr-f cr-' + x + '">' + x + "</i>"; }).join(""); }
@@ -9272,7 +10518,7 @@ function homeInbox() {
     h += "</tbody></table></div></section><div class=\"cr-col2\">";
     var L = mine(), inj = L.filter(function (x) { return isInj(x.k); });
     h += '<section class="cr-card"><h3>Squad news</h3><p class="cr-sub">Weekly wage bill ' + fm(wageBill() / 1000) + '.</p>' + (inj.length ? '<ul class="cr-list">' + inj.map(function (x) { return "<li><b>" + esc(x.p.name) + "</b><span>Out " + st.inj[x.k] + (st.inj[x.k] === 1 ? " week" : " weeks") + "</span></li>"; }).join("") + "</ul>" : '<p class="cr-sub">Everyone is fit.</p>') + "</section>";
-    h += homeInbox();
+    h += homeSheet(); h += homeInbox();
     if (st.hist.length) h += '<section class="cr-card"><h3>Seasons</h3><ul class="cr-list">' + st.hist.map(function (x) { return "<li><b>Season " + x.season + "</b><span>" + ordinal(x.pos) + ", " + x.pts + " pts</span></li>"; }).join("") + "</ul></section>";
     return h + "</div></div>";
   }
@@ -9301,7 +10547,7 @@ function homeInbox() {
   function teamView() {
     var L = mine(), t = TEAMS[st.team], P = squadPower(st.team), h = "", c = counts(L);
     h += '<div class="cr-bars">' + [["Overall", P.all], ["Attack", P.att], ["Midfield", P.mid], ["Defence", P.def], ["Goalkeeper", P.gk]].map(function (r) { return '<div class="al-r"><span>' + r[0] + "</span><b>" + Math.round(r[1]) + '</b><span class="al-bar"><i style="width:' + Math.max(0, Math.min(100, Math.round(r[1]))) + '%"></i></span></div>'; }).join("") + "</div>";
-    h += '<div class="cr-tools"><label class="cr-lab">Formation<select class="inp" id="cr-form">' + Object.keys(FORMN).map(function (k) { return '<option value="' + k + '"' + (st.form === k ? " selected" : "") + ">" + FORMN[k] + "</option>"; }).join("") + '</select></label><button class="btn small" type="button" data-act="auto">Pick best XI</button>' +
+    h += '<div class="cr-tools"><span class="cr-lab">Formation <b>' + FORMN[st.form] + '</b></span><button class="btn small ghost" type="button" data-act="sub" data-v="tactics">Edit in Tactics</button><button class="btn small" type="button" data-act="auto">Pick best XI</button>' +
       '<span class="cr-sub">' + L.length + " players. " + c.GK + " GK, " + c.DF + " DF, " + c.MF + " MF, " + c.FW + " FW.</span></div>";
     if (S.sel != null) h += '<p class="cr-hint">Choose who replaces ' + esc(L[S.sel].p.name) + " in the " + slotName(S.sel) + " slot, or <button class=\"cr-link\" type=\"button\" data-act=\"unsel\">cancel</button>.</p>";
     h += fmView(L);
@@ -9311,7 +10557,7 @@ function homeInbox() {
         (S.sel == null ? '<button class="pill" type="button" data-act="pick" data-i="' + i + '">' + (starter ? "Swap" : "Start") + "</button>" : (sel ? "" : '<button class="pill" type="button" data-act="swap" data-i="' + i + '">Here</button>')) + '<button class="pill" type="button" data-act="sell" data-k="' + esc(x.k) + '" aria-label="Sell ' + esc(p.name) + '">Sell ' + fm(Math.round(valueOf(p) * 0.9 * 10) / 10) + "</button></span></li>";
     };
     h += '<div class="cr-cols"><section class="cr-card"><h3>Squad list: starting XI</h3><ul class="cr-pls">' + L.slice(0, 11).map(function (x, i) { return row(x, i); }).join("") + '</ul></section><section class="cr-card"><h3>Squad list: bench</h3><ul class="cr-pls">' + L.slice(11).map(function (x, i) { return row(x, i + 11); }).join("") + "</ul></section></div>";
-    h += '<section class="cr-card"><h3>Tactics <span class="cr-arch">' + esc(archOf(t.tactics).name) + '</span></h3><div class="cr-tac">' + TACT.map(function (r) { var v = Math.round(t.tactics[r[0]] * 100); return '<label class="cr-sl2"><span>' + r[1] + '</span><input type="range" min="0" max="100" value="' + v + '" data-tac="' + r[0] + '" aria-label="' + r[1] + '"><b>' + v + "</b></label>"; }).join("") + '</div><button class="btn small ghost" type="button" data-act="tdef">Reset to club default</button></section>';
+    h += '<section class="cr-card"><h3>Tactics <span class="cr-arch">' + esc(archOf(t.tactics).name) + '</span></h3><p class="cr-sub">Style sliders, formations, player roles and the Code editor now live in the Tactics tab.</p><div class="actions"><button class="btn small" type="button" data-act="sub" data-v="tactics">Open Tactics</button></div></section>';
     return h;
   }
 
@@ -9367,11 +10613,12 @@ function homeInbox() {
     if (!active && st) applyState();
     if (S.screen === "saves" || !st) { root.innerHTML = savesView(); bindSaves(); return; }
     if (S.sub === "inbox") S.ibSeen = true; else if (S.ibSeen) { S.ibSeen = false; S.ibn = 0; markRead(); }
-    var body = S.sub === "inbox" ? inboxView() : S.sub === "team" ? teamView() : S.sub === "transfers" ? transfersView() : S.sub === "cups" ? contView() : S.sub === "standings" ? standingsView() : homeView();
+    var body = S.sub === "tactics" ? tacticsView() : S.sub === "inbox" ? inboxView() : S.sub === "team" ? teamView() : S.sub === "transfers" ? transfersView() : S.sub === "cups" ? contView() : S.sub === "standings" ? standingsView() : homeView();
     root.innerHTML = strip() + subtabs() + '<div class="cr-body">' + (S.msg && S.sub !== "home" ? '<p class="cr-hint" role="status">' + esc(S.msg) + "</p>" : "") + body + "</div>";
     if (S.sub === "transfers") bindMarket();
     if (S.sub === "standings") bindStandings();
     if (S.sub === "team") bindTeam();
+    if (S.sub !== "tactics") cxStopPlay();
   }
   function bindSaves() {
     var f = $("cr-file"); if (f) f.addEventListener("change", function () {
@@ -9392,11 +10639,6 @@ function homeInbox() {
     $("cr-sort").addEventListener("change", function (e) { S.flt.sort = e.target.value; upd(); });
   }
   function bindTeam() {
-    $("cr-form").addEventListener("change", function (e) { st.form = e.target.value; TEAMS[st.team].form = st.form; saveNow(); render(); });
-    root.querySelectorAll("[data-tac]").forEach(function (el) {
-      el.addEventListener("input", function () { var k = el.getAttribute("data-tac"), v = +el.value / 100; st.tact[k] = v; TEAMS[st.team].tactics[k] = v; el.nextElementSibling.textContent = el.value; var a = root.querySelector(".cr-arch"); if (a) a.textContent = archOf(TEAMS[st.team].tactics).name; });
-      el.addEventListener("change", function () { saveNow(); });
-    });
   }
 
 
@@ -9461,12 +10703,12 @@ function homeInbox() {
     else if (a === "unsel") S.sel = null;
     else if (a === "swap") { var i = +b.getAttribute("data-i"), L = mine().map(function (x) { return x.k; }), t = L[i]; L[i] = L[S.sel]; L[S.sel] = t; put(st.team, L); S.sel = null; saveNow(); S.msg = ""; }
     else if (a === "sell") sell(b.getAttribute("data-k"));
+    else if (a.indexOf("tx") === 0) { var rx = cxAct(a, b); if (rx === "keep") return; }
     else if (a === "ibf") { S.ibf = b.getAttribute("data-v"); S.ibn = 0; }
     else if (a === "ibread") markRead();
     else if (a === "ibmore") S.ibn = (S.ibn || 40) + 60;
     else if (a === "renew") { var kr = b.getAttribute("data-k"); if (b.getAttribute("aria-disabled") === "true") S.msg = "Talks with " + POOL[kr].name + " broke down. Try again in " + cooldownLeft(kr) + " week" + (cooldownLeft(kr) === 1 ? "" : "s") + "."; else { openNeg(kr, "renew"); return; } }
     else if (a === "neg") { var kn = b.getAttribute("data-k"); if (b.getAttribute("aria-disabled") === "true") S.msg = "Talks over " + POOL[kn].name + " broke down. Try again in " + cooldownLeft(kn) + " week" + (cooldownLeft(kn) === 1 ? "" : "s") + "."; else if (mine().length >= MAXSQ) S.msg = "Your squad is full. Sell someone first."; else { openNeg(kn); return; } }
-    else if (a === "tdef") { Object.assign(st.tact, ORIG[st.team].tactics); Object.assign(TEAMS[st.team].tactics, ORIG[st.team].tactics); saveNow(); }
     render();
   });
   /* the squads belong to the Career tab only: swap them in when it opens and out again when you leave it */
@@ -9878,6 +11120,105 @@ function homeInbox() {
   }
 
   window.TLCareer = { state: function () { return st; }, db: function () { return DB; }, start: startCareer, advance: advance, load: loadCareer };
+})();
+
+/* ---------- liquid glass: outlined football shapes, drifting ---------- */
+(function () {
+  if (document.getElementById("field")) return;
+  function ngon(n, r, rot, cx, cy) { var o = []; for (var i = 0; i < n; i++) { var a = (rot || -90) * Math.PI / 180 + i * 2 * Math.PI / n; o.push([(cx || 50) + r * Math.cos(a), (cy || 50) + r * Math.sin(a)]); } return o; }
+  function pts(a) { return a.map(function (p) { return p[0].toFixed(1) + "," + p[1].toFixed(1); }).join(" "); }
+  function pg(a) { return '<polygon points="' + pts(a) + '"/>'; }
+  function pl(a) { return '<polyline points="' + pts(a) + '"/>'; }
+  function ln(a, b, c, d) { return '<line x1="' + a + '" y1="' + b + '" x2="' + c + '" y2="' + d + '"/>'; }
+  function arc(cx, cy, r, a0, a1, n) { var o = []; for (var i = 0; i <= n; i++) { var a = (a0 + (a1 - a0) * i / n) * Math.PI / 180; o.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]); } return o; }
+  var SH = {
+    ball: function () { var pen = ngon(5, 17, -90), ring = ngon(10, 46, -90), h = pg(ngon(24, 46)) + pg(pen); pen.forEach(function (p, i) { var q = ngon(5, 46, -90)[i]; h += ln(p[0], p[1], q[0], q[1]); }); for (var i = 0; i < 5; i++) { var a = ngon(5, 46, -90)[i], b = ngon(5, 46, -90)[(i + 1) % 5], m = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], c = [50 + (m[0] - 50) * 1.0, 50 + (m[1] - 50) * 1.0]; h += pg(ngon(5, 9, -90 + 36 + i * 72, c[0] * 0.96 + 2, c[1] * 0.96 + 2)).replace("<polygon", "<polygon"); } return h; },
+    hexes: function () { var h = ""; [[30, 34], [58, 34], [44, 58]].forEach(function (c) { h += pg(ngon(6, 15, 0, c[0], c[1])); }); h += pg(ngon(5, 6, -90, 44, 58)); return h; },
+    goal: function () { return pl([[8, 88], [8, 24], [92, 24], [92, 88]]) + pl([[8, 24], [22, 12], [78, 12], [92, 24]]) + ln(22, 12, 22, 70) + ln(78, 12, 78, 70) + ln(8, 88, 22, 70) + ln(92, 88, 78, 70) + ln(22, 70, 78, 70) + ln(36, 12, 36, 24) + ln(50, 12, 50, 24) + ln(64, 12, 64, 24); },
+    box: function () { return pg([[6, 6], [94, 6], [94, 94], [6, 94]]) + pg([[26, 6], [26, 34], [74, 34], [74, 6]]) + pg([[38, 6], [38, 18], [62, 18], [62, 6]]) + pl(arc(50, 34, 14, 28, 152, 10)); },
+    centre: function () { return pg(ngon(32, 38)) + pg(ngon(8, 3)) + ln(6, 50, 94, 50); },
+    flag: function () { return ln(30, 94, 30, 8) + pg([[30, 8], [78, 22], [30, 36]]) + pl(arc(30, 94, 22, 180, 360, 8)); },
+    boot: function () { return pg([[6, 40], [30, 36], [40, 20], [52, 20], [58, 38], [82, 52], [94, 70], [94, 82], [6, 82]]) + ln(6, 72, 94, 72) + ln(16, 82, 16, 92) + ln(34, 82, 34, 92) + ln(66, 82, 66, 92) + ln(84, 82, 84, 92) + ln(40, 20, 58, 38); },
+    shirt: function () { return pg([[34, 10], [44, 16], [56, 16], [66, 10], [92, 26], [82, 44], [72, 38], [72, 92], [28, 92], [28, 38], [18, 44], [8, 26]]) + pl([[44, 16], [50, 26], [56, 16]]); },
+    whistle: function () { return pg(ngon(16, 26, 0, 38, 62)) + pg([[58, 50], [94, 38], [94, 52], [62, 74]]) + pg(ngon(6, 8, 0, 38, 62)); },
+    trophy: function () { return pg([[28, 10], [72, 10], [70, 42], [60, 56], [54, 60], [54, 76], [68, 82], [68, 92], [32, 92], [32, 82], [46, 76], [46, 60], [40, 56], [30, 42]]) + pl([[28, 18], [12, 18], [12, 32], [32, 46]]) + pl([[72, 18], [88, 18], [88, 32], [68, 46]]); },
+    card: function () { return pg([[24, 8], [76, 8], [76, 92], [24, 92]]) + pl([[24, 22], [76, 22]]); },
+    tri: function () { return pg([[50, 8], [94, 88], [6, 88]]) + pg([[50, 34], [74, 78], [26, 78]]); },
+    rhomb: function () { return pg([[50, 4], [92, 50], [50, 96], [8, 50]]) + pg([[50, 26], [72, 50], [50, 74], [28, 50]]); },
+    oct: function () { return pg(ngon(8, 44, -67.5)) + pg(ngon(8, 26, -67.5)); },
+    hept: function () { return pg(ngon(7, 44)); },
+    star: function () { var o = []; for (var i = 0; i < 10; i++) { var a = (-90 + i * 36) * Math.PI / 180, r = i % 2 ? 19 : 46; o.push([50 + r * Math.cos(a), 50 + r * Math.sin(a)]); } return pg(o); },
+    penta: function () { return pg(ngon(5, 44)) + pg(ngon(5, 22, 90)); },
+    para: function () { return pg([[22, 20], [94, 20], [78, 80], [6, 80]]); },
+    trap: function () { return pg([[24, 16], [76, 16], [96, 84], [4, 84]]) + ln(16, 50, 84, 50); },
+    hex: function () { return pg(ngon(6, 44, 0)) + pg(ngon(6, 28, 0)); }
+  };
+  var CFG = [
+    ["ball", 12, 18, 360, 1, 150, 40, 30, -12, 160], ["hexes", 82, 14, 300, 0, 120, -50, 40, 10, 190], ["goal", 70, 62, 440, 0, 130, 60, -30, -6, 8],
+    ["box", 16, 70, 340, 0, 170, 30, -50, 4, 70], ["centre", 46, 36, 420, 1, 190, -40, 30, 0, 90], ["flag", 90, 80, 260, 0, 110, -30, -40, 8, -14],
+    ["boot", 30, 88, 300, 0, 140, 50, -30, -16, 20], ["shirt", 56, 10, 250, 0, 160, -30, 40, 12, -8], ["whistle", 8, 46, 220, 0, 100, 40, 30, 20, 50],
+    ["trophy", 62, 84, 270, 1, 150, -40, -40, -8, 6], ["card", 94, 44, 150, 0, 90, -30, 30, 18, 40], ["tri", 38, 14, 200, 0, 130, 30, 40, -20, 15],
+    ["rhomb", 76, 38, 180, 0, 170, -50, 20, 0, 90], ["oct", 22, 44, 160, 0, 120, 40, -30, 0, 45], ["hept", 50, 62, 150, 0, 150, -30, -30, 10, -20],
+    ["star", 4, 90, 130, 0, 100, 20, -40, 0, 36], ["penta", 66, 28, 190, 0, 180, 30, 40, -10, 60], ["para", 40, 52, 170, 0, 140, -40, 30, 5, 20],
+    ["trap", 88, 56, 200, 0, 160, 30, -30, 0, -10], ["hex", 20, 8, 130, 0, 110, 30, 30, 0, 60]
+  ];
+  var el = document.createElement("div"); el.id = "field"; el.setAttribute("aria-hidden", "true");
+  el.innerHTML = CFG.map(function (c, i) {
+    var dur = c[5] + (i % 5) * 14, k = (0.02 + (i % 6) * 0.011) * (i % 2 ? 1 : -1);
+    return '<svg class="' + (c[4] ? "acc" : "") + '" data-t="' + c[0] + '" viewBox="0 0 100 100" style="--x:' + c[1] + "%;--y:" + c[2] + "%;--s:" + c[3] + "px;--d:" + dur + "s;--o:-" + ((i * 13) % dur) + "s;--dx:" + c[6] + "px;--dy:" + c[7] + "px;--r0:" + c[9] + "deg;--r1:" + (c[9] + c[8] * 6) + "deg;--k:" + k.toFixed(3) + ";--kr:" + (k * 0.5).toFixed(3) + '"><g class="px">' + SH[c[0]]() + "</g></svg>";
+  }).join("");
+  document.body.insertBefore(el, document.body.firstChild);
+
+  /* reactions: every interaction nudges the field, and it stirs on its own */
+  if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var svgs = [].slice.call(el.children), KEYS = Object.keys(SH), ST = svgs.map(function () { return { r: 0, k: 1, busy: false }; });
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+  function pick1(a) { return a[Math.floor(Math.random() * a.length)]; }
+  function apply(i) { var g = svgs[i].firstChild, st = ST[i]; g.style.transform = "rotate(" + st.r + "deg) scale(" + st.k + ")"; }
+  function vanish(i, back, swap) {
+    var s = svgs[i], st = ST[i]; if (st.busy) return; st.busy = true; s.style.opacity = "0";
+    setTimeout(function () {
+      if (swap) { var t = pick1(KEYS.filter(function (x) { return x !== s.getAttribute("data-t"); })); s.setAttribute("data-t", t); s.firstChild.innerHTML = SH[t](); }
+      s.style.opacity = ""; st.busy = false;
+    }, back);
+  }
+  function nudge(i, mode) {
+    var s = svgs[i], st = ST[i]; if (st.busy) return;
+    mode = mode || pick1(["grow", "shrink", "spin", "spin", "tint", "tint", "vanish", "morph"]);
+    if (mode === "grow") st.k = Math.min(1.45, st.k * rnd(1.12, 1.28));
+    else if (mode === "shrink") st.k = Math.max(0.62, st.k * rnd(0.78, 0.9));
+    else if (mode === "spin") st.r += pick1([-1, 1]) * rnd(28, 85);
+    else if (mode === "tint") { s.classList.add("hot"); setTimeout(function () { s.classList.remove("hot"); }, rnd(1800, 3200)); }
+    else if (mode === "vanish") return vanish(i, rnd(1500, 2800), false);
+    else if (mode === "morph") return vanish(i, 900, true);
+    if (mode !== "tint") apply(i);
+    s.firstChild.animate([{ opacity: 1 }, { opacity: 0.35, offset: 0.25 }, { opacity: 1 }], { duration: 900, easing: "ease-out" });
+  }
+  function centre(s) { var r = s.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; }
+  function ripple(x, y, n, modes) {
+    var d = svgs.map(function (s, i) { var c = centre(s); return { i: i, d: Math.hypot(c[0] - x, c[1] - y) }; }).sort(function (a, b) { return a.d - b.d; }).slice(0, n);
+    d.forEach(function (o, j) { setTimeout(function () { nudge(o.i, j < 2 ? "tint" : modes ? pick1(modes) : null); if (j === 0) nudge(o.i, "spin"); }, Math.min(900, o.d * 0.9)); });
+  }
+  window.addEventListener("pointerdown", function (e) { ripple(e.clientX, e.clientY, 7, ["grow", "spin", "shrink", "vanish"]); }, { passive: true, capture: true });
+  window.addEventListener("keydown", function () { nudge(Math.floor(Math.random() * svgs.length)); }, { passive: true });
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest && e.target.closest('[role="tab"], [data-act="sub"], [data-act="txsub"], .ctab, .mode');
+    if (!t) return;
+    var modes = ["spin", "grow", "tint", "shrink", "vanish", "morph"];
+    svgs.forEach(function (s, i) { setTimeout(function () { nudge(i, modes[(i + Math.floor(Math.random() * 3)) % modes.length]); }, i * 55); });
+  }, true);
+  var ticking = false, sy = 0, endT = 0;
+  function onScroll() {
+    sy = window.scrollY || document.documentElement.scrollTop || 0;
+    if (!ticking) { ticking = true; requestAnimationFrame(function () { el.style.setProperty("--sy", sy + "px"); ticking = false; }); }
+    clearTimeout(endT); endT = setTimeout(function () { for (var n = 0; n < 4; n++) nudge(Math.floor(Math.random() * svgs.length)); }, 160);
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  function idle() {
+    if (!document.hidden) { var n = 1 + Math.floor(Math.random() * 2); for (var j = 0; j < n; j++) nudge(Math.floor(Math.random() * svgs.length)); }
+    setTimeout(idle, rnd(1800, 3600));
+  }
+  setTimeout(idle, 1500);
 })();
 
 </script>
